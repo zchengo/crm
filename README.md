@@ -10,6 +10,7 @@
 
 - [技术选型](https://github.com/zchengo/crm/blob/main/docs/techstack.md)
 - [目录结构](https://github.com/zchengo/crm/blob/main/docs/structure.md)
+- [本地运行指南](https://mp.weixin.qq.com/s/oAmMoEtTk5lXSQS4wDlYAg)
 
 # 快速运行
 
@@ -21,6 +22,7 @@
 | mysql | >= 8.0.31 | https://www.mysql.com/downloads/ |
 | redis | >= 7.0.5 | https://redis.io/download/ |
 | node | >= 18.12.0 | https://nodejs.org/en/download/ |
+
 
 在终端（Terminal）中，执行如下命令，进行项目的初始化和运行。
 
@@ -39,9 +41,7 @@ $ npm install
 $ npm run dev
 ```
 
-运行成功后，使用浏览器访问：http://127.0.0.1:8008/#/login
-
-账号：12345@qq.com 密码：123
+运行成功后，打开浏览器访问 http://127.0.0.1:8008/#/login （ 账号：12345@qq.com 密码：123 ）
 
 # 问题反馈
 
@@ -49,4 +49,4 @@ $ npm run dev
 
 # 许可证
 
-[MIT License](https://github.com/zchengo/crm/blob/main/LICENSE) 
+Copyright (c) 2022 zchengo [MIT License](https://github.com/zchengo/crm/blob/main/LICENSE) 
