@@ -1,0 +1,31 @@
+# 启动端口号
+server:
+  port: 8000
+
+# MySQL数据库配置
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  username: root
+  password: 123456
+  dbname: crm
+  maxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifetime: 3600
+
+# Redis数据库配置
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: 
+  database: 0
+
+# JWT配置
+jwt:
+  signingKey: z3d6k8v0n3w7m9sa1fd0u09h
+
+# 邮件服务
+mail:
+  smtp: smtp.qq.com
+  secret: zxbxswmaccpfdaes
+  sender: 1933757688@qq.com
