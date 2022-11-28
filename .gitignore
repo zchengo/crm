@@ -1,0 +1,12 @@
+### node
+node_modules
+/dist
+
+### IDEA ###
+.idea
+
+### MacOS ###
+.DS_Store
+
+### VS Code ###
+.vscode
