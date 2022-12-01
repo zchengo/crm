@@ -1,34 +1,57 @@
 # crm
 
+<a href="#公众号"><img src="https://img.shields.io/badge/公众号-GoCode-%2302DF6D" /></a>
+<a href="https://www.zhihu.com/people/87-4-8-5"><img src="https://img.shields.io/badge/知乎-菜鸟程序员-%230092FF" /></a>
+
+## 项目简介
+
 客户关系管理系统，基于 Vue + Go 实现，主要功能有仪表盘、客户管理、合同管理、产品管理，订阅等功能。
 
-# 项目演示
+### 项目演示
 
-开源ZOCRM官网：https://www.zocrm.cloud
+开源 ZOCRM 官网：https://www.zocrm.cloud
 
-# 项目文档
+## 技术选型
 
-- [技术选型](https://github.com/zchengo/crm/blob/main/docs/techstack.md)
-- [目录结构](https://github.com/zchengo/crm/blob/main/docs/structure.md)
-- [本地运行指南](https://mp.weixin.qq.com/s/oAmMoEtTk5lXSQS4wDlYAg)
+### 前端技术
 
-# 快速运行
+| 技术 | 说明 | 相关文档 |
+|---|---|---|
+| Vue.js | 前端框架 | https://v3.cn.vuejs.org |
+| Vue Router | 页面路由 | https://router.vuejs.org |
+| Axios | 网络请求库 | https://axios-http.com |
+| Pinia | 状态管理 | https://pinia.vuejs.org |
+| Vite | 构建工具 | https://vitejs.cn |
+| Ant Design Vue | 前端UI组件库 | https://www.antdv.com |
+| Apache ECharts | 可视化图表库 | https://echarts.apache.org |
+| Moment | 日期库 | https://momentjs.com |
+
+### 后端技术
+
+| 技术 | 说明 | 相关文档 |
+|---|---|---|
+| Gin | Web框架 | https://gin-gonic.com |
+| Gorm | ORM框架 | https://gorm.io |
+| Jwt | 用户认证 | https://github.com/golang-jwt/jwt |
+| Viper | 配置管理 | https://github.com/spf13/viper |
+| Redis | 数据缓存 | https://github.com/go-redis/redis |
+| Mail | 邮件服务SDK | https://github.com/go-gomail/gomail |
+
+## 快速运行
 
 系统运行环境：
 
 | 环境 | 版本 | 下载地址 |
 |---|---|---|
-| go | >= 1.19.2 | https://golang.google.cn/dl/ |
-| mysql | >= 8.0.31 | https://www.mysql.com/downloads/ |
-| redis | >= 7.0.5 | https://redis.io/download/ |
-| node | >= 18.12.0 | https://nodejs.org/en/download/ |
+| go | >= 1.19.2 | https://golang.google.cn/dl |
+| mysql | >= 8.0.31 | https://www.mysql.com/downloads |
+| redis | >= 7.0.5 | https://redis.io/download |
+| node | >= 18.12.0 | https://nodejs.org/en/download |
 
 
-在终端（Terminal）中，执行如下命令，进行项目的初始化和运行。
+在终端中，执行如下命令，初始化并运行。
 
 ```
-$ git clone https://github.com/zchengo/crm.git
-
 $ cd server
 $ go mod tidy
 $ go build -o server main.go (windows编译命令为 go build -o server.exe main.go )
@@ -41,12 +64,16 @@ $ npm install
 $ npm run dev
 ```
 
-运行成功后，打开浏览器访问 http://127.0.0.1:8008/#/login （ 账号：12345@qq.com 密码：123 ）
+项目运行成功后，打开浏览器访问 http://127.0.0.1:8060
 
-# 问题反馈
+## 公众号
 
-你可以提交 Issues ，也可以通过 [知乎](https://www.zhihu.com/people/87-4-8-5) 或 [CSDN](https://blog.csdn.net/m0_47890251?spm=1000.2115.3001.5343) 联系作者。
+关注公众号「**GoCode**」，回复「**部署指南**」，获取最新版本地部署指南！
 
-# 许可证
+![公众号图片](https://www.zocrm.cloud/qrcode/gsh_qrcode.jpg)
 
-Copyright (c) 2022 zchengo [MIT License](https://github.com/zchengo/crm/blob/main/LICENSE) 
+## 许可证
+
+[MIT License](https://github.com/zchengo/crm/blob/main/LICENSE) 
+
+Copyright (c) 2022 zchengo 
