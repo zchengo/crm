@@ -70,7 +70,8 @@
             </a-form-item>
             <a-form-item name="code" :rules="[{ required: true, message: '请输入验证码!' }]">
               <a-input v-model:value="user.code" size="large" style="width: 55%;" placeholder="验证码" />
-              <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :disabled="disabled">
+              <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :loading="loading"
+                :disabled="disabled">
                 {{ buttonText }}</a-button>
             </a-form-item>
             <a-form-item name="newEmail" :rules="[{ required: true, message: '请输入新邮箱!' }]">
@@ -87,7 +88,8 @@
             </a-form-item>
             <a-form-item name="code" :rules="[{ required: true, message: '请输入验证码!' }]">
               <a-input v-model:value="user.code" size="large" style="width: 55%;" placeholder="验证码" />
-              <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :disabled="disabled">
+              <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :loading="loading"
+                :disabled="disabled">
                 {{ buttonText }}</a-button>
             </a-form-item>
           </a-form>
@@ -176,6 +178,7 @@ export default {
     const visible = ref(false)
     const visibleLogo = ref(false)
     const delUserVisible = ref(false)
+    const loading = ref(false)
     const disabled = ref(false)
     const buttonText = ref('获取验证码')
 
@@ -225,14 +228,21 @@ export default {
     const onGetCode = () => {
       if (user.email == '') {
         message.warn('邮箱不能为空')
+        return
       }
+      loading.value = true
       let param = {
         email: user.email
       }
       getVerifyCode(param).then((res) => {
         if (res.data.code == 0) {
+          loading.value = false
           disabled.value = true
           buttonText.value = '验证码已发送'
+        }
+        if (res.data.code == 10004) {
+          loading.value = false
+          message.error('验证码发送失败')
         }
       })
     }
@@ -265,6 +275,7 @@ export default {
 
     // 点击取消按钮
     const onCancel = () => {
+      disabled.value = false
       modalFormRef.value.resetFields()
       visible.value = false
       delUserVisible.value = false
@@ -278,6 +289,7 @@ export default {
       visible,
       visibleLogo,
       delUserVisible,
+      loading,
       disabled,
       buttonText,
       userInfo,

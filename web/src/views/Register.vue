@@ -6,7 +6,7 @@
         </a-form-item>
         <a-form-item name="code" :rules="[{ required: true, message: '请输入验证码!' }]">
             <a-input v-model:value="formData.code" size="large" style="width: 55%;" placeholder="验证码" />
-            <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :disabled="disabled">
+            <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :loading="loading" :disabled="disabled">
                 {{ buttonText }}</a-button>
         </a-form-item>
         <a-form-item name="password1" :rules="[{ required: true, message: '请输入密码!' }]">
@@ -40,6 +40,7 @@ export default {
             password2: '',
         });
 
+        const loading = ref(false)
         const disabled = ref(false)
         const buttonText = ref('获取验证码')
 
@@ -71,14 +72,21 @@ export default {
         const onGetCode = () => {
             if (formData.email == '') {
                 message.warn('邮箱不能为空')
+                return
             }
+            loading.value = true
             let param = {
                 email: formData.email
             }
             getVerifyCode(param).then((res) => {
                 if (res.data.code == 0) {
+                    loading.value = false
                     disabled.value = true
                     buttonText.value = '验证码已发送'
+                }
+                if (res.data.code == 10004) {
+                    loading.value = false
+                    message.error('验证码发送失败')
                 }
             })
         }
@@ -90,6 +98,7 @@ export default {
 
         return {
             formData,
+            loading,
             disabled,
             buttonText,
             onRegister,
