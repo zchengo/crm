@@ -42,7 +42,7 @@ export default {
     },
     setup() {
 
-        const ver = ref(1)
+        const ver = ref(0)
         const expired = ref(undefined)
 
         // 初始化数据
