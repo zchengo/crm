@@ -48,8 +48,8 @@ export default {
 
         // 用户登录
         const formData = reactive({
-            email: '',
-            password: '',
+            email: '1655064994@qq.com',
+            password: '1655064994',
             remember: true,
         });
         const onLogin = () => {
