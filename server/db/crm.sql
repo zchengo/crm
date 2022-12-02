@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 28/11/2022 15:18:33
+ Date: 02/12/2022 21:39:16
 */
 
 SET NAMES utf8mb4;
@@ -41,12 +41,12 @@ CREATE TABLE `contract` (
 -- Records of contract
 -- ----------------------------
 BEGIN;
-INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (14, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 23, 1669550577, 1669553025);
-INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (15, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 23, 1669550577, 1669553025);
-INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (16, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 23, 1669550577, 1669553025);
-INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (18, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 23, 1669550577, 1669553025);
-INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (19, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 23, 1669550577, 1669553025);
-INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 23, 1669550577, 1669553025);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (14, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 25, 1669550577, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (15, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 25, 1669550577, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (16, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 25, 1669550577, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (18, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 25, 1669550577, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (19, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 25, 1669550577, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20, '家居用品买卖合同', 8170.00, '2022-11-27', '2022-11-27', '客户对价格很满意', 21, '[{\"id\": 51, \"name\": \"洗发露\", \"type\": 1, \"unit\": \"瓶\", \"count\": 20, \"price\": 200, \"total\": 4000}, {\"id\": 52, \"name\": \"运动鞋\", \"type\": 1, \"unit\": \"只\", \"count\": 30, \"price\": 139, \"total\": 4170}]', 1, 25, 1669550577, 0);
 COMMIT;
 
 -- ----------------------------
@@ -69,18 +69,18 @@ CREATE TABLE `customer` (
   `created` bigint DEFAULT NULL COMMENT '创建时间',
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of customer
 -- ----------------------------
 BEGIN;
-INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (17, '河南正商泰盛裕网电有限公司 ', '电话咨询', '13308322331', '12637237@qq.com', '金融业', '普通客户', '无备注', '河南省,郑州市,上街区', '淮阳路南段23号院', 2, 19, 1669181566, 1669181797);
-INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (18, '海航科技股份有限公司 ', '线上注册', '18905850015', '1737283@163.com', '房地产', '重点客户', '无备注', '北京市,朝阳区', '黄厂路豆各庄3号', 1, 19, 1669182133, 0);
-INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (19, '可望企业股份有限公司', '搜索引擎', '12043480098', '9843834@gmail.com', '物流运输', '普通客户', '无备注', '河南省,郑州市,金水区', '绿地之窗尚峰座', 1, 19, 1669182378, 1669182392);
-INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (20, '广北嵊州天燃气集团有限公司', '电话咨询', '13500205580', '123456@163.com', '金融业', '重点客户', '交流大会上收集的名片', '广东省,茂名市,电白区', '坡心镇谭莲工业区市民大道', 1, 23, 1669547870, 1669548361);
-INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (21, '河南郑州石油集团有限公司', '搜索引擎', '12300561200', 'shiyou@qq.com', '文化传媒', '非优先客户', '', '河南省,郑州市,金水区', '绿地之窗尚峰座', 1, 23, 1669548325, 1669548341);
-INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (22, '可望企业股份有限公司', '线上注册', '15890800054', '200300@163.com', '物流运输', '普通客户', '现有客户引荐', '北京市,朝阳区', '黄厂路豆各庄2号', 1, 23, 1669548489, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (17, '河南正商泰盛裕网电有限公司 ', '电话咨询', '13308322331', '12637237@qq.com', '金融业', '普通客户', '无备注', '河南省,郑州市,上街区', '淮阳路南段23号院', 2, 25, 1669181566, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (18, '海航科技股份有限公司 ', '线上注册', '18905850015', '1737283@163.com', '房地产', '重点客户', '无备注', '北京市,朝阳区', '黄厂路豆各庄3号', 1, 25, 1669182133, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (19, '可望企业股份有限公司', '搜索引擎', '12043480098', '9843834@gmail.com', '物流运输', '普通客户', '无备注', '河南省,郑州市,金水区', '绿地之窗尚峰座', 1, 25, 1669182378, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (20, '广北嵊州天燃气集团有限公司', '电话咨询', '13500205580', '123456@163.com', '金融业', '重点客户', '交流大会上收集的名片', '广东省,茂名市,电白区', '坡心镇谭莲工业区市民大道', 1, 25, 1669547870, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (21, '河南郑州石油集团有限公司', '搜索引擎', '12300561200', 'shiyou@qq.com', '文化传媒', '非优先客户', '', '河南省,郑州市,金水区', '绿地之窗尚峰座', 1, 25, 1669548325, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (22, '可望企业股份有限公司', '线上注册', '15890800054', '200300@163.com', '物流运输', '普通客户', '现有客户引荐', '北京市,东城区', '黄厂路豆各庄2号', 1, 25, 1669548489, 0);
 COMMIT;
 
 -- ----------------------------
@@ -106,15 +106,11 @@ CREATE TABLE `product` (
 -- Records of product
 -- ----------------------------
 BEGIN;
-INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (44, '运动鞋', 1, '只', '024', 139.00, '男鞋跑步鞋2021新款冬季潮流男士厚底旅游透气保暖网面休闲运动鞋黑色板鞋防水皮面慢跑鞋子男加厚 黑白皮面-【店长推荐】 42码 ', 1, 19, 1669178384, 1669178428);
-INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (45, '洗衣液', 1, '瓶', '012', 89.90, '全效洁净除菌洗衣液（洁雅百合香）超值套装16斤（2KG*4瓶）家庭装 去渍去污无残留 ', 2, 19, 1669178484, 0);
-INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (46, '洗发露', 1, '瓶', '013', 200.00, '洗发水清爽去油型1KG（持久去屑清洁止痒清爽柔润）柠檬香 男士女士通用 新老包装随机发货 ', 1, 19, 1669178546, 0);
-INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (47, '电动车', 1, '台', '004', 1498.00, '代驾折叠电动车电动自行车成人代步外卖锂电池小型轻便电瓶车迷你便携电单车 G2/汽车电芯-能量回收-6Ah约60km ', 2, 19, 1669178630, 0);
-INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (48, '跑步机', 1, '台', '005', 1599.00, '生态伙伴跑步机家用智能可折叠免安装室内健身多功能走步机64CM宽大跑台（支持HUAWEI HiLink） ', 1, 19, 1669178665, 0);
-INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (50, '洗衣液', 1, '瓶', '013', 98.80, '全效洁净除菌洗衣液（洁雅百合香）超值套装16斤（2KG*4瓶）家庭装 去渍去污无残留', 1, 23, 1669535316, 0);
-INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (51, '洗发露', 1, '瓶', '005', 200.00, '洗发水清爽去油型1KG（持久去屑清洁止痒清爽柔润）柠檬香 男士女士通用 新老包装随机发货', 1, 23, 1669535360, 0);
-INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (52, '运动鞋', 1, '只', '008', 139.00, '男鞋跑步鞋2021新款冬季潮流男士厚底旅游透气保暖网面休闲运动鞋黑色板鞋防水皮面慢跑鞋子男加厚 黑白皮面-【店长推荐】 42码', 1, 23, 1669535416, 0);
-INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (53, '工装', 1, '只', '023', 89.00, '芯耐磨工作服套装男士纯棉电焊防烫建筑工地汽修春秋工装军绿户外劳保服 军绿A款 【精品581】套装 2XL 175码（120-140斤）', 1, 23, 1669535475, 0);
+INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (44, '运动鞋', 1, '只', '024', 139.00, '男鞋跑步鞋2021新款冬季潮流男士厚底旅游透气保暖网面休闲运动鞋黑色板鞋防水皮面慢跑鞋子男加厚 黑白皮面-【店长推荐】 42码 ', 1, 25, 1669178384, 0);
+INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (45, '洗衣液', 1, '瓶', '012', 89.90, '全效洁净除菌洗衣液（洁雅百合香）超值套装16斤（2KG*4瓶）家庭装 去渍去污无残留 ', 2, 25, 1669178484, 0);
+INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (46, '洗发露', 1, '瓶', '013', 200.00, '洗发水清爽去油型1KG（持久去屑清洁止痒清爽柔润）柠檬香 男士女士通用 新老包装随机发货 ', 1, 25, 1669178546, 0);
+INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (47, '电动车', 1, '台', '004', 1498.00, '代驾折叠电动车电动自行车成人代步外卖锂电池小型轻便电瓶车迷你便携电单车 G2/汽车电芯-能量回收-6Ah约60km ', 2, 25, 1669178630, 0);
+INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (48, '跑步机', 1, '台', '005', 1599.00, '生态伙伴跑步机家用智能可折叠免安装室内健身多功能走步机64CM宽大跑台（支持HUAWEI HiLink） ', 1, 25, 1669178665, 0);
 COMMIT;
 
 -- ----------------------------
@@ -132,13 +128,13 @@ CREATE TABLE `user` (
   `created` bigint DEFAULT NULL COMMENT '创建时间',
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
 BEGIN;
-INSERT INTO `user` (`id`, `email`, `password`, `name`, `version`, `expired`, `status`, `created`, `updated`) VALUES (23, '12345@qq.com', '$2a$10$61Tabrfk/s3TKuzErG4cx.o9VOtaLhmeb3K4x5lkaN2dHns004dNe', '', 2, 1672126771, 1, 1669534759, 1669534807);
+INSERT INTO `user` (`id`, `email`, `password`, `name`, `version`, `expired`, `status`, `created`, `updated`) VALUES (25, '1655064994@qq.com', '$2a$10$JO84PF2YacM/qwmMMPisZeAIAPvCIfPPxtjCi65bD428ngoh0geFG', '', 2, 1672580226, 1, 1669988047, 1669988226);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
