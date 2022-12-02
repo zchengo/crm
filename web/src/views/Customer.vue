@@ -94,7 +94,7 @@
                     <a-row :gutter="16">
                         <a-col :span="12">
                             <a-form-item label="所在地区" name="region">
-                                <a-cascader v-model:value="region" @change="selectedOptions" :options="options"
+                                <a-cascader v-model:value="customer.region" @change="selectedOptions" :options="options"
                                     placeholder="请选择" style="width: 100%" />
                             </a-form-item>
                         </a-col>
@@ -243,8 +243,6 @@ export default {
         const modalFormRef = ref();
         const keyWord = ref('')
 
-        const region = ref([])
-
         // 点击新建客户
         const onCreate = () => {
             title.value = '新建客户'
@@ -270,7 +268,7 @@ export default {
                     customer.level = p.level
                     customer.remarks = p.remarks
                     customer.region = p.region
-                    region.value = customer.region.split(',')
+                    customer.region = p.region.split(',')
                     customer.address = p.address
                     customer.status = p.status
                 }
@@ -281,8 +279,8 @@ export default {
         const onSave = () => {
             console.log("zzz123")
             modalFormRef.value.validateFields().then(() => {
+                customer.region = customer.region.toString()
                 if (operation.value == 1) {
-                    customer.region.toString()
                     createCustomer(customer).then((res) => {
                         if (res.data.code == 0) {
                             message.success('保存成功')
@@ -361,7 +359,7 @@ export default {
         const options = regionData
 
         const selectedOptions = (value) => {
-            customer.region = value.toString()
+            customer.region = value
         }
 
         return {
@@ -386,7 +384,6 @@ export default {
             getCustomerList,
             keyWord,
             options,
-            region,
             onPagination,
             pagination,
             selectedOptions,
