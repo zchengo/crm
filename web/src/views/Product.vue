@@ -245,7 +245,7 @@ export default {
 
         // 点击保存产品
         const onSave = () => {
-            modalFormRef.value.validateFields().then(() => {
+            productForm.value.validateFields().then(() => {
                 if (operation.value == 1) {
                     createProduct(product).then((res) => {
                         if (res.data.code == 0) {
@@ -262,7 +262,7 @@ export default {
                         }
                     })
                 }
-                modalFormRef.value.resetFields()
+                productForm.value.resetFields()
                 visible.value = false;
             });
         };
