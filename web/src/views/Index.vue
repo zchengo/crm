@@ -14,10 +14,11 @@
             </div>
             <div class="footer">
                 <div class="links">
-                    <a href="">许可证</a>
+                    <a href="https://github.com/zchengo/crm">开源地址</a>
+                    <a href="https://github.com/zchengo/crm/blob/main/LICENSE">许可证</a>
                     <a href="https://mail.qq.com/">企鹅邮箱</a>
                 </div>
-                <div class="copyright">Copyright © 2022 Zocrm.cloud</div>
+                <div class="copyright">Copyright © 2022 www.zocrm.cloud</div>
             </div>
         </div>
     </div>
