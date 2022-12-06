@@ -22,7 +22,7 @@ func SendMail(email, content string) error {
 	m.SetHeader("Bcc", email)  			// 暗送，可以多个
 	m.SetHeader("Subject", "ZOCRM")     // 邮件主题
 	m.SetBody("text/html", content)
-	d := gomail.NewDialer(smtp, 25, sender, secret)
+	d := gomail.NewDialer(smtp, 465, sender, secret)
 	// 关闭SSL协议认证
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	if err := d.DialAndSend(m); err != nil {
