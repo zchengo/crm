@@ -1,0 +1,39 @@
+name: CRM CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.12.0'    
+        
+    - name: Build Web
+      run: cd web && npm install && npm run build  
+    
+    - name: Use Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+    
+    - name: Build Server
+      run: cd server && go mod tidy && go build -o crmserver main.go
+    
+    - name: Deploy CRM
+      env:
+        KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        HOST: ${{ secrets.REMOTE_HOST }}
+      run: |
+        mkdir -p ~/.ssh/ && echo "$KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+        scp -o StrictHostKeyChecking=no -r web/dist ubuntu@${HOST}:/usr/local/nginx/html/
+        ssh -o StrictHostKeyChecking=no ubuntu@${HOST} "sudo /usr/local/nginx/sbin/nginx -s reload"
+        scp -o StrictHostKeyChecking=no -r server/crmserver ubuntu@${HOST}:/home/ubuntu/
+        ssh -o StrictHostKeyChecking=no ubuntu@${HOST} "sudo /home/ubuntu/crmapi/restart.sh > /dev/null 2>&1 &"
