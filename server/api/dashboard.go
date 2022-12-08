@@ -22,6 +22,11 @@ func NewDashboardApi() *DashboardApi {
 // 获取数据汇总
 func (d *DashboardApi) Summary(context *gin.Context) {
 	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
-	sum := d.dashboardService.Summary(int64(uid))
+	days, _ := strconv.Atoi(context.Query("daysRange"))
+	if days < 7 || days > 30 {
+		response.Result(response.ErrCodeParamInvalid, nil, context)
+		return
+	}
+	sum := d.dashboardService.Summary(int64(uid), days)
 	response.Result(response.ErrCodeSuccess, sum, context)
 }
