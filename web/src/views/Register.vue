@@ -1,18 +1,18 @@
 <template>
-    <a-form :model="formData" layout="vertical" @finish="onRegister">
-        <a-form-item name="email" :rules="[{ required: true, message: '请输入邮箱!' }]">
-            <a-input v-model:value="formData.email" size="large" placeholder="邮箱">
-            </a-input>
+    <a-form ref="registerFormRef" :model="formData" layout="vertical" @finish="onRegister" :rules="rules">
+        <a-form-item name="email">
+            <a-input v-model:value="formData.email" size="large" placeholder="邮箱" />
         </a-form-item>
-        <a-form-item name="code" :rules="[{ required: true, message: '请输入验证码!' }]">
+        <a-form-item name="code">
             <a-input v-model:value="formData.code" size="large" style="width: 55%;" placeholder="验证码" />
-            <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :loading="loading" :disabled="disabled">
+            <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :loading="loading"
+                :disabled="disabled">
                 {{ buttonText }}</a-button>
         </a-form-item>
-        <a-form-item name="password1" :rules="[{ required: true, message: '请输入密码!' }]">
+        <a-form-item name="password1">
             <a-input-password v-model:value="formData.password1" size="large" placeholder="密码" />
         </a-form-item>
-        <a-form-item name="password2" :rules="[{ required: true, message: '请输入密码!' }]">
+        <a-form-item name="password2">
             <a-input-password v-model:value="formData.password2" size="large" placeholder="确认密码" />
         </a-form-item>
         <a-form-item>
@@ -40,31 +40,50 @@ export default {
             password2: '',
         });
 
+        // 表单校验
+        const rules = {
+            email: [{
+                required: true,
+                message: '请输入邮箱!',
+                trigger: 'blur',
+            }, {
+                pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
+                message: '邮箱格式不正确',
+                trigger: 'blur',
+            }],
+            code: [{ required: true, message: '请输入验证码!' }],
+            password1: [{ required: true, message: '请输入密码!' }],
+            password2: [{ required: true, message: '请输入密码!' }],
+        };
+
         const loading = ref(false)
         const disabled = ref(false)
+        const registerFormRef = ref()
         const buttonText = ref('获取验证码')
 
         const onRegister = () => {
-            if (formData.password1 != formData.password2) {
-                message.info('密码不一致');
-                return
-            }
-            let param = {
-                email: formData.email,
-                code: formData.code,
-                password: formData.password2,
-            }
-            userRegister(param).then((res) => {
-                if (res.data.code == 0) {
-                    message.success('注册成功');
-                    onLogin()
+            registerFormRef.value.validateFields().then(() => {
+                if (formData.password1 != formData.password2) {
+                    message.warn('密码不一致');
+                    return
                 }
-                if (res.data.code == 10001) {
-                    message.warn('该用户已经存在');
+                let param = {
+                    email: formData.email,
+                    code: formData.code,
+                    password: formData.password2,
                 }
-                if (res.data.code == 10005) {
-                    message.error('验证码错误');
-                }
+                userRegister(param).then((res) => {
+                    if (res.data.code == 0) {
+                        message.success('注册成功');
+                        onLogin()
+                    }
+                    if (res.data.code == 10001) {
+                        message.warn('该用户已经存在');
+                    }
+                    if (res.data.code == 10005) {
+                        message.error('验证码错误');
+                    }
+                })
             })
         };
 
@@ -98,6 +117,8 @@ export default {
 
         return {
             formData,
+            rules,
+            registerFormRef,
             loading,
             disabled,
             buttonText,

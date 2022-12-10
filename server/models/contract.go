@@ -21,63 +21,63 @@ type Contract struct {
 }
 
 type ContractCreateParam struct {
-	Name        string       `json:"name,omitempty"`
-	Amount      float64      `json:"amount,omitempty"`
-	BeginTime   string       `json:"beginTime,omitempty"`
-	OverTime    string       `json:"overTime,omitempty"`
-	Remarks     string       `json:"remarks,omitempty"`
-	Cid         int64        `json:"cid,omitempty"`
-	Productlist *Productlist `json:"productlist,omitempty"`
-	Status      int          `json:"status,omitempty"`
-	Creator     int64        `json:"creator,omitempty"`
+	Name        string       `json:"name" binding:"required"`
+	Amount      float64      `json:"amount" binding:"required,gt=0"`
+	BeginTime   string       `json:"beginTime" binding:"-"`
+	OverTime    string       `json:"overTime" binding:"-"`
+	Remarks     string       `json:"remarks" binding:"-"`
+	Cid         int64        `json:"cid" binding:"required,gt=0"`
+	Productlist *Productlist `json:"productlist"`
+	Status      int          `json:"status" binding:"required,oneof=1 2"`
+	Creator     int64        `json:"creator,omitempty" binding:"-"`
 }
 
 type ContractUpdateParam struct {
-	Id          int64        `json:"id,omitempty"`
-	Name        string       `json:"name,omitempty"`
-	Amount      float64      `json:"amount,omitempty"`
-	BeginTime   string       `json:"beginTime,omitempty"`
-	OverTime    string       `json:"overTime,omitempty"`
-	Remarks     string       `json:"remarks,omitempty"`
-	Cid         int64        `json:"cid,omitempty"`
-	Productlist *Productlist `json:"productlist,omitempty"`
-	Status      int          `json:"status,omitempty"`
+	Id          int64        `json:"id" binding:"required,gt=0"`
+	Name        string       `json:"name" binding:"required"`
+	Amount      float64      `json:"amount" binding:"required,gt=0"`
+	BeginTime   string       `json:"beginTime" binding:"-"`
+	OverTime    string       `json:"overTime" binding:"-"`
+	Remarks     string       `json:"remarks" binding:"-"`
+	Cid         int64        `json:"cid" binding:"required,gt=0"`
+	Productlist *Productlist `json:"productlist"`
+	Status      int          `json:"status" binding:"required,oneof=1 2"`
 }
 
 type ContractDeleteParam struct {
-	Ids []int64 `json:"ids,omitempty"`
+	Ids []int64 `json:"ids" binding:"required"`
 }
 
 type ContractQueryParam struct {
-	Id      int64  `form:"id,omitempty"`
-	Name    string `form:"name,omitempty"`
-	Creator int64  `form:"creator,omitempty"`
+	Id      int64  `form:"id" binding:"omitempty,gt=0"`
+	Name    string `form:"name" binding:"-"`
+	Creator int64  `form:"creator,omitempty" binding:"-"`
 	Page    Page
 }
 
 type ContractList struct {
-	Id        int64   `json:"id,omitempty"`
-	Name      string  `json:"name,omitempty"`
-	Amount    float64 `json:"amount,omitempty"`
-	BeginTime string  `json:"beginTime,omitempty"`
-	OverTime  string  `json:"overTime,omitempty"`
-	Remarks   string  `json:"remarks,omitempty"`
-	Cname     string  `json:"cname,omitempty"`
-	Status    int     `json:"status,omitempty"`
-	Created   int64   `json:"created,omitempty"`
-	Updated   int64   `json:"updated,omitempty"`
+	Id        int64   `json:"id"`
+	Name      string  `json:"name"`
+	Amount    float64 `json:"amount"`
+	BeginTime string  `json:"beginTime"`
+	OverTime  string  `json:"overTime"`
+	Remarks   string  `json:"remarks"`
+	Cname     string  `json:"cname"`
+	Status    int     `json:"status"`
+	Created   int64   `json:"created"`
+	Updated   int64   `json:"updated"`
 }
 
 type ContractInfo struct {
-	Id          int64        `json:"id,omitempty"`
-	Name        string       `json:"name,omitempty"`
-	Cid         int64        `json:"cid,omitempty"`
-	Amount      float64      `json:"amount,omitempty"`
-	BeginTime   string       `json:"beginTime,omitempty"`
-	OverTime    string       `json:"overTime,omitempty"`
-	Remarks     string       `json:"remarks,omitempty"`
-	Productlist *Productlist `json:"productlist,omitempty"`
-	Status      int          `json:"status,omitempty"`
+	Id          int64        `json:"id"`
+	Name        string       `json:"name"`
+	Cid         int64        `json:"cid"`
+	Amount      float64      `json:"amount"`
+	BeginTime   string       `json:"beginTime"`
+	OverTime    string       `json:"overTime"`
+	Remarks     string       `json:"remarks"`
+	Productlist *Productlist `json:"productlist"`
+	Status      int          `json:"status"`
 }
 
 type Products struct {

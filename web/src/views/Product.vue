@@ -34,17 +34,15 @@
         <!-- 新建、编辑产品 -->
         <a-modal v-model:visible="visible" :title="title" @ok="onSave" @cancel="onCancel" cancelText="取消" okText="保存"
             width="800px" style="top: 80px">
-            <a-form ref="productForm" :model="product" layout="vertical" name="product">
+            <a-form ref="productFormRef" :model="product" layout="vertical" name="product" :rules="rules">
                 <a-row :gutter="16">
                     <a-col :span="12">
-                        <a-form-item label="产品名称" name="name" :rules="[{ required: true, message: '请输入产品名称' }]">
+                        <a-form-item label="产品名称" name="name">
                             <a-input v-model:value="product.name" />
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-item label="产品类型" name="type" :rules="[{
-                            required: true, message: '请选择产品类型',
-                        }]">
+                        <a-form-item label="产品类型" name="type">
                             <a-select v-model:value="product.type" placeholder="请选择">
                                 <a-select-option :value="1">默认</a-select-option>
                             </a-select>
@@ -67,19 +65,19 @@
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-item label="产品编码" name="code" :rules="[{ required: true, message: '请输入产品编码' }]">
+                        <a-form-item label="产品编码" name="code">
                             <a-input v-model:value="product.code" />
                         </a-form-item>
                     </a-col>
                 </a-row>
                 <a-row :gutter="16">
                     <a-col :span="12">
-                        <a-form-item label="价格" name="price" :rules="[{ required: true, message: '请输入产品价格' }]">
+                        <a-form-item label="价格" name="price">
                             <a-input-number v-model:value="product.price" style="width: 100%" />
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-item label="是否上下架" name="status" :rules="[{ required: true, message: '请选择是否上下架' }]">
+                        <a-form-item label="是否上下架" name="status">
                             <a-select v-model:value="product.status" placeholder="请选择">
                                 <a-select-option :value="1">上架</a-select-option>
                                 <a-select-option :value="2">下架</a-select-option>
@@ -161,6 +159,15 @@ export default {
             }
         }];
 
+        // 表单校验
+        const rules = {
+            name: [{ required: true, message: '请输入产品名称', trigger: 'blur' }],
+            type: [{ required: true, message: '请选择产品类型' }],
+            code: [{ pattern: /^\d+$/, message: '产品编码格式不正确', trigger: 'blur' }],
+            price: [{ required: true, message: '请输入产品价格' }],
+            status: [{ required: true, message: '请选择是否上下架' }]
+        };
+
         // 产品属性
         let product = reactive({
             id: undefined,
@@ -190,7 +197,7 @@ export default {
         const visible = ref(false);
         const disabled = ref(true)
         const operation = ref(0);
-        const productForm = ref();
+        const productFormRef = ref();
         const keyWord = ref('')
 
         // 初始化数据
@@ -218,14 +225,13 @@ export default {
         // 点击新建产品
         const onCreate = () => {
             title.value = '新建产品'
-            visible.value = true
             operation.value = 1
+            visible.value = true
         }
 
         // 点击产品名称
         const onEdit = (row) => {
             title.value = '编辑产品'
-            visible.value = true
             operation.value = 2
             let param = { id: row.id }
             queryProductInfo(param).then((res) => {
@@ -241,11 +247,12 @@ export default {
                     product.description = p.description
                 }
             })
+            visible.value = true
         }
 
         // 点击保存产品
         const onSave = () => {
-            productForm.value.validateFields().then(() => {
+            productFormRef.value.validateFields().then(() => {
                 if (operation.value == 1) {
                     createProduct(product).then((res) => {
                         if (res.data.code == 0) {
@@ -262,7 +269,7 @@ export default {
                         }
                     })
                 }
-                productForm.value.resetFields()
+                productFormRef.value.resetFields()
                 visible.value = false;
             });
         };
@@ -313,12 +320,13 @@ export default {
 
         // 点击取消按钮
         const onCancel = () => {
-            productForm.value.resetFields()
+            productFormRef.value.resetFields()
             visible.value = false
         };
 
         return {
             columns,
+            rules,
             data,
             onSelectChange,
             onSearch,
@@ -330,7 +338,7 @@ export default {
             onProducts,
             onCreate,
             onEdit,
-            productForm,
+            productFormRef,
             onSave,
             onCancel,
             onDelete,

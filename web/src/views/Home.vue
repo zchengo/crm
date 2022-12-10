@@ -64,17 +64,17 @@
         <!-- 修改邮箱弹出框 -->
         <a-modal v-model:visible="visible" title="修改邮箱" @ok="onSave" @cancel="onCancel" cancelText="取消" okText="保存"
           width="450px" style="top: 120px">
-          <a-form :model="user" layout="vertical" @finish="onSubmit">
-            <a-form-item name="email" :rules="[{ required: true, message: '请输入邮箱!' }]">
+          <a-form :model="user" layout="vertical" @finish="onSubmit" :rules="rules">
+            <a-form-item name="email">
               <a-input v-model:value="user.email" size="large" placeholder="邮箱" disabled />
             </a-form-item>
-            <a-form-item name="code" :rules="[{ required: true, message: '请输入验证码!' }]">
+            <a-form-item name="code">
               <a-input v-model:value="user.code" size="large" style="width: 55%;" placeholder="验证码" />
               <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :loading="loading"
                 :disabled="disabled">
                 {{ buttonText }}</a-button>
             </a-form-item>
-            <a-form-item name="newEmail" :rules="[{ required: true, message: '请输入新邮箱!' }]">
+            <a-form-item name="newEmail">
               <a-input v-model:value="user.newEmail" size="large" placeholder="新邮箱" />
             </a-form-item>
           </a-form>
@@ -82,11 +82,11 @@
         <!-- 注销账号弹出框 -->
         <a-modal v-model:visible="delUserVisible" title="注销账号" @ok="onConfirm" @cancel="onCancel" cancelText="取消"
           okText="注销" width="450px" style="top: 120px">
-          <a-form :model="user" layout="vertical" @finish="onSubmit">
-            <a-form-item name="email" :rules="[{ required: true, message: '请输入邮箱!' }]">
+          <a-form :model="user" layout="vertical" @finish="onSubmit" :rules="rules">
+            <a-form-item name="email">
               <a-input v-model:value="user.email" size="large" placeholder="邮箱" disabled />
             </a-form-item>
-            <a-form-item name="code" :rules="[{ required: true, message: '请输入验证码!' }]">
+            <a-form-item name="code">
               <a-input v-model:value="user.code" size="large" style="width: 55%;" placeholder="验证码" />
               <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :loading="loading"
                 :disabled="disabled">
@@ -161,6 +161,29 @@ export default {
       icon: "crown-outlined",
       name: "订阅"
     }])
+
+    // 表单校验
+    const rules = {
+      email: [{
+        required: true,
+        message: '请输入邮箱!',
+        trigger: 'blur',
+      }, {
+        pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
+        message: '邮箱格式不正确',
+        trigger: 'blur',
+      }],
+      code: [{ required: true, message: '请输入验证码!' }],
+      newEmail: [{
+        required: true,
+        message: '请输入邮箱!',
+        trigger: 'blur',
+      }, {
+        pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
+        message: '邮箱格式不正确',
+        trigger: 'blur',
+      }],
+    };
 
     const selectedKeys = ref(['dashboard'])
     const collapsed = ref(false)
@@ -283,6 +306,7 @@ export default {
 
     return {
       menuItem,
+      rules,
       selectedKeys,
       collapsed,
       user,

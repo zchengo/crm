@@ -34,10 +34,10 @@
         <a-modal v-model:visible="visible" :title="title" @ok="onSave" @cancel="onCancel" cancelText="取消" okText="保存"
             width="800px" style="top: 80px;">
             <div style="height: 55vh;overflow-y: scroll;padding: 0 15px;">
-                <a-form ref="modalFormRef" :model="customer" layout="vertical" name="customer">
+                <a-form ref="customerFormRef" :model="customer" layout="vertical" name="customer" :rules="rules">
                     <a-row :gutter="16">
                         <a-col :span="12">
-                            <a-form-item label="客户名称" name="name" :rules="[{ required: true, message: '请输入客户名称' }]">
+                            <a-form-item label="客户名称" name="name">
                                 <a-input v-model:value="customer.name" />
                             </a-form-item>
                         </a-col>
@@ -188,6 +188,21 @@ export default {
             }
         }];
 
+        // 表单校验
+        const rules = {
+            name: [{ required: true, message: '请输入客户名称', trigger: 'blur' }],
+            phone: [{
+                pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/,
+                message: '手机格式不正确',
+                trigger: 'blur',
+            }],
+            email: [{
+                pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
+                message: '邮箱格式不正确',
+                trigger: 'blur',
+            }],
+        };
+
         const data = reactive({
             customerList: [],
             selectedIds: []
@@ -240,20 +255,19 @@ export default {
         const visible = ref(false);
         const disabled = ref(true)
         const operation = ref(0);
-        const modalFormRef = ref();
+        const customerFormRef = ref();
         const keyWord = ref('')
 
         // 点击新建客户
         const onCreate = () => {
             title.value = '新建客户'
-            visible.value = true
             operation.value = 1
+            visible.value = true
         }
 
         // 点击客户名称
         const onEdit = (row) => {
             title.value = '编辑客户'
-            visible.value = true
             operation.value = 2
             let param = { id: row.id }
             queryCustomerInfo(param).then((res) => {
@@ -273,13 +287,15 @@ export default {
                     customer.status = p.status
                 }
             })
+            visible.value = true
         }
 
         // 点击保存客户
         const onSave = () => {
-            console.log("zzz123")
-            modalFormRef.value.validateFields().then(() => {
-                customer.region = customer.region.toString()
+            customerFormRef.value.validateFields().then(() => {
+                if (customer.region !== undefined) {
+                    customer.region = customer.region.toString()
+                }
                 if (operation.value == 1) {
                     createCustomer(customer).then((res) => {
                         if (res.data.code == 0) {
@@ -296,7 +312,7 @@ export default {
                         }
                     })
                 }
-                modalFormRef.value.resetFields()
+                customerFormRef.value.resetFields()
                 visible.value = false;
             });
         };
@@ -352,7 +368,7 @@ export default {
 
         // 点击取消按钮
         const onCancel = () => {
-            modalFormRef.value.resetFields()
+            customerFormRef.value.resetFields()
             visible.value = false
         };
 
@@ -365,6 +381,7 @@ export default {
         return {
             data,
             columns,
+            rules,
             onSearch,
             visible,
             disabled,
@@ -377,7 +394,7 @@ export default {
             onCustomers,
             onCreate,
             onEdit,
-            modalFormRef,
+            customerFormRef,
             onSave,
             onCancel,
             onDelete,

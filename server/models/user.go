@@ -13,39 +13,36 @@ type User struct {
 }
 
 type UserCreateParam struct {
-	Email    string `json:"email"`
-	Code     string `json:"code"`
-	Password string `json:"password"`
-}
-
-type UserUpdateParam struct {
-	Id       int64  `json:"id"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Status   int    `json:"status"`
+	Email    string `json:"email" binding:"required,email"`
+	Code     string `json:"code" binding:"required,len=6"`
+	Password string `json:"password" binding:"required"`
 }
 
 type UserDeleteParam struct {
-	Id    int64  `json:"id"`
-	Email string `json:"email"`
-	Code  string `json:"code"`
+	Id    int64  `json:"id,omitempty" binding:"-"`
+	Email string `json:"email" binding:"required,email"`
+	Code  string `json:"code" binding:"required,len=6"`
 }
 
 type UserLoginParam struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required"`
+}
+
+type UserVerifyCodeParam struct {
+	Email string `form:"email" binding:"required,email"`
 }
 
 type UserPassParam struct {
-	Email    string `json:"email"`
-	Code     string `json:"code"`
-	Password string `json:"password"`
+	Email    string `json:"email" binding:"required,email"`
+	Code     string `json:"code" binding:"required,len=6"`
+	Password string `json:"password" binding:"required"`
 }
 
 type UserMailParam struct {
-	Email    string `json:"email"`
-	Code     string `json:"code"`
-	NewEmail string `json:"newEmail"`
+	Email    string `json:"email" binding:"required,email"`
+	Code     string `json:"code" binding:"required,len=6"`
+	NewEmail string `json:"newEmail" binding:"required,email"`
 }
 
 type UserInfo struct {

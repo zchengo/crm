@@ -18,42 +18,42 @@ type Customer struct {
 }
 
 type CustomerCreateParam struct {
-	Name     string `json:"name,omitempty"`
-	Source   string `json:"source,omitempty"`
-	Phone    string `json:"phone,omitempty"`
-	Email    string `json:"email,omitempty"`
-	Industry string `json:"industry,omitempty"`
-	Level    string `json:"level,omitempty"`
-	Remarks  string `json:"remarks,omitempty"`
-	Region   string `json:"region,omitempty"`
-	Address  string `json:"address,omitempty"`
-	Status   int    `json:"status,omitempty"`
-	Creator  int64  `json:"creator,omitempty"`
+	Name     string `json:"name" binding:"required"`
+	Source   string `json:"source" binding:"-"`
+	Phone    string `json:"phone" binding:"omitempty,len=11"`
+	Email    string `json:"email" binding:"omitempty,email"`
+	Industry string `json:"industry" binding:"-"`
+	Level    string `json:"level" binding:"-"`
+	Remarks  string `json:"remarks" binding:"-"`
+	Region   string `json:"region" binding:"-"`
+	Address  string `json:"address" binding:"-"`
+	Status   int    `json:"status" binding:"-"`
+	Creator  int64  `json:"creator,omitempty" binding:"-"`
 }
 
 type CustomerUpdateParam struct {
-	Id       int64  `json:"id,omitempty"`
-	Name     string `json:"name,omitempty"`
-	Source   string `json:"source,omitempty"`
-	Phone    string `json:"phone,omitempty"`
-	Email    string `json:"email,omitempty"`
-	Industry string `json:"industry,omitempty"`
-	Level    string `json:"level,omitempty"`
-	Remarks  string `json:"remarks,omitempty"`
-	Region   string `json:"region,omitempty"`
-	Address  string `json:"address,omitempty"`
-	Status   int    `json:"status,omitempty"`
+	Id       int64  `json:"id" binding:"required"`
+	Name     string `json:"name" binding:"-"`
+	Source   string `json:"source" binding:"-"`
+	Phone    string `json:"phone" binding:"omitempty,len=11"`
+	Email    string `json:"email" binding:"omitempty,email"`
+	Industry string `json:"industry" binding:"-"`
+	Level    string `json:"level" binding:"-"`
+	Remarks  string `json:"remarks" binding:"-"`
+	Region   string `json:"region" binding:"-"`
+	Address  string `json:"address" binding:"-"`
+	Status   int    `json:"status" binding:"-"`
 }
 
 type CustomerDeleteParam struct {
-	Ids []int64 `json:"ids,omitempty"`
+	Ids []int64 `json:"ids" binding:"required"`
 }
 
 type CustomerQueryParam struct {
-	Id      int64  `form:"id,omitempty"`
-	Name    string `form:"name,omitempty"`
-	Phone   string `form:"phone,omitempty"`
-	Creator int64  `form:"creator"`
+	Id      int64  `form:"id" binding:"omitempty,gt=0"`
+	Name    string `form:"name" binding:"-"`
+	Phone   string `form:"phone" binding:"omitempty,len=11"`
+	Creator int64  `form:"creator,omitempty" binding:"-"`
 	Page    Page
 }
 

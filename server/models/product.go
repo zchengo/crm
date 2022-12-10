@@ -15,38 +15,38 @@ type Product struct {
 }
 
 type ProductCreateParam struct {
-	Name        string  `json:"name,omitempty"`
-	Type        int     `json:"type,omitempty"`
-	Unit        string  `json:"unit,omitempty"`
-	Code        string  `json:"code,omitempty"`
-	Price       float64 `json:"price,omitempty"`
-	Description string  `json:"description,omitempty"`
-	Status      int     `json:"status,omitempty"`
-	Creator     int64   `json:"creator,omitempty"`
+	Name        string  `json:"name" binding:"required"`
+	Type        int     `json:"type" binding:"required,len=1"`
+	Unit        string  `json:"unit" binding:"-"`
+	Code        string  `json:"code" binding:"-"`
+	Price       float64 `json:"price" binding:"required,gt=0"`
+	Description string  `json:"description" binding:"-"`
+	Status      int     `json:"status" binding:"required,oneof=1 2"`
+	Creator     int64   `json:"creator,omitempty" binding:"-"`
 }
 
 type ProductUpdateParam struct {
-	Id          int64   `json:"id,omitempty"`
-	Name        string  `json:"name,omitempty"`
-	Type        int     `json:"type,omitempty"`
-	Unit        string  `json:"unit,omitempty"`
-	Code        string  `json:"code,omitempty"`
-	Price       float64 `json:"price,omitempty"`
-	Description string  `json:"description,omitempty"`
-	Status      int     `json:"status,omitempty"`
-	Creator     int64   `json:"creator,omitempty"`
+	Id          int64   `json:"id" binding:"required,gt=0"`
+	Name        string  `json:"name" binding:"required"`
+	Type        int     `json:"type" binding:"required,len=1"`
+	Unit        string  `json:"unit" binding:"-"`
+	Code        string  `json:"code" binding:"-"`
+	Price       float64 `json:"price" binding:"required,gt=0"`
+	Description string  `json:"description" binding:"-"`
+	Status      int     `json:"status" binding:"required,oneof=1 2"`
+	Creator     int64   `json:"creator,omitempty" binding:"-"`
 }
 
 type ProductDeleteParam struct {
-	Ids []int64 `json:"ids,omitempty"`
+	Ids []int64 `json:"ids" binding:"required"`
 }
 
 type ProductQueryParam struct {
-	Id      int64   `form:"id,omitempty"`
-	Ids     []int64 `form:"ids,omitempty"`
-	Name    string  `form:"name,omitempty"`
-	Status  int     `form:"status,omitempty"`
-	Creator int64   `form:"creator,omitempty"`
+	Id      int64   `form:"id" binding:"omitempty,gt=0"`
+	Ids     []int64 `form:"ids" json:"ids" binding:"-"`
+	Name    string  `form:"name" binding:"-"`
+	Status  int     `form:"status" binding:"omitempty,oneof=1 2"`
+	Creator int64   `form:"creator,omitempty" binding:"-"`
 	Page    Page
 }
 

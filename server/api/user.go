@@ -5,7 +5,6 @@ import (
 	"crm/response"
 	"crm/service"
 	"log"
-	"regexp"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -30,10 +29,6 @@ func (u *UserApi) Register(context *gin.Context) {
 		log.Printf("[error]UserApi:Register:%s", err)
 		return
 	}
-	if !verifyEmailFormat(param.Email) {
-		response.Result(response.ErrCodeEmailFormatInvalid, nil, context)
-		return
-	}
 	errCode := u.userService.Register(&param)
 	response.Result(errCode, nil, context)
 }
@@ -43,10 +38,6 @@ func (u *UserApi) Login(context *gin.Context) {
 	var param models.UserLoginParam
 	if err := context.ShouldBind(&param); err != nil {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
-		return
-	}
-	if !verifyEmailFormat(param.Email) {
-		response.Result(response.ErrCodeEmailFormatInvalid, nil, context)
 		return
 	}
 	userInfo, errCode := u.userService.Login(&param)
@@ -59,26 +50,18 @@ func (u *UserApi) Login(context *gin.Context) {
 
 // 获取验证码
 func (u *UserApi) GetVerifyCode(context *gin.Context) {
-	email := context.Query("email")
-	if email == "" {
+	var param models.UserVerifyCodeParam
+	if err := context.ShouldBind(&param); err != nil {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return
 	}
-	if !verifyEmailFormat(email) {
-		response.Result(response.ErrCodeEmailFormatInvalid, nil, context)
-		return
-	}
-	errCode := u.userService.GetVerifyCode(email)
+	errCode := u.userService.GetVerifyCode(param.Email)
 	response.Result(errCode, nil, context)
 }
 
 // 忘记密码
 func (u *UserApi) ForgotPass(context *gin.Context) {
 	var param models.UserPassParam
-	if verifyEmailFormat(param.Email) {
-		response.Result(response.ErrCodeEmailFormatInvalid, nil, context)
-		return
-	}
 	if err := context.ShouldBind(&param); err != nil {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return
@@ -90,10 +73,6 @@ func (u *UserApi) ForgotPass(context *gin.Context) {
 // 修改邮箱
 func (u *UserApi) UpdateMail(context *gin.Context) {
 	var param models.UserMailParam
-	if verifyEmailFormat(param.Email) && verifyEmailFormat(param.NewEmail) {
-		response.Result(response.ErrCodeEmailFormatInvalid, nil, context)
-		return
-	}
 	if err := context.ShouldBind(&param); err != nil {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return
@@ -147,11 +126,4 @@ func (u *UserApi) Buy(context *gin.Context) {
 	}
 	versionInfo, errCode := u.userService.Buy(int64(uid))
 	response.Result(errCode, versionInfo, context)
-}
-
-// 邮箱格式校验
-func verifyEmailFormat(email string) bool {
-	pattern := `\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*`
-	reg := regexp.MustCompile(pattern)
-	return reg.MatchString(email)
 }

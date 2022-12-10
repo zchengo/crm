@@ -33,7 +33,7 @@
         <a-modal v-model:visible="visible" :title="title" @ok="onSave" @cancel="onCancel" cancelText="取消" okText="保存"
             width="800px" style="top: 80px">
             <div style="height: 55vh;overflow-y: scroll;padding: 0 15px;">
-                <a-form ref="modalFormRef" :model="contract" layout="vertical" name="contract">
+                <a-form ref="contractFormRef" :model="contract" layout="vertical" name="contract" :rules="rules">
                     <a-row :gutter="16">
                         <a-col :span="12">
                             <a-form-item label="合同编号" name="id">
@@ -41,21 +41,21 @@
                             </a-form-item>
                         </a-col>
                         <a-col :span="12">
-                            <a-form-item label="合同名称" name="name" :rules="[{ required: true, message: '请输入合同名称' }]">
+                            <a-form-item label="合同名称" name="name">
                                 <a-input v-model:value="contract.name" />
                             </a-form-item>
                         </a-col>
                     </a-row>
                     <a-row :gutter="16">
                         <a-col :span="12">
-                            <a-form-item label="客户名称" name="cid" :rules="[{ required: true, message: '请选择客户' }]">
+                            <a-form-item label="客户名称" name="cid">
                                 <a-select v-model:value="contract.cid" style="width: 100%" placeholder="请选择"
                                     :fieldNames="{ label: 'name', value: 'id' }" :options="data.customerOption"
                                     @focus="getCustomerOption" @change="changeCustomerOption"></a-select>
                             </a-form-item>
                         </a-col>
                         <a-col :span="12">
-                            <a-form-item label="合同金额" name="amount" :rules="[{ required: true, message: '请输入合同金额' }]">
+                            <a-form-item label="合同金额" name="amount">
                                 <a-input-number v-model:value="contract.amount" style="width: 100%" />
                             </a-form-item>
                         </a-col>
@@ -76,7 +76,7 @@
                     </a-row>
                     <a-row :gutter="16">
                         <a-col :span="12">
-                            <a-form-item label="合同状态" name="status" :rules="[{ required: true, message: '请选择合同状态' }]">
+                            <a-form-item label="合同状态" name="status">
                                 <a-select v-model:value="contract.status" placeholder="请选择">
                                     <a-select-option :value="1">已生效</a-select-option>
                                     <a-select-option :value="2">未生效</a-select-option>
@@ -321,6 +321,14 @@ export default {
             width: 150,
         }];
 
+        // 表单校验
+        const rules = {
+            name: [{ required: true, message: '请输入合同名称', trigger: 'blur' }],
+            cid: [{ required: true, message: '请选择客户', trigger: 'blur' }],
+            amount: [{ required: true, message: '请输入合同金额', trigger: 'blur' }],
+            status: [{ required: true, message: '请选择合同状态' }]
+        };
+
         // 合同属性
         let contract = reactive({
             id: undefined,
@@ -358,21 +366,20 @@ export default {
         const visible = ref(false);
         const disabled = ref(true)
         const operation = ref(0);
-        const modalFormRef = ref();
+        const contractFormRef = ref();
         const keyWord = ref('')
         const productListVisible = ref(false);
 
         // 点击新建合同
         const onCreate = () => {
             title.value = '新建合同'
-            visible.value = true
             operation.value = 1
+            visible.value = true
         }
 
         // 点击编辑合同
         const onEdit = (row) => {
             title.value = '编辑合同'
-            visible.value = true
             operation.value = 2
             getCustomerOption()
             let param = { id: row.id }
@@ -389,18 +396,14 @@ export default {
                     contract.status = p.status
                     contract.productlist = p.productlist
                     data.addedProductList = p.productlist
-                    if (data.addedProductList.length > 0) {
-                        for (let i = 0; i < data.addedProductList.length; i++) {
-                            data.defaultSelectedIds.push(data.addedProductList[i].id)
-                        }
-                    }
                 }
             })
+            visible.value = true
         }
 
         // 点击保存合同
         const onSave = () => {
-            modalFormRef.value.validateFields().then(() => {
+            contractFormRef.value.validateFields().then(() => {
                 if (operation.value == 1) {
                     let param = {
                         name: contract.name,
@@ -440,7 +443,7 @@ export default {
                         }
                     })
                 }
-                modalFormRef.value.resetFields()
+                contractFormRef.value.resetFields()
                 visible.value = false;
             });
         };
@@ -501,7 +504,6 @@ export default {
 
         // 点击添加产品
         const onAddProduct = () => {
-            productListVisible.value = true
             let param = {
                 pageNum: pagination.current,
                 pageSize: pagination.pageSize
@@ -512,6 +514,13 @@ export default {
                     data.productList = res.data.data.list
                 }
             })
+            data.defaultSelectedIds = []
+            if (data.addedProductList.length > 0) {
+                for (let i = 0; i < data.addedProductList.length; i++) {
+                    data.defaultSelectedIds[i] = data.addedProductList[i].id
+                }
+            }
+            productListVisible.value = true
         }
 
         // 分页查询产品列表
@@ -595,7 +604,8 @@ export default {
 
         // 点击合同取消按钮
         const onCancel = () => {
-            modalFormRef.value.resetFields()
+            contractFormRef.value.resetFields()
+            data.addedProductList = []
             visible.value = false
         };
 
@@ -610,6 +620,7 @@ export default {
             columns,
             productColumns,
             productListColumns,
+            rules,
             data,
             onSelectedConteactIds,
             onSelectedProductIds,
@@ -622,7 +633,7 @@ export default {
             operation,
             onCreate,
             onEdit,
-            modalFormRef,
+            contractFormRef,
             onSave,
             onCancel,
             onDelete,
