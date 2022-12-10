@@ -43,7 +43,7 @@ func Router() {
 		// 合同模块
 		route.GET("/contract/list", api.NewContractApi().QueryList)
 		route.GET("/contract/info", api.NewContractApi().QueryInfo)
-		route.GET("/contract/plist", api.NewContractApi().QueryPlist)
+		route.POST("/contract/plist", api.NewContractApi().QueryPlist)
 		route.PUT("/contract/update", api.NewContractApi().Update)
 		route.POST("/contract/create", api.NewContractApi().Create)
 		route.DELETE("/contract/delete", api.NewContractApi().Delete)

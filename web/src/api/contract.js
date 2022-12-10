@@ -41,7 +41,7 @@ export function queryContractInfo(param) {
     return request({
 		url: '/contract/info',
 		method: 'get',
-		data: param,
+		params: param,
 	})
 }
 
@@ -49,7 +49,7 @@ export function queryContractInfo(param) {
 export function queryContractPlist(param) {
     return request({
 		url: '/contract/plist',
-		method: 'get',
-		params: param,
+		method: 'post',
+		data: param,
 	})
 }
