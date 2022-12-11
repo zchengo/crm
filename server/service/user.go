@@ -74,17 +74,12 @@ func (u *UserService) Login(param *models.UserLoginParam) (*models.UserInfo, int
 	}
 
 	// 生成并保存Token
-	token, err := common.GenToken(user.Id, TOKEN_MAX_EXPIRE_TIME)
+	token, err := common.GenToken(user.Id)
 	if err != nil {
 		log.Printf("[error]Login:GenerateToken:%s", err)
 		return nil, response.ErrCodeFailed
 	}
-	expiration := time.Duration(TOKEN_MAX_EXPIRE_TIME) * time.Hour
-	if err := global.Rdb.SetEx(ctx, token, "", expiration).Err(); err != nil {
-		log.Printf("[error]Login:SaveToken:%s", err)
-		return nil, response.ErrCodeFailed
-	}
-
+	
 	userInfo := models.UserInfo{
 		Uid:   user.Id,
 		Token: token,

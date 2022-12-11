@@ -1,23 +1,25 @@
 package middleware
 
 import (
+	"crm/common"
 	"crm/response"
-	"crm/service"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-// JwtAuth JWT认证中间件
+// JWT认证中间件
 func JwtAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		uid, _ := strconv.Atoi(c.Request.Header.Get("uid"))
 		token := c.Request.Header.Get("token")
 		if token == "" {
 			response.Result(response.ErrCodeNoLogin, nil, c)
 			c.Abort()
 			return
 		}
-		user := &service.UserService{}
-		if err := user.VerifyToken(token); err != nil {
+		userid, err := common.VerifyToken(token)
+		if userid != int64(uid) || err != nil {
 			response.Result(response.ErrCodeTokenExpire, nil, c)
 			c.Abort()
 			return

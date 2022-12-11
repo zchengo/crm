@@ -36,7 +36,8 @@ type Redis struct {
 
 // JWT用户认证配置
 type Jwt struct {
-	SigningKey string `mapstructure:"signingKey"`
+	SigningKey  string `mapstructure:"signingKey"`
+	ExpiredTime int    `mapstructure:"expiredTime"`
 }
 
 // 邮件服务配置

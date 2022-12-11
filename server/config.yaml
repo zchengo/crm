@@ -23,6 +23,7 @@ redis:
 # JWT配置
 jwt:
   signingKey: z3d6k8v0n3w7m9sa1fd0u09h
+  expiredTime: 604800
 
 # 邮件服务
 mail:
