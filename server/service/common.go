@@ -9,10 +9,16 @@ import (
 const (
 
 	// 数据库表名
-	USER     = "user"
-	CUSTOMER = "customer"
-	CONTRACT = "contract"
-	PRODUCT  = "product"
+	USER      = "user"
+	CUSTOMER  = "customer"
+	CONTRACT  = "contract"
+	PRODUCT   = "product"
+	SUBSCRIBE = "subscribe"
+)
+
+const (
+	NumberNull = 0
+	StringNull = ""
 )
 
 var ctx = context.Background()
