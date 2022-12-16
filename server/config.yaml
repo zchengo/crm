@@ -28,5 +28,16 @@ jwt:
 # 邮件服务
 mail:
   smtp: smtp.qq.com
-  secret: zxbxswmaccpfdaes
-  sender: 1933757688@qq.com
+  secret: dhsepilzlvoaceij
+  sender: 1655064994@qq.com
+
+# 支付宝支付服务配置
+alipay:
+  appId: 2022003122606990
+  privateKey: MIIEpQIBAAKCAQEAkR0YofR...2sDd6uIy9rkpk8azj/rLmetW5r+tqTZgxcPWKeSz4=
+  appPublicCert: /home/ubuntu/crm/cert/appPublicCert.crt
+  alipayRootCert: /home/ubuntu/crm/cert/alipayRootCert.crt
+  alipayPublicCert: /home/ubuntu/crm/cert/alipayPublicCert.crt
+  returnURL: http://127.0.0.1:8000/api/subscribe/callback
+  notifyURL: http://127.0.0.1:8000/api/subscribe/notify
+  paySuccessURL: http://127.0.0.1:8060/#/subscribe

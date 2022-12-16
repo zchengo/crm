@@ -7,6 +7,7 @@ type Config struct {
 	Redis  Redis  `mapstructure:"redis"`
 	Jwt    Jwt    `mapstructure:"jwt"`
 	Mail   Mail   `mapstructure:"mail"`
+	Alipay Alipay `mapstructure:"alipay"`
 }
 
 // 服务启动端口号配置
@@ -45,4 +46,16 @@ type Mail struct {
 	Smtp   string `mapstructure:"smtp"`
 	Secret string `mapstructure:"secret"`
 	Sender string `mapstructure:"sender"`
+}
+
+// 支付宝支付服务配置
+type Alipay struct {
+	AppId            string `mapstructure:"appId"`
+	PrivateKey       string `mapstructure:"privateKey"`
+	AppPublicCert    string `mapstructure:"appPublicCert"`
+	AlipayRootCert   string `mapstructure:"alipayRootCert"`
+	AlipayPublicCert string `mapstructure:"alipayPublicCert"`
+	ReturnURL        string `mapstructure:"returnURL"`
+	NotifyURL        string `mapstructure:"notifyURL"`
+	PaySuccessURL    string `mapstructure:"paySuccessURL"`
 }
