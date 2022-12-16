@@ -18,16 +18,16 @@ func Router() {
 	route := engine.Group("/api")
 
 	{	
-		// 用户模块
+		// 用户模块，订阅模块
 		route.GET("/user/verifycode", api.NewUserApi().GetVerifyCode)
 		route.GET("/user/info", api.NewUserApi().GetInfo)
 		route.PUT("/user/mail", api.NewUserApi().UpdateMail)
-		route.PUT("/user/buy", api.NewUserApi().Buy)
 		route.POST("/user/login", api.NewUserApi().Login)
 		route.POST("/user/register", api.NewUserApi().Register)
 		route.POST("/user/pass", api.NewUserApi().ForgotPass)
 		route.DELETE("/user/logout", api.NewUserApi().Logout)
 		route.DELETE("/user/delete", api.NewUserApi().Delete)
+		route.GET("/subscribe/callback", api.NewSubscribeApi().Callback)
 
 		// Jwt中间件
 		route.Use(middleware.JwtAuth())
@@ -57,7 +57,11 @@ func Router() {
 
 		// 仪表盘模块
 		route.GET("/dashboard/sum", api.NewDashboardApi().Summary)
-		
+
+		// 订阅模块
+		route.GET("/subscribe/info", api.NewSubscribeApi().GetInfo)
+		route.POST("/subscribe/pay", api.NewSubscribeApi().Pay)
+		route.POST("/subscribe/notify", api.NewSubscribeApi().Notify)	
 	}
 
 	// 启动、监听端口

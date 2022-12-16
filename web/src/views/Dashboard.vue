@@ -93,7 +93,7 @@ import { QuestionCircleTwoTone } from '@ant-design/icons-vue'
 import * as echarts from "echarts";
 import { reactive, ref, onMounted } from 'vue';
 import { getSummary } from "../api/dashboard";
-import { getUserInfo } from "../api/user";
+import { getSubscribeInfo } from '../api/subscribe';
 import { useRouter } from 'vue-router'
 
 export default {
@@ -114,7 +114,7 @@ export default {
         })
 
         onMounted(() => {
-            checkVersion();
+            subscribeInfo();
             initChart();
         });
 
@@ -163,9 +163,9 @@ export default {
             })
         }
 
-        // 查看用户系统版本
-        const checkVersion = () => {
-            getUserInfo().then((res) => {
+        // 获取用户订阅信息
+        const subscribeInfo = () => {
+            getSubscribeInfo().then((res) => {
                 if (res.data.code == 0 && res.data.data.version == 1) {
                     router.push('/result')
                 }
@@ -176,7 +176,7 @@ export default {
             data,
             daysRange,
             initChart,
-            checkVersion,
+            subscribeInfo,
         }
     }
 }

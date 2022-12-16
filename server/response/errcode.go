@@ -16,6 +16,8 @@ const (
 	ErrCodeCompanyIdNotExist    = 10007 // 企业编号不存在
 	ErrCodeEmailFormatInvalid   = 10008 // 邮箱格式无效
 	ErrCodeUserPassResetFailed  = 10009 // 用户密码重置失败
+
+	ErrCodePayFailed = 20001 // 支付宝支付失败
 )
 
 var msg = map[int]string{
