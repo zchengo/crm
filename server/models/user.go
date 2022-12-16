@@ -5,8 +5,6 @@ type User struct {
 	Email    string `gorm:"email"`
 	Password string `gorm:"password"`
 	Name     string `gorm:"name"`
-	Version  int    `gorm:"version"`
-	Expired  int64  `gorm:"expired"`
 	Status   int    `gorm:"status"`
 	Created  int64  `gorm:"created"`
 	Updated  int64  `gorm:"updated"`
@@ -47,18 +45,10 @@ type UserMailParam struct {
 
 type UserInfo struct {
 	Uid   int64  `json:"uid"`
-	Ver   int    `json:"version"`
 	Token string `json:"token"`
 }
 
 type UserPersonInfo struct {
-	Name    string `json:"name"`
-	Email   string `json:"email"`
-	Version int    `json:"version"`
-	Expired int64  `json:"expired"`
-}
-
-type UserVerisonInfo struct {
-	Version int   `json:"version"`
-	Expired int64 `json:"expired"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }

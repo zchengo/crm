@@ -116,14 +116,3 @@ func (u *UserApi) GetInfo(context *gin.Context) {
 	userInfo, errCode := u.userService.GetInfo(int64(uid))
 	response.Result(errCode, userInfo, context)
 }
-
-// 订阅个人版
-func (u *UserApi) Buy(context *gin.Context) {
-	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
-	if uid <= 0 {
-		response.Result(response.ErrCodeParamInvalid, nil, context)
-		return
-	}
-	versionInfo, errCode := u.userService.Buy(int64(uid))
-	response.Result(errCode, versionInfo, context)
-}

@@ -47,13 +47,33 @@ func (u *UserService) Register(param *models.UserCreateParam) int {
 	newUser := models.User{
 		Email:    param.Email,
 		Password: string(password),
-		Version:  1,
 		Status:   1,
 		Created:  time.Now().Unix(),
 	}
 	if err := global.Db.Create(&newUser).Error; err != nil {
 		return response.ErrCodeFailed
 	}
+
+	// 新用户默认订阅免费版
+	subscribe := models.Subscribe{
+		Version: 1,
+		Created: time.Now().Unix(),
+	}
+	if global.Db.Table(SUBSCRIBE).Where("uid = ?", newUser.Id).First(&models.Subscribe{}).RowsAffected == 0 {
+		subscribe.Uid = newUser.Id
+		subscribe.Created = time.Now().Unix()
+		err := global.Db.Table(SUBSCRIBE).Create(&subscribe).Error
+		if err != nil {
+			return response.ErrCodeFailed
+		}
+	} else {
+		subscribe.Updated = time.Now().Unix()
+		err = global.Db.Model(&models.Subscribe{}).Where("uid = ?", newUser.Id).Updates(&subscribe).Error
+		if err != nil {
+			return response.ErrCodeFailed
+		}
+	}
+
 	return response.ErrCodeSuccess
 }
 
@@ -79,7 +99,7 @@ func (u *UserService) Login(param *models.UserLoginParam) (*models.UserInfo, int
 		log.Printf("[error]Login:GenerateToken:%s", err)
 		return nil, response.ErrCodeFailed
 	}
-	
+
 	userInfo := models.UserInfo{
 		Uid:   user.Id,
 		Token: token,
@@ -189,37 +209,7 @@ func (u *UserService) GetInfo(uid int64) (*models.UserPersonInfo, int) {
 	if err != nil {
 		return nil, response.ErrCodeFailed
 	}
-
-	// 判断用户订阅是否过期
-	if user.Version == 2 && time.Now().Unix() > int64(user.Expired) {
-		err := global.Db.Model(&models.User{}).Where("id = ?", uid).Update("version", 1).Error
-		if err != nil {
-			return nil, response.ErrCodeFailed
-		}
-		return &user, response.ErrCodeSuccess
-	}
 	return &user, response.ErrCodeSuccess
-}
-
-// 订阅个人版
-func (u *UserService) Buy(uid int64) (*models.UserVerisonInfo, int) {
-	// 订阅一个月按30天计算
-	month := time.Now().Unix() + int64(2592000)
-	user := models.User{
-		Version: 2,
-		Expired: month,
-		Updated: time.Now().Unix(),
-	}
-	err := global.Db.Model(&models.User{}).Where("id = ?", uid).Updates(&user).Error
-	if err != nil {
-		return nil, response.ErrCodeFailed
-	}
-	// 查询版本信息
-	var version models.UserVerisonInfo
-	if err := global.Db.Table(USER).Where("id = ?", uid).First(&version).Error; err != nil {
-		return nil, response.ErrCodeFailed
-	}
-	return &version, response.ErrCodeSuccess
 }
 
 // 校验用户Token
