@@ -68,7 +68,7 @@ $ npm run dev
 
 ## 公众号
 
-关注公众号「**GoCode**」，回复「**部署指南**」，获取最新版本地部署指南！
+关注公众号「**GoCode**」，回复「**部署指南**」，获取详细部署指南！
 
 ![公众号图片](https://www.zocrm.cloud/qrcode/gsh_qrcode.jpg)
 
