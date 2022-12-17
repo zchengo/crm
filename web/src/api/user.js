@@ -45,15 +45,6 @@ export function updateMail(param) {
 	})
 }
 
-// 退出登录
-export function userLogout(param) {
-    return request({
-		url: '/user/logout',
-		method: 'delete',
-		data: param,
-	})
-}
-
 // 注销账号
 export function userDelete(param) {
     return request({

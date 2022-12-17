@@ -81,17 +81,6 @@ func (u *UserApi) UpdateMail(context *gin.Context) {
 	response.Result(errCode, nil, context)
 }
 
-// 退出登录
-func (u *UserApi) Logout(context *gin.Context) {
-	token := context.Request.Header.Get("token")
-	if token == "" {
-		response.Result(response.ErrCodeParamInvalid, nil, context)
-		return
-	}
-	errCode := u.userService.Logout(token)
-	response.Result(errCode, nil, context)
-}
-
 // 注销账号
 func (u *UserApi) Delete(context *gin.Context) {
 	var param models.UserDeleteParam

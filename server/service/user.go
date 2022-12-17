@@ -178,15 +178,6 @@ func (u *UserService) UpdateMail(param *models.UserMailParam) int {
 	return response.ErrCodeSuccess
 }
 
-// 退出登录
-func (u *UserService) Logout(token string) int {
-	err := global.Rdb.Del(ctx, token).Err()
-	if err != nil {
-		return response.ErrCodeFailed
-	}
-	return response.ErrCodeSuccess
-}
-
 // 注销账号
 func (u *UserService) Delete(param models.UserDeleteParam) int {
 	// 校验验证码是否正确

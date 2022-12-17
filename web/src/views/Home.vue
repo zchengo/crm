@@ -110,7 +110,7 @@
 import { reactive, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue';
-import { getUserInfo, updateMail, getVerifyCode, userDelete, userLogout } from '../api/user';
+import { getUserInfo, updateMail, getVerifyCode, userDelete } from '../api/user';
 import { DashboardOutlined, SmileOutlined, MehOutlined, ShoppingOutlined } from '@ant-design/icons-vue';
 import { CrownOutlined, MenuUnfoldOutlined, MenuFoldOutlined, QuestionCircleFilled } from '@ant-design/icons-vue';
 import { SmileFilled, BellFilled, MailOutlined, ClearOutlined } from '@ant-design/icons-vue';
@@ -291,9 +291,9 @@ export default {
 
     // 点击退出账号
     const onLogout = () => {
-      userLogout().then((res) => {
-        if (res.data.code == 0) { router.push('/') }
-      })
+      localStorage.removeItem("uid")
+      localStorage.removeItem("token")
+      router.push('/')
     }
 
     // 点击取消按钮
