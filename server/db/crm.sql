@@ -120,7 +120,7 @@ CREATE TABLE `subscribe` (
 -- Records of subscribe
 -- ----------------------------
 BEGIN;
-INSERT INTO `subscribe` (`id`, `uid`, `version`, `expired`, `created`, `updated`) VALUES (3, 29, 2, 1673783817, 1671191625, 1671191817);
+INSERT INTO `subscribe` (`id`, `uid`, `version`, `expired`, `created`, `updated`) VALUES (3, 29, 1, 0, 1671191625, 1671191817);
 COMMIT;
 
 -- ----------------------------
