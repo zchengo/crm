@@ -4,6 +4,10 @@ import (
 	"context"
 	"crm/global"
 	"crm/models"
+	"crm/response"
+	"io/ioutil"
+	"log"
+	"strings"
 )
 
 const (
@@ -21,6 +25,11 @@ const (
 	StringNull = ""
 )
 
+const (
+	Dev  = "dev"
+	Prod = "prod"
+)
+
 var ctx = context.Background()
 
 // RestPage 分页查询
@@ -36,4 +45,30 @@ func restPage(page models.Page, name string, query interface{}, dest interface{}
 	}
 	res := global.Db.Table(name).Where(query).Find(bind)
 	return res.RowsAffected, res.Error
+}
+
+// 初始化数据库数据
+func InitData() int {
+	env := global.Config.Server.Runenv
+	if env == Prod {
+		fn := "/home/ubuntu/crmapi/crm.sql"
+		sql, err := ioutil.ReadFile(fn)
+		if err != nil {
+			log.Printf("[ERROR] read file %s error: %s", fn, err)
+			return response.ErrCodeInitDataFailed
+		}
+		sqls := strings.Split(string(sql), ";")
+		for _, sql := range sqls {
+			s := strings.TrimSpace(sql)
+			if s == "" {
+				continue
+			}
+			if err := global.Db.Exec(s).Error; err != nil {
+				log.Printf("[ERROR] datebase flie import error: %s", err)
+				return response.ErrCodeInitDataFailed
+			}
+		}
+		return response.ErrCodeInitDataSuccess
+	}
+	return response.ErrCodeSuccess
 }

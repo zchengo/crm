@@ -7,6 +7,9 @@ const (
 	ErrCodeNoLogin      = 3 // 未登录或非法访问
 	ErrCodeTokenExpire  = 4 // Token过期
 
+	ErrCodeInitDataSuccess = 10 // 初始化数据成功
+	ErrCodeInitDataFailed  = 11 // 初始化数据失败
+
 	ErrCodeUserHasExist         = 10001 // 用户已经存在
 	ErrCodeUserNotExist         = 10002 // 用户不存在
 	ErrCOdeUserEmailOrPass      = 10003 // 用户邮箱或密码错误
@@ -26,6 +29,8 @@ var msg = map[int]string{
 	ErrCodeParamInvalid:         "param invalid",
 	ErrCodeNoLogin:              "no login",
 	ErrCodeTokenExpire:          "token expire",
+	ErrCodeInitDataSuccess:      "init data success",
+	ErrCodeInitDataFailed:       "init data failed",
 	ErrCodeUserHasExist:         "user has exist",
 	ErrCodeUserNotExist:         "user not exist",
 	ErrCOdeUserEmailOrPass:      "user email or password error",

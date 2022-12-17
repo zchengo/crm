@@ -36,6 +36,7 @@ import { reactive } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router'
 import { userLogin } from '../api/user';
+import { initData } from '../api/common';
 import { message } from 'ant-design-vue';
 
 export default {
@@ -63,6 +64,7 @@ export default {
                     localStorage.setItem('ver', res.data.data.ver)
                     localStorage.setItem('token', res.data.data.token)
                     router.push("/home")
+                    initSysData()
                 }
                 if (res.data.code == 10002) {
                     message.error('用户不存在');
@@ -84,6 +86,18 @@ export default {
         // 用户注册
         const toRegister = () => {
             router.push("/register")
+        }
+
+        // 初始化数据（只会在生产环境中初始化）
+        const initSysData = () => {
+            initData().then((res) => {
+                if (res.data.code == 10) {
+                    message.success('初始化数据成功！')
+                }
+                if (res.data.code == 11) {
+                    message.success('初始化数据失败！')
+                }
+            })
         }
 
         return {

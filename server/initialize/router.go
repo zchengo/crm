@@ -25,9 +25,11 @@ func Router() {
 		route.POST("/user/login", api.NewUserApi().Login)
 		route.POST("/user/register", api.NewUserApi().Register)
 		route.POST("/user/pass", api.NewUserApi().ForgotPass)
-		route.DELETE("/user/logout", api.NewUserApi().Logout)
 		route.DELETE("/user/delete", api.NewUserApi().Delete)
 		route.GET("/subscribe/callback", api.NewSubscribeApi().Callback)
+
+		// 初始化数据
+		route.POST("/init/data", api.InitData)
 
 		// Jwt中间件
 		route.Use(middleware.JwtAuth())
