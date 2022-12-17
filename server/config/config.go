@@ -10,9 +10,10 @@ type Config struct {
 	Alipay Alipay `mapstructure:"alipay"`
 }
 
-// 服务启动端口号配置
+// 服务端启动配置
 type Server struct {
-	Port int `mapstructure:"port"`
+	Port   int    `mapstructure:"port"`
+	Runenv string `mapstructure:"runenv"`
 }
 
 // MySQL数据库配置

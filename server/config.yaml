@@ -1,6 +1,7 @@
-# 启动端口号
+# 服务端启动配置
 server:
   port: 8000
+  runenv: dev
 
 # MySQL数据库配置
 mysql:
