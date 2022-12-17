@@ -63,8 +63,8 @@ export default {
                     localStorage.setItem('uid', res.data.data.uid)
                     localStorage.setItem('ver', res.data.data.ver)
                     localStorage.setItem('token', res.data.data.token)
-                    router.push("/home")
                     initSysData()
+                    router.push("/home")
                 }
                 if (res.data.code == 10002) {
                     message.error('用户不存在');
