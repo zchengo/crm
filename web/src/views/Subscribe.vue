@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import { CheckCircleFilled } from '@ant-design/icons-vue';
 import { subscribePay, getSubscribeInfo } from '../api/subscribe';
 import { useRouter } from 'vue-router'
@@ -85,7 +85,7 @@ export default {
         }
 
         // 初始化数据
-        onMounted(() => { subscribeInfo() })
+        onBeforeMount(() => { subscribeInfo() })
 
         // 点击支付
         const onPay = (ver) => {
@@ -163,19 +163,19 @@ export default {
 
 .card {
     min-height: 450px;
-    box-shadow: 0 1px 16px 0 rgb(33 41 48 / 5%);
+    box-shadow: 0 1px 10px 0 rgb(33 41 48 / 5%);
 }
 
 .selected-free-card {
     min-height: 450px;
-    box-shadow: 0 1px 16px 0 rgb(33 41 48 / 5%);
+    box-shadow: 0 1px 10px 0 rgb(33 41 48 / 5%);
     border: 2px solid #ceebfa;
     background: #f0faff;
 }
 
 .selected-card {
     min-height: 450px;
-    box-shadow: 0 1px 16px 0 rgb(33 41 48 / 5%);
+    box-shadow: 0 1px 10px 0 rgb(33 41 48 / 5%);
     border: 2px solid #d6ddf9;
     background: #f3f6fd;
 }
