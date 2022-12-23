@@ -5,7 +5,8 @@ import (
 	"crm/global"
 	"crm/models"
 	"crm/response"
-	"io/ioutil"
+	"os"
+
 	"log"
 	"strings"
 )
@@ -52,7 +53,7 @@ func InitData() int {
 	env := global.Config.Server.Runenv
 	if env == Prod {
 		fn := "/home/ubuntu/crmapi/crm.sql"
-		sql, err := ioutil.ReadFile(fn)
+		sql, err := os.ReadFile(fn)
 		if err != nil {
 			log.Printf("[ERROR] read file %s error: %s", fn, err)
 			return response.ErrCodeInitDataFailed
@@ -60,7 +61,7 @@ func InitData() int {
 		sqls := strings.Split(string(sql), ";")
 		for _, sql := range sqls {
 			s := strings.TrimSpace(sql)
-			if s == "" {
+			if s == StringNull {
 				continue
 			}
 			if err := global.Db.Exec(s).Error; err != nil {
