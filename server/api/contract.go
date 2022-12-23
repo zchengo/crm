@@ -4,7 +4,6 @@ import (
 	"crm/models"
 	"crm/response"
 	"crm/service"
-	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -30,7 +29,6 @@ func (c *ContractApi) Create(context *gin.Context) {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return
 	}
-	fmt.Println(param)
 	param.Creator = int64(uid)
 	errCode := c.contractService.Create(&param)
 	response.Result(errCode, nil, context)
@@ -85,7 +83,7 @@ func (c *ContractApi) QueryInfo(context *gin.Context) {
 
 // 编辑合同时，查询产品列表
 func (p *ContractApi) QueryPlist(context *gin.Context) {
-	var param models.ProductQueryParam
+	var param models.ContractQueryParam
 	if err := context.ShouldBind(&param); err != nil {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return

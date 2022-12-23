@@ -42,8 +42,8 @@ func (p *ProductService) Update(param *models.ProductUpdateParam) int {
 		Status:      param.Status,
 		Updated:     time.Now().Unix(),
 	}
-	err := global.Db.Model(&product).Updates(&product).Error
-	if err != nil {
+	db := global.Db.Model(&product).Select("*").Omit("id", "creator", "created")
+	if err := db.Updates(&product).Error; err != nil {
 		return response.ErrCodeFailed
 	}
 	return response.ErrCodeSuccess

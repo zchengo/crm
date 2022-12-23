@@ -4,6 +4,7 @@ import (
 	"crm/global"
 	"crm/models"
 	"crm/response"
+
 	"time"
 )
 
@@ -44,8 +45,8 @@ func (c *ContractService) Update(param *models.ContractUpdateParam) int {
 		Status:      param.Status,
 		Updated:     time.Now().Unix(),
 	}
-	err := global.Db.Model(&contract).Updates(&contract).Error
-	if err != nil {
+	db := global.Db.Model(&contract).Select("*").Omit("id", "creator", "created")
+	if err := db.Updates(&contract).Error; err != nil {
 		return response.ErrCodeFailed
 	}
 	return response.ErrCodeSuccess
@@ -95,12 +96,48 @@ func (c *ContractService) QueryInfo(param *models.ContractQueryParam) (*models.C
 	return &contractInfo, response.ErrCodeSuccess
 }
 
-// 在编辑合同中，添加产品后，增加已添加的产品列表
-func (p *ContractService) QueryPlist(param *models.ProductQueryParam) ([]*models.Products, int) {
-	products := make([]*models.Products, 0)
-	err := global.Db.Table(PRODUCT).Find(&products, param.Ids).Error
+// 在编辑合同中，添加产品后，返回已添加的产品列表
+func (p *ContractService) QueryPlist(param *models.ContractQueryParam) ([]*models.Products, int) {
+	if param.Id == 0 {
+		products := make([]*models.Products, 0)
+		if err := global.Db.Table(PRODUCT).Find(&products, param.Pids).Error; err != nil {
+			return nil, response.ErrCodeFailed
+		}
+		return products, response.ErrCodeSuccess
+	}
+
+	// 默认已添加的产品列表
+	var contract models.Contract
+	err := global.Db.Table(CONTRACT).Select("productlist").First(&contract, param.Id).Error
 	if err != nil {
 		return nil, response.ErrCodeFailed
 	}
-	return products, response.ErrCodeSuccess
+
+	// 最终已添加的产品列表
+	addedProductList := make([]*models.Products, 0)
+
+	if len(param.Pids) == 0 {
+		return addedProductList, response.ErrCodeSuccess
+	}
+
+	addedPids := make([]int64, 0)
+	for _, pid := range param.Pids {
+		if len(*contract.Productlist) == 0 {
+			addedPids = param.Pids
+			break
+		}
+		for _, product := range *contract.Productlist {
+			if pid == product.Id {
+				addedProductList = append(addedProductList, product)
+				continue
+			}
+			addedPids = append(addedPids, pid)
+		}
+	}
+	products := make([]*models.Products, 0)
+	if err := global.Db.Table(PRODUCT).Find(&products, addedPids).Error; err != nil {
+		return nil, response.ErrCodeFailed
+	}
+	addedProductList = append(addedProductList, products...)
+	return addedProductList, response.ErrCodeSuccess
 }

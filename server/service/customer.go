@@ -35,6 +35,7 @@ func (c *CustomerService) Create(param *models.CustomerCreateParam) int {
 // 更新客户
 func (c *CustomerService) Update(param *models.CustomerUpdateParam) int {
 	customer := models.Customer{
+		Id:       param.Id,
 		Name:     param.Name,
 		Source:   param.Source,
 		Phone:    param.Phone,
@@ -47,8 +48,8 @@ func (c *CustomerService) Update(param *models.CustomerUpdateParam) int {
 		Status:   param.Status,
 		Updated:  time.Now().Unix(),
 	}
-	err := global.Db.Model(&models.Customer{}).Where("id = ?", param.Id).Updates(&customer).Error
-	if err != nil {
+	db := global.Db.Model(&customer).Select("*").Omit("id", "creator", "created")
+	if err := db.Updates(&customer).Error; err != nil {
 		return response.ErrCodeFailed
 	}
 	return response.ErrCodeSuccess

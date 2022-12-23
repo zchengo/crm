@@ -35,7 +35,7 @@ type ContractCreateParam struct {
 type ContractUpdateParam struct {
 	Id          int64        `json:"id" binding:"required,gt=0"`
 	Name        string       `json:"name" binding:"required"`
-	Amount      float64      `json:"amount" binding:"required,gt=0"`
+	Amount      float64      `json:"amount" binding:"omitempty,gt=0"`
 	BeginTime   string       `json:"beginTime" binding:"-"`
 	OverTime    string       `json:"overTime" binding:"-"`
 	Remarks     string       `json:"remarks" binding:"-"`
@@ -49,9 +49,10 @@ type ContractDeleteParam struct {
 }
 
 type ContractQueryParam struct {
-	Id      int64  `form:"id" binding:"omitempty,gt=0"`
-	Name    string `form:"name" binding:"-"`
-	Creator int64  `form:"creator,omitempty" binding:"-"`
+	Id      int64   `form:"id" binding:"omitempty,gt=0"`
+	Pids    []int64 `form:"pids" json:"pids" binding:"-"`
+	Name    string  `form:"name" binding:"-"`
+	Creator int64   `form:"creator,omitempty" binding:"-"`
 	Page    Page
 }
 
