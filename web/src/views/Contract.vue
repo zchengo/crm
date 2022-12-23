@@ -56,7 +56,7 @@
                         </a-col>
                         <a-col :span="12">
                             <a-form-item label="合同金额" name="amount">
-                                <a-input-number v-model:value="contract.amount" style="width: 100%" />
+                                <a-input v-model:value="contract.amount" style="width: 100%" :disabled="true" />
                             </a-form-item>
                         </a-col>
                     </a-row>
@@ -64,13 +64,13 @@
                         <a-col :span="12">
                             <a-form-item label="合同开始时间" name="beginTime">
                                 <a-date-picker v-model:value="contract.beginTime" placeholder="选择日期"
-                                    style="width: 100%" />
+                                    style="width: 100%" format="YYYY-MM-DD" valueFormat="YYYY-MM-DD"/>
                             </a-form-item>
                         </a-col>
                         <a-col :span="12">
                             <a-form-item label="合同结束时间" name="overTime">
                                 <a-date-picker v-model:value="contract.overTime" placeholder="选择日期"
-                                    style="width: 100%" />
+                                    style="width: 100%" format="YYYY-MM-DD" valueFormat="YYYY-MM-DD"/>
                             </a-form-item>
                         </a-col>
                     </a-row>
@@ -325,7 +325,6 @@ export default {
         const rules = {
             name: [{ required: true, message: '请输入合同名称', trigger: 'blur' }],
             cid: [{ required: true, message: '请选择客户', trigger: 'blur' }],
-            amount: [{ required: true, message: '请输入合同金额', trigger: 'blur' }],
             status: [{ required: true, message: '请选择合同状态' }]
         };
 
@@ -334,15 +333,16 @@ export default {
             id: undefined,
             name: undefined,
             amount: undefined,
-            beginTime: undefined,
+            beginTime: '',
+            overTime: '',
             cid: undefined,
-            overTime: undefined,
             remarks: undefined,
             status: undefined,
             productlist: [],
         });
 
         const data = reactive({
+            contractId: 0,
             contractList: [],
             contractIds: [],
             productList: [],
@@ -390,14 +390,15 @@ export default {
                     contract.name = p.name
                     contract.cid = p.cid
                     contract.amount = p.amount
-                    contract.beginTime = moment(new Date(p.beginTime))
-                    contract.overTime = moment(new Date(p.overTime))
+                    contract.beginTime = p.beginTime
+                    contract.overTime = p.overTime
                     contract.remarks = p.remarks
                     contract.status = p.status
                     contract.productlist = p.productlist
                     data.addedProductList = p.productlist
                 }
             })
+            data.contractId = row.id
             visible.value = true
         }
 
@@ -409,8 +410,8 @@ export default {
                         name: contract.name,
                         cid: contract.cid,
                         amount: contract.amount,
-                        beginTime: moment(contract.beginTime).format('YYYY-MM-DD'),
-                        overTime: moment(contract.overTime).format('YYYY-MM-DD'),
+                        beginTime: contract.beginTime,
+                        overTime: contract.overTime,
                         remarks: contract.remarks,
                         status: contract.status,
                         productlist: data.addedProductList,
@@ -429,8 +430,8 @@ export default {
                         name: contract.name,
                         cid: contract.cid,
                         amount: contract.amount,
-                        beginTime: moment(contract.beginTime).format('YYYY-MM-DD'),
-                        overTime: moment(contract.overTime).format('YYYY-MM-DD'),
+                        beginTime: contract.beginTime,
+                        overTime: contract.overTime,
                         remarks: contract.remarks,
                         status: contract.status,
                         productlist: data.addedProductList,
@@ -568,7 +569,8 @@ export default {
         const onConfirm = () => {
             console.log("xzx", data.productIds)
             let param = {
-                ids: data.productIds
+                id: data.contractId,
+                pids: data.productIds
             }
             queryContractPlist(param).then((res) => {
                 if (res.data.code == 0) {
@@ -606,14 +608,16 @@ export default {
         const onCancel = () => {
             contractFormRef.value.resetFields()
             data.addedProductList = []
+            data.contractId = undefined
             visible.value = false
         };
 
         // 点击取消产品列表
         const onCancelProductList = () => {
             productListVisible.value = false
+            data.contractId = undefined
             pagination.current = 1,
-                pagination.total = undefined
+            pagination.total = undefined
         }
 
         return {
