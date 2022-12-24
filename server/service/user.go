@@ -168,7 +168,21 @@ func (u *UserService) Delete(param models.UserDeleteParam) int {
 	if code != param.Code {
 		return response.ErrCodeVerityCodeInvalid
 	}
-	err := global.Db.Delete(&models.User{}, param.Id).Error
+	err := global.Db.Transaction(func(tx *gorm.DB) error {
+		mw := map[interface{}]string{
+			&models.Product{}:   "creator = ?",
+			&models.Customer{}:  "creator = ?",
+			&models.Contract{}:  "creator = ?",
+			&models.Subscribe{}: "uid = ?",
+			&models.User{}:      "id = ?",
+		}
+		for k, v := range mw {
+			if err := tx.Where(v, param.Id).Delete(k).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 	if err != nil {
 		return response.ErrCodeFailed
 	}
@@ -179,11 +193,11 @@ func (u *UserService) Delete(param models.UserDeleteParam) int {
 func (u *UserService) GetInfo(uid int64) (*models.UserPersonInfo, int) {
 	var user models.UserPersonInfo
 	err := global.Db.Transaction(func(tx *gorm.DB) error {
-		if err := global.Db.Table(USER).Where("id = ?", uid).First(&user).Error; err != nil {
+		if err := tx.Table(USER).Where("id = ?", uid).First(&user).Error; err != nil {
 			return err
 		}
 		var subscribe models.Subscribe
-		if err := global.Db.Table(SUBSCRIBE).Select("version").Where("uid = ?", uid).First(&subscribe).Error; err != nil {
+		if err := tx.Table(SUBSCRIBE).Select("version").Where("uid = ?", uid).First(&subscribe).Error; err != nil {
 			return err
 		}
 		user.Version = subscribe.Version
