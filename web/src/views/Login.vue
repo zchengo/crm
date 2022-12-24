@@ -36,8 +36,8 @@ import { reactive } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router'
 import { userLogin } from '../api/user';
-import { initData } from '../api/common';
 import { message } from 'ant-design-vue';
+import { initData } from '../api/common';
 
 export default {
     components: {
@@ -60,10 +60,10 @@ export default {
             }
             userLogin(param).then((res) => {
                 if (res.data.code == 0) {
+                    initSysData()
                     localStorage.setItem('uid', res.data.data.uid)
                     localStorage.setItem('ver', res.data.data.ver)
                     localStorage.setItem('token', res.data.data.token)
-                    initSysData()
                     router.push("/home")
                 }
                 if (res.data.code == 10002) {
@@ -95,7 +95,7 @@ export default {
                     message.success('初始化数据成功！')
                 }
                 if (res.data.code == 11) {
-                    message.success('初始化数据失败！')
+                    message.error('初始化数据失败！')
                 }
             })
         }
@@ -105,7 +105,8 @@ export default {
             onLogin,
             onLoginFailed,
             forgotPass,
-            toRegister
+            toRegister,
+            initSysData,
         };
     }
 };

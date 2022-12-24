@@ -8,7 +8,7 @@
       </div>
       <a-menu style="border-right: none;" v-model:selectedKeys="selectedKeys" mode="inline">
         <a-menu-item :key="item.key" v-for="item in menuItem">
-          <router-link :to="item.to">
+          <router-link :to="item.to" @click="store.selectedKeys = item.key" replace>
             <component :is="item.icon" />
             <span>{{ item.name }}</span>
           </router-link>
@@ -36,60 +36,40 @@
               </template>
             </a-button>
           </a-tooltip>
-          <!-- 个人信息 -->
-          <a-dropdown :trigger="['click']">
-            <a-avatar @click="toMine" class="avatar" :size="28">U</a-avatar>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item key="0">
-                  <a @click="onMail">
-                    <MailOutlined /> 修改邮箱
-                  </a>
-                </a-menu-item>
-                <a-menu-item key="1">
-                  <a @click="onDelete">
-                    <ClearOutlined /> 注销账号
-                  </a>
-                </a-menu-item>
-                <a-menu-divider />
-                <a-menu-item key="2">
-                  <a @click="onLogout">
-                    <LogoutOutlined /> 退出账号
-                  </a>
-                </a-menu-item>
-              </a-menu>
+          <a-popover trigger="click" v-model:visible="popoverVisible" placement="bottomRight">
+            <template #title>
+              <div
+                style="display: flex;align-items: center;justify-content:space-between;flex-direction: row;padding: 10px 0;">
+                <a-avatar @click="toMine" class="avatar" :size="50">U</a-avatar>
+                <div
+                  style="display: flex;align-items:flex-start;flex-direction: column;margin: 0 10px;font-weight: normal;">
+                  <span>{{ user.email }}</span>
+                  <sapn style="font-size: 12px;color: #476FFF;"><crown-two-tone style="font-size:15px;"
+                      two-tone-color="#476FFF" />&nbsp;{{ user.versionText }}</sapn>
+                </div>
+              </div>
             </template>
-          </a-dropdown>
+            <template #content>
+              <div style="display: flex;align-items: center;justify-content:space-between;flex-direction: row;">
+                <a-button type="text" style="color: #476FFF;" @click="onDelete">注销账号</a-button>
+                <a-divider type="vertical" />
+                <a-button type="text" @click="onLogout">退出登录</a-button>
+              </div>
+            </template>
+            <a-avatar @click="popoverVisible = true" class="avatar" :size="28">U</a-avatar>
+          </a-popover>
         </div>
-        <!-- 修改邮箱弹出框 -->
-        <a-modal v-model:visible="visible" title="修改邮箱" @ok="onSave" @cancel="onCancel" cancelText="取消" okText="保存"
-          width="450px" style="top: 120px">
-          <a-form :model="user" layout="vertical" @finish="onSubmit" :rules="rules">
-            <a-form-item name="email">
-              <a-input v-model:value="user.email" size="large" placeholder="邮箱" disabled />
-            </a-form-item>
-            <a-form-item name="code">
-              <a-input v-model:value="user.code" size="large" style="width: 55%;" placeholder="验证码" />
-              <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :loading="loading"
-                :disabled="disabled">
-                {{ buttonText }}</a-button>
-            </a-form-item>
-            <a-form-item name="newEmail">
-              <a-input v-model:value="user.newEmail" size="large" placeholder="新邮箱" />
-            </a-form-item>
-          </a-form>
-        </a-modal>
         <!-- 注销账号弹出框 -->
         <a-modal v-model:visible="delUserVisible" title="注销账号" @ok="onConfirm" @cancel="onCancel" cancelText="取消"
-          okText="注销" width="450px" style="top: 120px">
+          okText="注销" width="360px" style="top: 120px">
+          <a-alert message="账号注销后，会清空账号相关的所有数据" banner /><br />
           <a-form :model="user" layout="vertical" @finish="onSubmit" :rules="rules">
             <a-form-item name="email">
-              <a-input v-model:value="user.email" size="large" placeholder="邮箱" disabled />
+              <a-input v-model:value="user.email" placeholder="邮箱" disabled />
             </a-form-item>
             <a-form-item name="code">
-              <a-input v-model:value="user.code" size="large" style="width: 55%;" placeholder="验证码" />
-              <a-button @click="onGetCode" size="large" style="width: 40%;float: right;" :loading="loading"
-                :disabled="disabled">
+              <a-input v-model:value="user.code" style="width: 55%;" placeholder="验证码" />
+              <a-button @click="onGetCode" style="width: 40%;float: right;" :loading="loading" :disabled="disabled">
                 {{ buttonText }}</a-button>
             </a-form-item>
           </a-form>
@@ -107,14 +87,15 @@
 </template>
 
 <script>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router'
+import { useStore } from '../store/index';
 import { message } from 'ant-design-vue';
-import { getUserInfo, updateMail, getVerifyCode, userDelete } from '../api/user';
+import { getUserInfo, getVerifyCode, userDelete } from '../api/user';
 import { DashboardOutlined, SmileOutlined, MehOutlined, ShoppingOutlined } from '@ant-design/icons-vue';
 import { CrownOutlined, MenuUnfoldOutlined, MenuFoldOutlined, QuestionCircleFilled } from '@ant-design/icons-vue';
-import { SmileFilled, BellFilled, MailOutlined, ClearOutlined } from '@ant-design/icons-vue';
-import { LogoutOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { SmileFilled, BellFilled } from '@ant-design/icons-vue';
+import { ExclamationCircleOutlined, CrownTwoTone } from '@ant-design/icons-vue';
 
 export default {
   components: {
@@ -128,10 +109,8 @@ export default {
     QuestionCircleFilled,
     SmileFilled,
     BellFilled,
-    MailOutlined,
-    ClearOutlined,
-    LogoutOutlined,
     ExclamationCircleOutlined,
+    CrownTwoTone,
   },
   setup() {
     // 菜单选项
@@ -174,19 +153,16 @@ export default {
         trigger: 'blur',
       }],
       code: [{ required: true, message: '请输入验证码!' }],
-      newEmail: [{
-        required: true,
-        message: '请输入邮箱!',
-        trigger: 'blur',
-      }, {
-        pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
-        message: '邮箱格式不正确',
-        trigger: 'blur',
-      }],
     };
 
-    const selectedKeys = ref(['dashboard'])
+    const store = useStore();
+
+    const selectedKeys = ref([store.selectedKeys])
     const collapsed = ref(false)
+
+    store.$subscribe((mutation, state) => {
+      selectedKeys.value = [state.selectedKeys]
+    })
 
     const router = useRouter()
 
@@ -195,10 +171,11 @@ export default {
       email: undefined,
       verison: undefined,
       code: undefined,
-      newEmail: undefined
+      versionText: undefined
     })
 
     const visible = ref(false)
+    const popoverVisible = ref(false)
     const visibleLogo = ref(false)
     const delUserVisible = ref(false)
     const loading = ref(false)
@@ -206,7 +183,11 @@ export default {
     const buttonText = ref('获取验证码')
 
     // 初始化数据
-    onMounted(() => { userInfo() })
+    onBeforeMount(() => {
+      userInfo()
+      store.selectedKeys = 'dashboard'
+      router.push('dashboard')
+    })
 
     // 获取用户信息
     const userInfo = () => {
@@ -214,35 +195,20 @@ export default {
         if (res.data.code == 0) {
           user.name = res.data.data.name
           user.email = res.data.data.email
-          user.version = res.data.data.version
-        }
-      })
-    }
-
-    // 点击升级到专业版
-    const onUpgrade = () => {
-      router.push('/subscribe')
-    }
-
-    // 点击修改邮箱
-    const onMail = () => {
-      visible.value = true
-    }
-
-    // 确认修改邮箱
-    const onSave = () => {
-      let param = {
-        email: user.email,
-        code: user.code,
-        newEmail: user.newEmail
-      }
-      updateMail(param).then((res) => {
-        if (res.data.code == 0) {
-          router.push('/')
-          message.success('修改成功，请重新登录！')
-        }
-        if (res.data.code == 10005) {
-          message.error('验证码错误');
+          switch (res.data.data.version) {
+            case 1:
+              user.versionText = '基础版'
+              break;
+            case 2:
+              user.versionText = '专业版'
+              break;
+            case 3:
+              user.versionText = '高级版'
+              break;
+            default:
+              user.versionText = ''
+              break;
+          }
         }
       })
     }
@@ -272,6 +238,7 @@ export default {
 
     // 点击注销账号
     const onDelete = () => {
+      popoverVisible.value = false
       delUserVisible.value = true
     }
 
@@ -312,6 +279,7 @@ export default {
       user,
       visible,
       visibleLogo,
+      popoverVisible,
       delUserVisible,
       loading,
       disabled,
@@ -319,12 +287,10 @@ export default {
       userInfo,
       onDelete,
       onLogout,
-      onMail,
       onGetCode,
-      onSave,
       onConfirm,
       onCancel,
-      onUpgrade,
+      store,
     };
   },
 }
