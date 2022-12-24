@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 const (
@@ -159,25 +160,6 @@ func (u *UserService) ForgotPass(param *models.UserPassParam) int {
 	return response.ErrCodeSuccess
 }
 
-// 修改邮箱
-func (u *UserService) UpdateMail(param *models.UserMailParam) int {
-	// 校验验证码是否正确
-	key := fmt.Sprintf("user:%s:code", param.Email)
-	code := global.Rdb.Get(ctx, key).Val()
-	if code != param.Code {
-		return response.ErrCodeVerityCodeInvalid
-	}
-	user := models.User{
-		Email:   param.NewEmail,
-		Updated: time.Now().Unix(),
-	}
-	err := global.Db.Table(USER).Where("email = ?", param.Email).Updates(&user).Error
-	if err != nil {
-		return response.ErrCodeFailed
-	}
-	return response.ErrCodeSuccess
-}
-
 // 注销账号
 func (u *UserService) Delete(param models.UserDeleteParam) int {
 	// 校验验证码是否正确
@@ -196,7 +178,17 @@ func (u *UserService) Delete(param models.UserDeleteParam) int {
 // 获取用户信息
 func (u *UserService) GetInfo(uid int64) (*models.UserPersonInfo, int) {
 	var user models.UserPersonInfo
-	err := global.Db.Table(USER).Where("id = ?", uid).First(&user).Error
+	err := global.Db.Transaction(func(tx *gorm.DB) error {
+		if err := global.Db.Table(USER).Where("id = ?", uid).First(&user).Error; err != nil {
+			return err
+		}
+		var subscribe models.Subscribe
+		if err := global.Db.Table(SUBSCRIBE).Select("version").Where("uid = ?", uid).First(&subscribe).Error; err != nil {
+			return err
+		}
+		user.Version = subscribe.Version
+		return nil
+	})
 	if err != nil {
 		return nil, response.ErrCodeFailed
 	}

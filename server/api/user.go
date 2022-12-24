@@ -70,17 +70,6 @@ func (u *UserApi) ForgotPass(context *gin.Context) {
 	response.Result(errCode, nil, context)
 }
 
-// 修改邮箱
-func (u *UserApi) UpdateMail(context *gin.Context) {
-	var param models.UserMailParam
-	if err := context.ShouldBind(&param); err != nil {
-		response.Result(response.ErrCodeParamInvalid, nil, context)
-		return
-	}
-	errCode := u.userService.UpdateMail(&param)
-	response.Result(errCode, nil, context)
-}
-
 // 注销账号
 func (u *UserApi) Delete(context *gin.Context) {
 	var param models.UserDeleteParam

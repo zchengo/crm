@@ -36,15 +36,6 @@ export function userForgotPass(param) {
 	})
 }
 
-// 修改邮箱
-export function updateMail(param) {
-    return request({
-		url: '/user/mail',
-		method: 'put',
-		data: param,
-	})
-}
-
 // 注销账号
 export function userDelete(param) {
     return request({
@@ -60,14 +51,5 @@ export function getUserInfo(param) {
 		url: '/user/info',
 		method: 'get',
 		params: param,
-	})
-}
-
-// 订阅个人版
-export function userBuy(param) {
-    return request({
-		url: '/user/buy',
-		method: 'put',
-		data: param,
 	})
 }

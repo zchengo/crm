@@ -37,18 +37,13 @@ type UserPassParam struct {
 	Password string `json:"password" binding:"required"`
 }
 
-type UserMailParam struct {
-	Email    string `json:"email" binding:"required,email"`
-	Code     string `json:"code" binding:"required,len=6"`
-	NewEmail string `json:"newEmail" binding:"required,email"`
-}
-
 type UserInfo struct {
 	Uid   int64  `json:"uid"`
 	Token string `json:"token"`
 }
 
 type UserPersonInfo struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	Name    string `json:"name"`
+	Email   string `json:"email"`
+	Version int    `json:"version"`
 }

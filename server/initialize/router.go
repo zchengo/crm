@@ -21,7 +21,6 @@ func Router() {
 		// 用户模块，订阅模块
 		route.GET("/user/verifycode", api.NewUserApi().GetVerifyCode)
 		route.GET("/user/info", api.NewUserApi().GetInfo)
-		route.PUT("/user/mail", api.NewUserApi().UpdateMail)
 		route.POST("/user/login", api.NewUserApi().Login)
 		route.POST("/user/register", api.NewUserApi().Register)
 		route.POST("/user/pass", api.NewUserApi().ForgotPass)
