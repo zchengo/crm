@@ -40,23 +40,23 @@
             <template #title>
               <div
                 style="display: flex;align-items: center;justify-content:space-between;flex-direction: row;padding: 10px 0;">
-                <a-avatar @click="toMine" class="avatar" :size="50">U</a-avatar>
-                <div
-                  style="display: flex;align-items:flex-start;flex-direction: column;margin: 0 10px;font-weight: normal;">
+                <a-avatar class="avatar" :size="55">U</a-avatar>
+                <div style="display: flex;align-items:flex-start;flex-direction: column;margin-left: 10px;font-weight: normal;">
                   <span>{{ user.email }}</span>
-                  <sapn style="font-size: 12px;color: #476FFF;"><crown-two-tone style="font-size:15px;"
-                      two-tone-color="#476FFF" />&nbsp;{{ user.versionText }}</sapn>
+                  <a-tag v-if="user.version == 1" color="green"><template #icon><crown-filled /></template>基础版</a-tag>
+                  <a-tag v-if="user.version == 2" color="blue"><template #icon><crown-filled /></template>专业版</a-tag>
+                  <a-tag v-if="user.version == 3" color="orange"><template #icon><crown-filled /></template>高级版</a-tag>
                 </div>
               </div>
             </template>
             <template #content>
-              <div style="display: flex;align-items: center;justify-content:space-between;flex-direction: row;">
+              <div style="display: flex;align-items: center;justify-content: center;flex-direction: row;">
                 <a-button type="text" style="color: #476FFF;" @click="onDelete">注销账号</a-button>
                 <a-divider type="vertical" />
                 <a-button type="text" @click="onLogout">退出登录</a-button>
               </div>
             </template>
-            <a-avatar @click="popoverVisible = true" class="avatar" :size="28">U</a-avatar>
+            <a-avatar @click="onUserAvatar" class="avatar" :size="28">U</a-avatar>
           </a-popover>
         </div>
         <!-- 注销账号弹出框 -->
@@ -95,7 +95,7 @@ import { getUserInfo, getVerifyCode, userDelete } from '../api/user';
 import { DashboardOutlined, SmileOutlined, MehOutlined, ShoppingOutlined } from '@ant-design/icons-vue';
 import { CrownOutlined, MenuUnfoldOutlined, MenuFoldOutlined, QuestionCircleFilled } from '@ant-design/icons-vue';
 import { SmileFilled, BellFilled } from '@ant-design/icons-vue';
-import { ExclamationCircleOutlined, CrownTwoTone } from '@ant-design/icons-vue';
+import { ExclamationCircleOutlined, CrownFilled } from '@ant-design/icons-vue';
 
 export default {
   components: {
@@ -110,7 +110,7 @@ export default {
     SmileFilled,
     BellFilled,
     ExclamationCircleOutlined,
-    CrownTwoTone,
+    CrownFilled,
   },
   setup() {
     // 菜单选项
@@ -184,32 +184,19 @@ export default {
 
     // 初始化数据
     onBeforeMount(() => {
-      userInfo()
       store.selectedKeys = 'dashboard'
       router.push('dashboard')
     })
 
-    // 获取用户信息
-    const userInfo = () => {
+    // 点击用户头像
+    const onUserAvatar = () => {
       getUserInfo().then((res) => {
         if (res.data.code == 0) {
           user.name = res.data.data.name
           user.email = res.data.data.email
-          switch (res.data.data.version) {
-            case 1:
-              user.versionText = '基础版'
-              break;
-            case 2:
-              user.versionText = '专业版'
-              break;
-            case 3:
-              user.versionText = '高级版'
-              break;
-            default:
-              user.versionText = ''
-              break;
-          }
+          user.version = res.data.data.version
         }
+        popoverVisible = true
       })
     }
 
@@ -284,7 +271,7 @@ export default {
       loading,
       disabled,
       buttonText,
-      userInfo,
+      onUserAvatar,
       onDelete,
       onLogout,
       onGetCode,

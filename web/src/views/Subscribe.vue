@@ -4,7 +4,7 @@
             show-icon /><br />
         <a-row :gutter="30">
             <a-col :span="8">
-                <a-card :class="version == 1 ? 'selected-free-card' : 'card'" :bordered="false">
+                <a-card :class="activedClass[0]" :bordered="false">
                     <span class="member-tag" style="color: #33B9FE;">基础版</span>
                     <h2 class="title">免费
                         <check-circle-filled v-if="ver == 1" class="icon" />
@@ -19,7 +19,7 @@
                 </a-card>
             </a-col>
             <a-col :span="8">
-                <a-card :class="version == 2 ? 'selected-card' : 'card'" :bordered="false">
+                <a-card :class="activedClass[1]" :bordered="false">
                     <span class="member-tag" style="color: #3788FF;">专业版</span>
                     <h2 class="title">按月付费，每月18元</h2>
                     <div class="content">能力不设限，新功能优先体验</div><br />
@@ -35,7 +35,7 @@
                 </a-card>
             </a-col>
             <a-col :span="8">
-                <a-card :class="version == 3 ? 'selected-card' : 'card'" :bordered="false">
+                <a-card :class="activedClass[2]" :bordered="false">
                     <span class="member-tag" style="color: #3788FF;">高级版</span>
                     <h2 class="title">按年付费，每年198元</h2>
                     <div class="content">能力不设限，新功能优先体验</div><br />
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { ref, onBeforeMount } from 'vue';
+import { ref, reactive, onBeforeMount } from 'vue';
 import { CheckCircleFilled } from '@ant-design/icons-vue';
 import { subscribePay, getSubscribeInfo } from '../api/subscribe';
 import { useRouter } from 'vue-router'
@@ -74,7 +74,7 @@ export default {
         const payUrl = ref()
         const visible = ref(false)
         const disabled = ref(false)
-        const active = ref(30)
+        const activedClass = reactive(['card', 'card', 'card'])
 
         const payResult = ref(false)
         const title = ref('')
@@ -110,6 +110,12 @@ export default {
                     if (res.data.data.version !== 1) {
                         disabled.value = true
                     }
+                    if (res.data.data.version == 1) {
+                        activedClass[0] = 'selected-free-card'
+                    }
+                    if (res.data.data.version == 2 || res.data.data.version == 3) {
+                        activedClass[res.data.data.version-1] = 'selected-card'
+                    }
                 }
             })
         }
@@ -123,7 +129,7 @@ export default {
             disabled,
             payResult,
             title,
-            active,
+            activedClass,
             buttonText,
             isClick,
             subscribeInfo,
