@@ -6,6 +6,7 @@ type Config struct {
 	Mysql  Mysql  `mapstructure:"mysql"`
 	Redis  Redis  `mapstructure:"redis"`
 	Jwt    Jwt    `mapstructure:"jwt"`
+	File   File   `mapstructure:"file"`
 	Mail   Mail   `mapstructure:"mail"`
 	Alipay Alipay `mapstructure:"alipay"`
 }
@@ -40,6 +41,11 @@ type Redis struct {
 type Jwt struct {
 	SigningKey  string `mapstructure:"signingKey"`
 	ExpiredTime int    `mapstructure:"expiredTime"`
+}
+
+// 文件存储配置
+type File struct {
+	Path string `mapstructure:"path"`
 }
 
 // 邮件服务配置

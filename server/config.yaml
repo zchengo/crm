@@ -26,7 +26,11 @@ jwt:
   signingKey: z3d6k8v0n3w7m9sa1fd0u09h
   expiredTime: 604800
 
-# 邮件服务
+# 文件存储配置
+file:
+  path: /home/ubuntu/crm/source/
+
+# 邮件服务配置
 mail:
   smtp: smtp.qq.com
   secret: dhsepilzlvoaceij
