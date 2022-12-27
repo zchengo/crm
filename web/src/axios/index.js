@@ -22,7 +22,6 @@ const request = axios.create({
 
 request.interceptors.request.use(config => {
     config.headers['uid'] = localStorage.getItem('uid')
-    config.headers['ver'] = localStorage.getItem('ver')
     config.headers['token'] = localStorage.getItem('token')
     return config
 })
