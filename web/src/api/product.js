@@ -44,3 +44,13 @@ export function queryProductList(param) {
 		params: param,
 	})
 }
+
+// 导出Excel表格
+export function productExport(param) {
+    return request({
+		url: '/product/export',
+		method: 'get',
+		responseType: 'blob',
+		params: param,
+	})
+}

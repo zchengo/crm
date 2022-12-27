@@ -1,9 +1,11 @@
 package service
 
 import (
+	"crm/common"
 	"crm/global"
 	"crm/models"
 	"crm/response"
+	"strconv"
 	"time"
 )
 
@@ -101,4 +103,45 @@ func (c *CustomerService) QueryOption(uid int64) ([]*models.CustomerOption, int)
 		return nil, response.ErrCodeFailed
 	}
 	return option, response.ErrCodeSuccess
+}
+
+// 导出Excel文件
+func (c *CustomerService) Export(uid int64) (string, int) {
+	customers := make([]models.Customer, 0)
+	err := global.Db.Where("creator = ?", uid).Find(&customers).Error
+	if err != nil {
+		return StringNull, response.ErrCodeFailed
+	}
+	excelRows := make([]models.CustomerExcelRow, 0)
+	var row models.CustomerExcelRow
+	for _, c := range customers {
+		row.Name = c.Name
+		row.Source = c.Source
+		row.Phone = c.Phone
+		row.Email = c.Email
+		row.Industry = c.Industry
+		row.Level = c.Level
+		row.Remarks = c.Remarks
+		row.Region = c.Region
+		row.Address = c.Address
+		if c.Status == 1 {
+			row.Status = "已签约"
+		}
+		if c.Status == 2 {
+			row.Status = "未签约"
+		}
+		row.Created = time.Unix(c.Created, 0).Format("2006-01-02")
+		if c.Updated != 0 {
+			row.Updated = time.Unix(c.Updated, 0).Format("2006-01-02")
+		}
+		excelRows = append(excelRows, row)
+	}
+	sheet := "客户信息"
+	columns := []string{"名称", "客户来源", "手机号", "邮箱", "客户行业", "客户级别", "备注", "地区", "详细地址", "成交状态", "创建时间", "更新时间"}
+	fileName := "customer_" + strconv.FormatInt(uid, 10)
+	file, err := common.GenExcelFile(sheet, columns, excelRows, fileName)
+	if err != nil {
+		return StringNull, response.ErrCodeFailed
+	}
+	return file, response.ErrCodeSuccess
 }

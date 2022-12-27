@@ -91,3 +91,19 @@ type CustomerOption struct {
 	Id   int64  `json:"id"`
 	Name string `json:"name"`
 }
+
+type CustomerExcelRow struct {
+	Name     string `json:"name"`
+	Source   string `json:"source"`
+	Phone    string `json:"phone"`
+	Email    string `json:"email"`
+	Industry string `json:"industry"`
+	Level    string `json:"level"`
+	Remarks  string `json:"remarks"`
+	Region   string `json:"region"`
+	Address  string `json:"address"`
+	Status   string `json:"status"`
+	Creator  int64  `json:"creator"`
+	Created  string `json:"created"`
+	Updated  string `json:"updated"`
+}

@@ -91,3 +91,18 @@ func (c *CustomerApi) QueryOption(context *gin.Context) {
 	customerOption, errCode := c.customerService.QueryOption(int64(uid))
 	response.Result(errCode, customerOption, context)
 }
+
+// 导出Excel文件
+func (c *CustomerApi) Export(context *gin.Context) {
+	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
+	if uid <= 0 {
+		response.Result(response.ErrCodeParamInvalid, nil, context)
+		return
+	}
+	file, errCode := c.customerService.Export(int64(uid))
+	if len(file) >= 0 && errCode != 0 {
+		response.Result(errCode, nil, context)
+		return
+	}
+	context.File(file)
+}

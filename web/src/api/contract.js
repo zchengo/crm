@@ -53,3 +53,13 @@ export function queryContractPlist(param) {
 		data: param,
 	})
 }
+
+// 导出Excel表格
+export function contractExport(param) {
+    return request({
+		url: '/contract/export',
+		method: 'get',
+		responseType: 'blob',
+		params: param,
+	})
+}

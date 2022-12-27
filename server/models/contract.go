@@ -91,6 +91,18 @@ type Products struct {
 	Total float64 `json:"total"`
 }
 
+type ContractExcelRow struct {
+	Name      string  `json:"name"`
+	Cname     string  `json:"cname"`
+	Amount    float64 `json:"amount"`
+	BeginTime string  `json:"beginTime"`
+	OverTime  string  `json:"overTime"`
+	Remarks   string  `json:"remarks"`
+	Status    string  `json:"status"`
+	Created   string  `json:"created"`
+	Updated   string  `json:"updated"`
+}
+
 type Productlist []*Products
 
 func (p *Productlist) Value() (driver.Value, error) {

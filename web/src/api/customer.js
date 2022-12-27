@@ -53,3 +53,13 @@ export function queryCustomerOption(param) {
 		params: param,
 	})
 }
+
+// 导出Excel表格
+export function customerExport(param) {
+    return request({
+		url: '/customer/export',
+		method: 'get',
+		responseType: 'blob',
+		params: param,
+	})
+}

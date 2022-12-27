@@ -21,6 +21,8 @@ const (
 	ErrCodeUserPassResetFailed  = 10009 // 用户密码重置失败
 
 	ErrCodePayFailed = 20001 // 支付宝支付失败
+
+	ErrCodeFileExportFailed = 30001 // 文件导出失败
 )
 
 var msg = map[int]string{
@@ -39,4 +41,5 @@ var msg = map[int]string{
 	ErrCodeCompanyCreateFailed:  "company create failed",
 	ErrCodeEmailFormatInvalid:   "email format invalid",
 	ErrCodeUserPassResetFailed:  "user password reset failed",
+	ErrCodeFileExportFailed:     "file export failed",
 }

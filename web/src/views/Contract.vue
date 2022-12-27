@@ -1,15 +1,23 @@
 <template>
     <div>
-        <a-space style="margin-bottom: 20px; width: 100%;">
-            <a-input v-model:value="keyWord" placeholder="合同编号" style="width: 280px; margin-right: 50px;">
-                <template #suffix>
-                    <search-outlined style="color: rgba(0, 0, 0, 0.45)" @click="onSearch" />
-                </template>
-            </a-input>
-            <a-button type="primary" @click="onContracts">全部合同</a-button>
-            <a-button type="primary" @click="onDelete" :disabled="disabled" danger>删除</a-button>
-            <a-button type="primary" @click="onCreate">新建</a-button>
-        </a-space>
+        <div style="display: flex;justify-content: space-between;margin-bottom: 20px;">
+            <a-space>
+                <a-input v-model:value="keyWord" placeholder="合同编号" style="width: 280px; margin-right: 50px;">
+                    <template #suffix>
+                        <search-outlined style="color: rgba(0, 0, 0, 0.45)" @click="onSearch" />
+                    </template>
+                </a-input>
+                <a-button type="primary" @click="onContracts">全部合同</a-button>
+                <a-button type="primary" @click="onDelete" :disabled="disabled" danger>删除</a-button>
+                <a-button type="primary" @click="onCreate">新建</a-button>
+            </a-space>
+            <div>
+                <a-button type="primary" @click="onExport">
+                    <template #icon>
+                        <DownloadOutlined />
+                    </template>导出</a-button>
+            </div>
+        </div>
         <a-table rowKey="id"
             :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectedConteactIds, getCheckboxProps: defaultSelected }"
             :columns="columns" :data-source="data.contractList"
@@ -63,14 +71,14 @@
                     <a-row :gutter="16">
                         <a-col :span="12">
                             <a-form-item label="合同开始时间" name="beginTime">
-                                <a-date-picker v-model:value="contract.beginTime" placeholder="选择日期"
-                                    style="width: 100%" format="YYYY-MM-DD" valueFormat="YYYY-MM-DD"/>
+                                <a-date-picker v-model:value="contract.beginTime" placeholder="选择日期" style="width: 100%"
+                                    format="YYYY-MM-DD" valueFormat="YYYY-MM-DD" />
                             </a-form-item>
                         </a-col>
                         <a-col :span="12">
                             <a-form-item label="合同结束时间" name="overTime">
-                                <a-date-picker v-model:value="contract.overTime" placeholder="选择日期"
-                                    style="width: 100%" format="YYYY-MM-DD" valueFormat="YYYY-MM-DD"/>
+                                <a-date-picker v-model:value="contract.overTime" placeholder="选择日期" style="width: 100%"
+                                    format="YYYY-MM-DD" valueFormat="YYYY-MM-DD" />
                             </a-form-item>
                         </a-col>
                     </a-row>
@@ -164,9 +172,9 @@
 
 <script>
 import { ref, reactive, onMounted, createVNode } from 'vue';
-import { SearchOutlined, ExclamationCircleOutlined, UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons-vue';
+import { SearchOutlined, ExclamationCircleOutlined, UpCircleOutlined, DownCircleOutlined, DownloadOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
-import { createContract, updateContract, queryContractList, queryContractInfo, deleteContract, queryContractPlist } from '../api/contract';
+import { createContract, updateContract, queryContractList, queryContractInfo, deleteContract, queryContractPlist, contractExport } from '../api/contract';
 import { queryProductList } from "../api/product";
 import { queryCustomerOption } from "../api/customer";
 import { message, Modal } from 'ant-design-vue';
@@ -175,7 +183,8 @@ export default {
     components: {
         SearchOutlined,
         UpCircleOutlined,
-        DownCircleOutlined
+        DownCircleOutlined,
+        DownloadOutlined
     },
     setup() {
 
@@ -612,6 +621,24 @@ export default {
             visible.value = false
         };
 
+        // 导出表格
+        const onExport = () => {
+            contractExport().then((res) => {
+                if (res.data.type == 'application/json'){
+                    message.error('导出错误！')
+                } else {
+                    let blob = new Blob([res.data], {
+                        type: "application/vnd.ms-excel"
+                    })
+                    let a = document.createElement('a')
+                    a.setAttribute("download", "合同信息.xlsx");
+                    a.href = window.URL.createObjectURL(blob)
+                    a.click()
+                    window.URL.revokeObjectURL(a.href)
+                }
+            })
+        }
+
         // 点击取消产品列表
         const onCancelProductList = () => {
             productListVisible.value = false
@@ -652,6 +679,7 @@ export default {
             delProduct,
             pagination,
             onPagination,
+            onExport,
             onContracts,
             onPaginationProduct,
         };

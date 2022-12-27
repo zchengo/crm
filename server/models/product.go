@@ -73,3 +73,15 @@ type ProductInfo struct {
 	Description string  `json:"description"`
 	Status      int     `json:"status"`
 }
+
+type ProductExcelRow struct {
+	Name        string  `json:"name"`
+	Type        string  `json:"type"`
+	Unit        string  `json:"unit"`
+	Code        string  `json:"code"`
+	Price       float64 `json:"price"`
+	Description string  `json:"description"`
+	Status      string  `json:"status"`
+	Created     string  `json:"created"`
+	Updated     string  `json:"updated"`
+}

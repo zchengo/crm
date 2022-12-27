@@ -1,9 +1,11 @@
 package service
 
 import (
+	"crm/common"
 	"crm/global"
 	"crm/models"
 	"crm/response"
+	"strconv"
 
 	"time"
 )
@@ -97,7 +99,7 @@ func (c *ContractService) QueryInfo(param *models.ContractQueryParam) (*models.C
 }
 
 // 在编辑合同中，添加产品后，返回已添加的产品列表
-func (p *ContractService) QueryPlist(param *models.ContractQueryParam) ([]*models.Products, int) {
+func (c *ContractService) QueryPlist(param *models.ContractQueryParam) ([]*models.Products, int) {
 	if param.Id == 0 {
 		products := make([]*models.Products, 0)
 		if err := global.Db.Table(PRODUCT).Find(&products, param.Pids).Error; err != nil {
@@ -140,4 +142,44 @@ func (p *ContractService) QueryPlist(param *models.ContractQueryParam) ([]*model
 	}
 	addedProductList = append(addedProductList, products...)
 	return addedProductList, response.ErrCodeSuccess
+}
+
+// 导出Excel文件
+func (c *ContractService) Export(uid int64) (string, int) {
+	contracts := make([]models.ContractList, 0)
+	s := "contract.id, contract.name, contract.amount, contract.begin_time, contract.over_time, customer.name as cname, contract.remarks, contract.status, contract.created, contract.updated"
+	j := "left join customer on contract.cid = customer.id and contract.creator = ?"
+	err := global.Db.Table(CONTRACT).Select(s).Joins(j, uid).Scan(&contracts).Error
+	if err != nil {
+		return StringNull, response.ErrCodeFailed
+	}
+	excelRows := make([]models.ContractExcelRow, 0)
+	var row models.ContractExcelRow
+	for _, c := range contracts {
+		row.Name = c.Name
+		row.Cname = c.Cname
+		row.Amount = c.Amount
+		row.BeginTime = c.BeginTime
+		row.OverTime = c.OverTime
+		row.Remarks = c.Remarks
+		if c.Status == 1 {
+			row.Status = "已签约"
+		}
+		if c.Status == 2 {
+			row.Status = "未签约"
+		}
+		row.Created = time.Unix(c.Created, 0).Format("2006-01-02")
+		if c.Updated != 0 {
+			row.Updated = time.Unix(c.Updated, 0).Format("2006-01-02")
+		}
+		excelRows = append(excelRows, row)
+	}
+	sheet := "合同信息"
+	columns := []string{"合同名称", "客户名称", "合同金额", "合同开始时间", "合同结束时间", "备注", "签约状态", "创建时间", "更新时间"}
+	fileName := "contract_" + strconv.FormatInt(uid, 10)
+	file, err := common.GenExcelFile(sheet, columns, excelRows, fileName)
+	if err != nil {
+		return StringNull, response.ErrCodeFailed
+	}
+	return file, response.ErrCodeSuccess
 }

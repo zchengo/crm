@@ -17,7 +17,7 @@ func Router() {
 
 	route := engine.Group("/api")
 
-	{	
+	{
 		// 用户模块，订阅模块
 		route.GET("/user/verifycode", api.NewUserApi().GetVerifyCode)
 		route.GET("/user/info", api.NewUserApi().GetInfo)
@@ -37,6 +37,7 @@ func Router() {
 		route.GET("/customer/list", api.NewCustomerApi().QueryList)
 		route.GET("/customer/info", api.NewCustomerApi().QueryInfo)
 		route.GET("/customer/option", api.NewCustomerApi().QueryOption)
+		route.GET("/customer/export", api.NewCustomerApi().Export)
 		route.POST("/customer/create", api.NewCustomerApi().Create)
 		route.PUT("/customer/update", api.NewCustomerApi().Update)
 		route.DELETE("/customer/delete", api.NewCustomerApi().Delete)
@@ -44,6 +45,7 @@ func Router() {
 		// 合同模块
 		route.GET("/contract/list", api.NewContractApi().QueryList)
 		route.GET("/contract/info", api.NewContractApi().QueryInfo)
+		route.GET("/contract/export", api.NewContractApi().Export)
 		route.POST("/contract/plist", api.NewContractApi().QueryPlist)
 		route.PUT("/contract/update", api.NewContractApi().Update)
 		route.POST("/contract/create", api.NewContractApi().Create)
@@ -52,6 +54,7 @@ func Router() {
 		// 产品模块
 		route.GET("/product/list", api.NewProductApi().QueryList)
 		route.GET("/product/info", api.NewProductApi().QueryInfo)
+		route.GET("/product/export", api.NewProductApi().Export)
 		route.POST("/product/create", api.NewProductApi().Create)
 		route.PUT("/product/update", api.NewProductApi().Update)
 		route.DELETE("/product/delete", api.NewProductApi().Delete)
@@ -62,7 +65,7 @@ func Router() {
 		// 订阅模块
 		route.GET("/subscribe/info", api.NewSubscribeApi().GetInfo)
 		route.POST("/subscribe/pay", api.NewSubscribeApi().Pay)
-		route.POST("/subscribe/notify", api.NewSubscribeApi().Notify)	
+		route.POST("/subscribe/notify", api.NewSubscribeApi().Notify)
 	}
 
 	// 启动、监听端口

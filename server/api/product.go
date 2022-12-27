@@ -80,3 +80,18 @@ func (p *ProductApi) QueryInfo(context *gin.Context) {
 	productInfo, errCode := p.productService.QueryInfo(&param)
 	response.Result(errCode, productInfo, context)
 }
+
+// 导出Excel文件
+func (p *ProductApi) Export(context *gin.Context) {
+	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
+	if uid <= 0 {
+		response.Result(response.ErrCodeParamInvalid, nil, context)
+		return
+	}
+	file, errCode := p.productService.Export(int64(uid))
+	if len(file) >= 0 && errCode != 0 {
+		response.Result(errCode, nil, context)
+		return
+	}
+	context.File(file)
+}

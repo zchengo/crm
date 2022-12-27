@@ -1,16 +1,23 @@
 <template>
     <div>
-        <a-space style="margin-bottom: 20px; width: 100%;">
-            <a-input v-model:value="keyWord" placeholder="客户名称" style="width: 280px; margin-right: 50px;">
-                <template #suffix>
-                    <search-outlined style="color: rgba(0, 0, 0, 0.45)" @click="onSearch" />
-                </template>
-            </a-input>
-            <a-button type="primary" @click="onCustomers">全部客户</a-button>
-            <a-button type="primary" @click="onDelete" :disabled="disabled" danger>删除</a-button>
-            <a-button type="primary" @click="onCreate">新建</a-button>
-        </a-space>
-
+        <div style="display: flex;justify-content: space-between;margin-bottom: 20px;">
+            <a-space>
+                <a-input v-model:value="keyWord" placeholder="客户名称" style="width: 280px; margin-right: 50px;">
+                    <template #suffix>
+                        <search-outlined style="color: rgba(0, 0, 0, 0.45)" @click="onSearch" />
+                    </template>
+                </a-input>
+                <a-button type="primary" @click="onCustomers">全部客户</a-button>
+                <a-button type="primary" @click="onDelete" :disabled="disabled" danger>删除</a-button>
+                <a-button type="primary" @click="onCreate">新建</a-button>
+            </a-space>
+            <div>
+                <a-button type="primary" @click="onExport">
+                    <template #icon>
+                        <DownloadOutlined />
+                    </template>导出</a-button>
+            </div>
+        </div>
         <a-table rowKey="id" :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
             :columns="columns" :data-source="data.customerList"
             :pagination="{ current: pagination.current, pageSize: pagination.pageSize, total: pagination.total, onChange: onPagination }"
@@ -119,15 +126,16 @@
 
 <script>
 import { ref, reactive, onMounted, createVNode } from 'vue';
-import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { SearchOutlined, ExclamationCircleOutlined, DownloadOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
-import { createCustomer, updateCustomer, queryCustomerList, queryCustomerInfo, deleteCustomer } from '../api/customer';
+import { createCustomer, updateCustomer, queryCustomerList, queryCustomerInfo, deleteCustomer, customerExport } from '../api/customer';
 import { message, Modal } from 'ant-design-vue';
 import regionData from '../assets/region';
 
 export default {
     components: {
-        SearchOutlined
+        SearchOutlined,
+        DownloadOutlined
     },
     setup() {
         const columns = [{
@@ -366,6 +374,24 @@ export default {
             })
         }
 
+        // 导出表格
+        const onExport = () => {
+            customerExport().then((res) => {
+                if (res.data.type == 'application/json'){
+                    message.error('导出错误！')
+                } else {
+                    let blob = new Blob([res.data], {
+                        type: "application/vnd.ms-excel"
+                    })
+                    let a = document.createElement('a')
+                    a.setAttribute("download", "客户信息.xlsx");
+                    a.href = window.URL.createObjectURL(blob)
+                    a.click()
+                    window.URL.revokeObjectURL(a.href)
+                }
+            })
+        }
+
         // 点击取消按钮
         const onCancel = () => {
             customerFormRef.value.resetFields()
@@ -399,6 +425,7 @@ export default {
             onCancel,
             onDelete,
             getCustomerList,
+            onExport,
             keyWord,
             options,
             onPagination,

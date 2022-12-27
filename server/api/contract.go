@@ -91,3 +91,18 @@ func (p *ContractApi) QueryPlist(context *gin.Context) {
 	productList, errCode := p.contractService.QueryPlist(&param)
 	response.Result(errCode, productList, context)
 }
+
+// 导出Excel文件
+func (c *ContractApi) Export(context *gin.Context) {
+	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
+	if uid <= 0 {
+		response.Result(response.ErrCodeParamInvalid, nil, context)
+		return
+	}
+	file, errCode := c.contractService.Export(int64(uid))
+	if len(file) >= 0 && errCode != 0 {
+		response.Result(errCode, nil, context)
+		return
+	}
+	context.File(file)
+}
