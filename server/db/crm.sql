@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 16/12/2022 20:08:38
+ Date: 28/12/2022 20:09:32
 */
 
 SET NAMES utf8mb4;
@@ -34,7 +34,8 @@ CREATE TABLE `contract` (
   `creator` bigint DEFAULT NULL COMMENT '创建人',
   `created` bigint DEFAULT NULL COMMENT '创建时间',
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_creator` (`creator`)
 ) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
@@ -64,7 +65,8 @@ CREATE TABLE `customer` (
   `creator` bigint DEFAULT NULL COMMENT '创建人',
   `created` bigint DEFAULT NULL COMMENT '创建时间',
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_creator` (`creator`)
 ) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
@@ -91,7 +93,8 @@ CREATE TABLE `product` (
   `creator` bigint DEFAULT NULL COMMENT '创建人',
   `created` bigint DEFAULT NULL COMMENT '创建时间',
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_creator` (`creator`)
 ) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
@@ -113,7 +116,8 @@ CREATE TABLE `subscribe` (
   `expired` bigint DEFAULT NULL COMMENT '到期时间',
   `created` bigint DEFAULT NULL COMMENT '创建时间',
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_uid` (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
