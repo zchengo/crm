@@ -24,7 +24,7 @@
         <div style="display: flex;align-items: center;justify-items: center;">
           <a-popover placement="bottomRight" :overlayStyle="{ width: '180px' }" trigger="click">
             <template #content>
-              <a-image :width="150" src="../../public/gzh_qrcode.jpg" :preview="false" />
+              <a-image :width="150" src="https://www.zocrm.cloud/gzh_qrcode.jpg" :preview="false" />
             </template>
             <QuestionCircleFilled style="color: #909399; font-size: 18px;margin: 0 15px;" />
           </a-popover>
