@@ -1,7 +1,7 @@
 # crm
 
 <a href="#公众号"><img src="https://img.shields.io/badge/公众号-GoCode-%2302DF6D" /></a>
-<a href="https://www.zocrm.cloud"><img src="https://img.shields.io/badge/官网-www.zocrm.cloud-%230092FF" /></a>
+<a href="https://zocrm.cloud"><img src="https://img.shields.io/badge/官网-www.zocrm.cloud-%230092FF" /></a>
 
 ## 项目简介
 
@@ -9,7 +9,7 @@
 
 ### 项目演示
 
-开源 ZOCRM 官网：https://www.zocrm.cloud
+开源 ZOCRM 官网：https://zocrm.cloud
 
 ## 技术选型
 
@@ -70,7 +70,7 @@ $ npm run dev
 
 关注公众号「**GoCode**」，回复「**部署指南**」，获取详细部署指南！
 
-![公众号图片](https://www.zocrm.cloud/gzh_qrcode.jpg)
+![公众号图片](https://zocrm.cloud/gzh_qrcode.jpg)
 
 ## 许可证
 
