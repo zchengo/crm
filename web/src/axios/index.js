@@ -5,8 +5,8 @@ import { message } from 'ant-design-vue';
 const host = window.location.hostname
 
 switch (host) {
-    case 'www.zocrm.cloud':
-        axios.defaults.baseURL = 'https://www.zocrm.cloud/api'
+    case 'zocrm.cloud':
+        axios.defaults.baseURL = 'https://zocrm.cloud/api'
         break;
     default:
         axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
