@@ -16,7 +16,7 @@ type SubscribeApi struct {
 
 func NewSubscribeApi() *SubscribeApi {
 	subscribeApi := SubscribeApi{
-		subscribeService: &service.SubscribeService{},
+		subscribeService: service.NewSubscribeService(),
 	}
 	return &subscribeApi
 }

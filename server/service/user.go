@@ -19,6 +19,14 @@ const (
 )
 
 type UserService struct {
+	noticeService *NoticeService
+}
+
+func NewUserService() *UserService {
+	userService := UserService{
+		noticeService: &NoticeService{},
+	}
+	return &userService
 }
 
 // 用户注册
@@ -75,6 +83,12 @@ func (u *UserService) Register(param *models.UserCreateParam) int {
 		}
 	}
 
+	// 注册通知
+	u.noticeService.Create(&models.NoticeParam{
+		Content: REGISTER_NOTICE_TEMPLATE,
+		Creator: newUser.Id,
+	})
+
 	return response.ErrCodeSuccess
 }
 
@@ -105,6 +119,12 @@ func (u *UserService) Login(param *models.UserLoginParam) (*models.UserInfo, int
 		Uid:   user.Id,
 		Token: token,
 	}
+
+	// 登录通知
+	u.noticeService.Create(&models.NoticeParam{
+		Content: LOGIN_NOTICE_TEMPLATE,
+		Creator: userInfo.Uid,
+	})
 
 	return &userInfo, response.ErrCodeSuccess
 }

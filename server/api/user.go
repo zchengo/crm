@@ -16,7 +16,7 @@ type UserApi struct {
 
 func NewUserApi() *UserApi {
 	userApi := UserApi{
-		userService: &service.UserService{},
+		userService: service.NewUserService(),
 	}
 	return &userApi
 }

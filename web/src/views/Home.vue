@@ -22,46 +22,67 @@
           <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
         </div>
         <div style="display: flex;align-items: center;justify-items: center;">
-          <a-tooltip title="帮助">
-            <a-button type="text" shape="circle">
-              <template #icon>
-                <QuestionCircleFilled style="color: #909399; font-size: 18px;" />
-              </template>
-            </a-button>
-          </a-tooltip>
-          <a-tooltip title="消息">
-            <a-button type="text" shape="circle">
-              <template #icon>
-                <BellFilled style="color: #909399; font-size: 20px;" />
-              </template>
-            </a-button>
-          </a-tooltip>
-          <a-popover trigger="click" v-model:visible="popoverVisible" placement="bottomRight">
-            <template #title>
-              <div
-                style="display: flex;align-items: center;justify-content:space-between;flex-direction: row;padding: 10px 0;">
-                <a-avatar class="avatar" :size="55">U</a-avatar>
-                <div style="display: flex;align-items:flex-start;flex-direction: column;margin-left: 10px;font-weight: normal;">
-                  <span>{{ user.email }}</span>
-                  <a-tag v-if="user.version == 1" color="green"><template #icon><crown-filled /></template>基础版</a-tag>
-                  <a-tag v-if="user.version == 2" color="blue"><template #icon><crown-filled /></template>专业版</a-tag>
-                  <a-tag v-if="user.version == 3" color="orange"><template #icon><crown-filled /></template>高级版</a-tag>
-                </div>
-              </div>
-            </template>
+          <a-popover placement="bottomRight" :overlayStyle="{ width: '180px' }" trigger="click">
             <template #content>
-              <div style="display: flex;align-items: center;justify-content: center;flex-direction: row;">
-                <a-button type="text" style="color: #476FFF;" @click="onDelete">注销账号</a-button>
-                <a-divider type="vertical" />
-                <a-button type="text" @click="onLogout">退出登录</a-button>
+              <a-image :width="150" src="../../public/gzh_qrcode.jpg" :preview="false" />
+            </template>
+            <QuestionCircleFilled style="color: #909399; font-size: 18px;margin: 0 15px;" />
+          </a-popover>
+          <a-popover placement="bottomRight" :overlayStyle="{ width: '320px' }" trigger="click">
+            <template #content>
+              <div style="max-height: 250px;overflow-y: scroll;">
+                <a-list item-layout="horizontal" :data-source="data.noticeList" size="small">
+                  <template #renderItem="{ item }">
+                    <a-list-item style="cursor: pointer;" @click="onReadNotice(item.id)">
+                      <div style="display: inline-flex;align-items: center;">
+                        <a-avatar shape="square" :size="20" v-if="item.status == 1">
+                          <template #icon>
+                            <BellFilled style="font-size: 12px;" />
+                          </template>
+                        </a-avatar>
+                        <a-avatar shape="square" style="color: #476FFF; background-color: #ccd6fa" :size="20" v-else>
+                          <template #icon>
+                            <BellFilled style="font-size: 12px;" />
+                          </template>
+                        </a-avatar>
+                        <div v-if="item.status == 1" style="color: #717171;">&nbsp;&nbsp;&nbsp;{{ item.content }}</div>
+                        <div v-else>&nbsp;&nbsp;&nbsp;{{ item.content }}</div>
+                      </div>
+                      <template #actions>
+                        <span v-if="item.status == 2" style="color: black;">{{ formatDate(item.created) }}</span>
+                        <span v-else>{{ formatDate(item.created) }}</span>
+                      </template>
+                    </a-list-item>
+                  </template>
+                </a-list>
+              </div>
+              <div style="margin-top: 10px;display: flex;align-items: center;justify-content: center;">
+                <a-button v-if="data.noticeList.length != 0" @click="onDeleteNotice" type="primary" style="width: 92%;"
+                  shape="round">清空全部 {{ data.noticeList.length }} 条通知</a-button>
               </div>
             </template>
-            <a-avatar @click="onUserAvatar" class="avatar" :size="28">U</a-avatar>
+            <a-badge :count="data.noticeCount">
+              <BellFilled style="color: #909399; font-size: 20px;cursor: pointer;" @click="onNotice" />
+            </a-badge>
           </a-popover>
+
+          <a-dropdown :trigger="['click']">
+            <a-avatar @click="onUserAvatar" class="avatar" :size="32">U</a-avatar>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item @click="visible = true">
+                  <ExclamationCircleOutlined /> 注销账号
+                </a-menu-item>
+                <a-menu-item @click="onLogout">
+                  <LogoutOutlined /> 退出登录
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </div>
         <!-- 注销账号弹出框 -->
-        <a-modal v-model:visible="delUserVisible" title="注销账号" @ok="onConfirm" @cancel="onCancel" cancelText="取消"
-          okText="注销" width="360px" style="top: 120px">
+        <a-modal v-model:visible="visible" title="注销账号" @ok="onConfirm" @cancel="onCancel" cancelText="取消" okText="注销"
+          width="360px" :centered="true">
           <a-alert message="账号注销后，会清空账号相关的所有数据" banner /><br />
           <a-form :model="user" layout="vertical" @finish="onSubmit" :rules="rules">
             <a-form-item name="email">
@@ -92,10 +113,12 @@ import { useRouter } from 'vue-router'
 import { useStore } from '../store/index';
 import { message } from 'ant-design-vue';
 import { getUserInfo, getVerifyCode, userDelete } from '../api/user';
+import { updateNotice, getNoticeCount, getNoticeList, deleteNotice } from '../api/notice';
 import { DashboardOutlined, SmileOutlined, MehOutlined, ShoppingOutlined } from '@ant-design/icons-vue';
-import { CrownOutlined, MenuUnfoldOutlined, MenuFoldOutlined, QuestionCircleFilled } from '@ant-design/icons-vue';
-import { SmileFilled, BellFilled } from '@ant-design/icons-vue';
-import { ExclamationCircleOutlined, CrownFilled } from '@ant-design/icons-vue';
+import { CrownOutlined, MenuUnfoldOutlined, MenuFoldOutlined, WechatFilled } from '@ant-design/icons-vue';
+import { QuestionCircleFilled, BellFilled } from '@ant-design/icons-vue';
+import { ExclamationCircleOutlined, CrownFilled, LogoutOutlined, DownCircleOutlined, DeleteOutlined } from '@ant-design/icons-vue';
+import moment from 'moment'
 
 export default {
   components: {
@@ -106,11 +129,14 @@ export default {
     CrownOutlined,
     MenuUnfoldOutlined,
     MenuFoldOutlined,
+    WechatFilled,
     QuestionCircleFilled,
-    SmileFilled,
     BellFilled,
     ExclamationCircleOutlined,
     CrownFilled,
+    LogoutOutlined,
+    DownCircleOutlined,
+    DeleteOutlined
   },
   setup() {
     // 菜单选项
@@ -160,6 +186,11 @@ export default {
     const selectedKeys = ref([store.selectedKeys])
     const collapsed = ref(false)
 
+    const data = reactive({
+      noticeCount: 0,
+      noticeList: []
+    })
+
     store.$subscribe((mutation, state) => {
       selectedKeys.value = [state.selectedKeys]
     })
@@ -175,9 +206,7 @@ export default {
     })
 
     const visible = ref(false)
-    const popoverVisible = ref(false)
     const visibleLogo = ref(false)
-    const delUserVisible = ref(false)
     const loading = ref(false)
     const disabled = ref(false)
     const buttonText = ref('获取验证码')
@@ -186,6 +215,7 @@ export default {
     onBeforeMount(() => {
       store.selectedKeys = 'dashboard'
       router.push('dashboard')
+      noticeCount()
     })
 
     // 点击用户头像
@@ -196,7 +226,6 @@ export default {
           user.email = res.data.data.email
           user.version = res.data.data.version
         }
-        popoverVisible = true
       })
     }
 
@@ -223,12 +252,6 @@ export default {
       })
     }
 
-    // 点击注销账号
-    const onDelete = () => {
-      popoverVisible.value = false
-      delUserVisible.value = true
-    }
-
     // 点击确认注销账号
     const onConfirm = () => {
       let param = {
@@ -239,6 +262,60 @@ export default {
         if (res.data.code == 0) {
           router.push('/')
           message.success('账号已注销')
+        }
+      })
+    }
+
+    // 日期格式化
+    const formatDate = (timeStamp) => {
+      let now = (Date.parse(new Date())) / 1000
+      if (now - timeStamp < 60) {
+        return "刚刚"
+      }
+      if ((new Date().getDate()) == (new Date(timeStamp * 1000).getDate())) {
+        return "今天 " + moment(timeStamp * 1000).format('HH:mm')
+      }
+      return moment(timeStamp * 1000).format('YYYY-MM-DD')
+    }
+
+    // 点击读取通知
+    const onReadNotice = (id) => {
+      updateNotice({ id: id }).then((res) => {
+        if (res.data.code == 0) {
+          onNotice()
+          noticeCount()
+        }
+      })
+    }
+
+    // 获取通知数量
+    const noticeCount = () => {
+      getNoticeCount().then((res) => {
+        if (res.data.code == 0) {
+          data.noticeCount = res.data.data.count
+        }
+      })
+    }
+
+    // 获取通知列表
+    const onNotice = () => {
+      getNoticeList().then((res) => {
+        if (res.data.code == 0) {
+          data.noticeList = res.data.data
+        }
+      })
+    }
+
+    // 删除通知
+    const onDeleteNotice = () => {
+      let ids = []
+      for (let index = 0; index < data.noticeList.length; index++) {
+        ids[index] = data.noticeList[index].id
+      }
+      deleteNotice({ ids: ids }).then((res) => {
+        if (res.data.code == 0) {
+          data.noticeList = res.data.data
+          onNotice()
         }
       })
     }
@@ -255,7 +332,6 @@ export default {
       disabled.value = false
       modalFormRef.value.resetFields()
       visible.value = false
-      delUserVisible.value = false
     };
 
     return {
@@ -266,18 +342,21 @@ export default {
       user,
       visible,
       visibleLogo,
-      popoverVisible,
-      delUserVisible,
       loading,
       disabled,
       buttonText,
       onUserAvatar,
-      onDelete,
       onLogout,
       onGetCode,
       onConfirm,
+      onNotice,
+      onReadNotice,
+      noticeCount,
+      onDeleteNotice,
       onCancel,
       store,
+      formatDate,
+      data
     };
   },
 }
@@ -320,7 +399,7 @@ export default {
   color: #f56a00;
   background-color: #fde3cf;
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 20px;
 }
 
 .popover {

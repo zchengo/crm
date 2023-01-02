@@ -20,6 +20,14 @@ const (
 )
 
 type SubscribeService struct {
+	noticeService *NoticeService
+}
+
+func NewSubscribeService() *SubscribeService {
+	subscribeService := SubscribeService{
+		noticeService: &NoticeService{},
+	}
+	return &subscribeService
 }
 
 // 订阅专业版，发起支付
@@ -96,11 +104,14 @@ func (s *SubscribeService) Callback(outTradeNo string) (string, int) {
 
 	// 创建订阅信息
 	var expired int64
+	var content string
 	switch order.Version {
 	case 2:
 		expired = time.Now().Unix() + int64(2592000)
+		content = SUBSCRIBE_NOTICE_TEMPLATE1
 	case 3:
 		expired = time.Now().Unix() + int64(31104000)
+		content = SUBSCRIBE_NOTICE_TEMPLATE2
 	}
 	subscribe := models.Subscribe{
 		Version: order.Version,
@@ -121,11 +132,12 @@ func (s *SubscribeService) Callback(outTradeNo string) (string, int) {
 		}
 	}
 
-	// 修改支付状态
-	key := fmt.Sprintf("uid:%v:pay:status", order.Uid)
-	if err := global.Rdb.Set(ctx, key, Payed, time.Hour*10).Err(); err != nil {
-		return StringNull, response.ErrCodeFailed
-	}
+	// 订阅通知
+	s.noticeService.Create(&models.NoticeParam{
+		Content: content,
+		Creator: order.Uid,
+	})
+
 	return global.Config.Alipay.PaySuccessURL, response.ErrCodeSuccess
 }
 

@@ -66,6 +66,12 @@ func Router() {
 		route.GET("/subscribe/info", api.NewSubscribeApi().GetInfo)
 		route.POST("/subscribe/pay", api.NewSubscribeApi().Pay)
 		route.POST("/subscribe/notify", api.NewSubscribeApi().Notify)
+
+		// 通知模块
+		route.GET("/notice/list", api.NewNoticeApi().GetList)
+		route.GET("/notice/count", api.NewNoticeApi().GetCount)
+		route.PUT("/notice/update", api.NewNoticeApi().Update)
+		route.DELETE("/notice/delete", api.NewNoticeApi().Delete)
 	}
 
 	// 启动、监听端口
