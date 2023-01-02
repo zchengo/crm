@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 28/12/2022 20:09:32
+ Date: 02/01/2023 10:55:52
 */
 
 SET NAMES utf8mb4;
@@ -75,6 +75,30 @@ CREATE TABLE `customer` (
 BEGIN;
 INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (63, '河南中通有限公司', '搜索引擎', '13302308800', '1220080@163.com', '互联网', '普通客户', '宣传页分发附着交通工具宣传', '河南省,郑州市,金水区', '绿地之窗尚峰座', 1, 29, 1671192173, 0);
 INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (64, '可望企业股份有限公司', '电话咨询', '15133905680', '28033056@qq.com', '金融业', '重点客户', '现有客户引荐', '北京市,朝阳区', '黄厂路豆各庄2号', 1, 29, 1671192269, 0);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for notice
+-- ----------------------------
+DROP TABLE IF EXISTS `notice`;
+CREATE TABLE `notice` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `content` varchar(200) DEFAULT NULL COMMENT '通知内容',
+  `status` tinyint DEFAULT NULL COMMENT '状态，1-已读，2-未读',
+  `creator` bigint DEFAULT NULL COMMENT '创建者',
+  `created` bigint DEFAULT NULL COMMENT '创建时间',
+  `updated` bigint DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb3;
+
+-- ----------------------------
+-- Records of notice
+-- ----------------------------
+BEGIN;
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (37, '你登录了账号', 1, 29, 1672627977, 1672628013);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (38, '你登录了账号', 1, 29, 1672628053, 1672628062);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (39, '你登录了账号', 2, 29, 1672628056, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (40, '你登录了账号', 2, 29, 1672628059, 0);
 COMMIT;
 
 -- ----------------------------
