@@ -63,8 +63,8 @@
             </a-col>
         </a-row>
         <a-row :gutter="16">
-            <a-col :span="24">
-                <a-card class="card">
+            <a-col :span="15">
+                <a-card class="card" style="height: 60vh;">
                     <div style="display:flex;align-items: center;justify-content: space-between;">
                         <div style="color: #606266;font-size: 16px;font-weight: 600;margin-left: 10px;">
                             <span>合同金额完成情况</span>
@@ -75,13 +75,27 @@
                                 <question-circle-two-tone style="margin-left: 5px" />
                             </a-tooltip>
                         </div>
-                        <a-radio-group v-model:value="daysRange" @change="initChart" style="margin-left: 20px;">
-                            <a-radio-button :value="7">最近7天</a-radio-button>
-                            <a-radio-button :value="14">最近14天</a-radio-button>
-                            <a-radio-button :value="30">最近30天</a-radio-button>
-                        </a-radio-group>
+                        <a-select v-model:value="daysRange" style="width: 120px" @focus="initChart" @change="initChart">
+                            <a-select-option :value="7">最近7天</a-select-option>
+                            <a-select-option :value="14">最近14天</a-select-option>
+                            <a-select-option :value="30">最近30天</a-select-option>
+                        </a-select>
                     </div>
-                    <div id="main" style="width: 100%; height: 360px;"></div>
+                    <div id="contract" style="width: 100%; height: 360px;"></div>
+                </a-card>
+            </a-col>
+            <a-col :span="9">
+                <a-card class="card" style="height: 60vh;">
+                    <div style="color: #606266;font-size: 16px;font-weight: 600;margin-left: 10px;">
+                        <span>客户行业分布</span>
+                        <a-tooltip placement="right">
+                            <template #title>
+                                <span>客户所在行业，单位（个）</span>
+                            </template>
+                            <question-circle-two-tone style="margin-left: 5px" />
+                        </a-tooltip>
+                    </div>
+                    <div id="customer" style="width: 100%; height: 360px;"></div>
                 </a-card>
             </a-col>
         </a-row>
@@ -91,7 +105,7 @@
 <script>
 import { QuestionCircleTwoTone } from '@ant-design/icons-vue'
 import * as echarts from "echarts";
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onBeforeMount } from 'vue';
 import { getSummary } from "../api/dashboard";
 import { getSubscribeInfo } from '../api/subscribe';
 import { useRouter } from 'vue-router'
@@ -113,7 +127,7 @@ export default {
             products: 0,
         })
 
-        onMounted(() => {
+        onBeforeMount(() => {
             subscribeInfo();
             initChart();
         });
@@ -128,7 +142,7 @@ export default {
                     data.contracts = res.data.data.contracts
                     data.contractAmount = res.data.data.contractAmount
                     data.products = res.data.data.products
-                    echarts.init(document.getElementById("main")).setOption({
+                    echarts.init(document.getElementById("contract")).setOption({
                         xAxis: {
                             type: 'category',
                             data: res.data.data.date,
@@ -156,6 +170,43 @@ export default {
                                 lineStyle: {
                                     width: 3
                                 }
+                            }
+                        ]
+                    });
+                    echarts.init(document.getElementById("customer")).setOption({
+                        tooltip: {
+                            trigger: 'item'
+                        },
+                        legend: {
+                            top: 'bottom',
+                            left: 'center',
+                        },
+                        series: [
+                            {
+                                type: 'pie',
+                                bottom: '15%',
+                                radius: ['40%', '70%'],
+                                avoidLabelOverlap: false,
+                                itemStyle: {
+                                    borderRadius: 10,
+                                    borderColor: '#fff',
+                                    borderWidth: 2,
+                                },
+                                label: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                                emphasis: {
+                                    label: {
+                                        show: true,
+                                        fontSize: 25,
+                                        fontWeight: 'bold'
+                                    }
+                                },
+                                labelLine: {
+                                    show: false
+                                },
+                                data: res.data.data.customerIndustry,
                             }
                         ]
                     })

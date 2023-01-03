@@ -28,6 +28,8 @@ func (d *DashboardService) Summary(uid int64, days int) models.DashboardSum {
 		ds.Date[i] = time.Unix(day, 0).Format("01-02")
 		d--
 	}
+	s := "industry as name, count(*) as value"
+	global.Db.Model(&models.Customer{}).Select(s).Where("creator = ?", uid).Group("industry").Find(&ds.CustomerIndustry)
 	return ds
 }
 
