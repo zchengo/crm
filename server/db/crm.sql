@@ -89,17 +89,8 @@ CREATE TABLE `notice` (
   `created` bigint DEFAULT NULL COMMENT '创建时间',
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
+  KEY `idx_creator` (`creator`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb3;
-
--- ----------------------------
--- Records of notice
--- ----------------------------
-BEGIN;
-INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (37, '你登录了账号', 1, 29, 1672627977, 1672628013);
-INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (38, '你登录了账号', 1, 29, 1672628053, 1672628062);
-INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (39, '你登录了账号', 2, 29, 1672628056, 0);
-INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (40, '你登录了账号', 2, 29, 1672628059, 0);
-COMMIT;
 
 -- ----------------------------
 -- Table structure for product
