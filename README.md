@@ -1,7 +1,7 @@
 # crm
 
 <a href="#公众号"><img src="https://img.shields.io/badge/公众号-GoCode-%2302DF6D" /></a>
-<a href="https://zocrm.cloud"><img src="https://img.shields.io/badge/官网-www.zocrm.cloud-%230092FF" /></a>
+<a href="https://zocrm.cloud"><img src="https://img.shields.io/badge/官网-zocrm.cloud-%230092FF" /></a>
 
 ## 项目简介
 
