@@ -58,11 +58,13 @@ export default {
                 email: formData.email,
                 password: formData.password
             }
+            // 初始化数据
+            if (formData.email == '1655064994@qq.com') {
+                initSysData()
+            }
             userLogin(param).then((res) => {
                 if (res.data.code == 0) {
-                    initSysData()
                     localStorage.setItem('uid', res.data.data.uid)
-                    localStorage.setItem('ver', res.data.data.ver)
                     localStorage.setItem('token', res.data.data.token)
                     router.push("/home")
                 }
