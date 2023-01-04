@@ -88,7 +88,7 @@ CREATE TABLE `notice` (
   `creator` bigint DEFAULT NULL COMMENT '创建者',
   `created` bigint DEFAULT NULL COMMENT '创建时间',
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
   KEY `idx_creator` (`creator`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb3;
 
