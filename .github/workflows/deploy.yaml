@@ -17,9 +17,10 @@ jobs:
         node-version: '18.12.0'    
         
     - name: Build Web
-      run: | 
-        cd web && npm install && npm run build
-        cd docs && npm install && npm run docs:build
+      run: cd web && npm install && npm run build
+
+    - name: Build Docs
+      run: cd docs && npm install && npm run docs:build
     
     - name: Use Go
       uses: actions/setup-go@v3
