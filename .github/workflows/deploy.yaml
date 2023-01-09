@@ -17,7 +17,9 @@ jobs:
         node-version: '18.12.0'    
         
     - name: Build Web
-      run: cd web && npm install && npm run build  
+      run: | 
+        cd web && npm install && npm run build
+        cd docs && npm install && npm run docs:build
     
     - name: Use Go
       uses: actions/setup-go@v3
@@ -34,6 +36,7 @@ jobs:
       run: |
         mkdir -p ~/.ssh/ && echo "$KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
         scp -o StrictHostKeyChecking=no -r web/dist ubuntu@${HOST}:/usr/local/nginx/html/
+        scp -o StrictHostKeyChecking=no -r docs/docs/.vitepress/dist ubuntu@${HOST}:/usr/local/nginx/html/docs/
         ssh -o StrictHostKeyChecking=no ubuntu@${HOST} "sudo /usr/local/nginx/sbin/nginx -s reload"
         scp -o StrictHostKeyChecking=no -r server/crmserver ubuntu@${HOST}:/home/ubuntu/
         ssh -o StrictHostKeyChecking=no ubuntu@${HOST} "sudo /home/ubuntu/crmapi/restart.sh > /dev/null 2>&1 &"
