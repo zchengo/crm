@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="header">
-            <img src="../assets/logo.svg" style="width: 60px;height: 60px;filter: drop-shadow(2px 2px 6px #79bbff);" />
+            <img src="../assets/logo.svg" style="width: 80px;height: 80px;filter: drop-shadow(2px 2px 6px #79bbff);" />
             <span class="title">ZO<b style="color: #1283FF;">C</b>RM</span>
         </div>
         <div class="content">

@@ -2,7 +2,7 @@
   <a-layout style="min-height: 100vh">
     <a-layout-sider width="180" class="sider" v-model:collapsed="collapsed" :trigger="null" collapsible>
       <div class="logo">
-        <div><img src="../assets/logo.svg" style="width: 32px;height: 32px;filter: drop-shadow(2px 2px 6px #79bbff);" />
+        <div><img src="../assets/logo.svg" style="width: 35px;height: 35px;filter: drop-shadow(2px 2px 6px #79bbff);" />
         </div>
         <div v-if="collapsed == false" class="title"><b>Z</b>O<b style="color: #1283FF;">C</b>RM</div>
       </div>
