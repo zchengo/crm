@@ -155,16 +155,14 @@ export default {
             dataIndex: 'created',
             width: 185,
             customRender: text => {
-                let m = moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
-                return m == 'Invalid date' ? '' : m
+                return text.value == 0 ? '' : moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
             }
         }, {
             title: '更新时间',
             dataIndex: 'updated',
             width: 185,
             customRender: text => {
-                let m = moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
-                return m == 'Invalid date' ? '' : m
+                return text.value == 0 ? '' : moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
             }
         }];
 
