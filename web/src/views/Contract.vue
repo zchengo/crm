@@ -14,7 +14,7 @@
             <div>
                 <a-button type="primary" @click="onExport">
                     <template #icon>
-                        <DownloadOutlined />
+                        <ExportOutlined />
                     </template>导出</a-button>
             </div>
         </div>
@@ -39,7 +39,7 @@
         </a-table>
         <!-- 新建、编辑合同 -->
         <a-modal v-model:visible="visible" :title="title" @ok="onSave" @cancel="onCancel" cancelText="取消" okText="保存"
-            width="800px" style="top: 80px">
+            width="800px" :centered="true">
             <div style="height: 55vh;overflow-y: scroll;padding: 0 15px;">
                 <a-form ref="contractFormRef" :model="contract" layout="vertical" name="contract" :rules="rules">
                     <a-row :gutter="16">
@@ -172,7 +172,7 @@
 
 <script>
 import { ref, reactive, onMounted, createVNode } from 'vue';
-import { SearchOutlined, ExclamationCircleOutlined, UpCircleOutlined, DownCircleOutlined, DownloadOutlined } from '@ant-design/icons-vue';
+import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
 import { createContract, updateContract, queryContractList, queryContractInfo, deleteContract, queryContractPlist, contractExport } from '../api/contract';
 import { queryProductList } from "../api/product";
@@ -182,9 +182,7 @@ import { message, Modal } from 'ant-design-vue';
 export default {
     components: {
         SearchOutlined,
-        UpCircleOutlined,
-        DownCircleOutlined,
-        DownloadOutlined
+        ExportOutlined
     },
     setup() {
 

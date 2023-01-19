@@ -14,7 +14,7 @@
             <div>
                 <a-button type="primary" @click="onExport">
                     <template #icon>
-                        <DownloadOutlined />
+                        <ExportOutlined />
                     </template>导出</a-button>
             </div>
         </div>
@@ -39,7 +39,7 @@
 
         <!-- 新建、编辑客户 -->
         <a-modal v-model:visible="visible" :title="title" @ok="onSave" @cancel="onCancel" cancelText="取消" okText="保存"
-            width="800px" style="top: 80px;">
+            width="800px" :centered="true">
             <div style="height: 55vh;overflow-y: scroll;padding: 0 15px;">
                 <a-form ref="customerFormRef" :model="customer" layout="vertical" name="customer" :rules="rules">
                     <a-row :gutter="16">
@@ -126,7 +126,7 @@
 
 <script>
 import { ref, reactive, onMounted, createVNode } from 'vue';
-import { SearchOutlined, ExclamationCircleOutlined, DownloadOutlined } from '@ant-design/icons-vue';
+import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
 import { createCustomer, updateCustomer, queryCustomerList, queryCustomerInfo, deleteCustomer, customerExport } from '../api/customer';
 import { message, Modal } from 'ant-design-vue';
@@ -135,7 +135,7 @@ import regionData from '../assets/region';
 export default {
     components: {
         SearchOutlined,
-        DownloadOutlined
+        ExportOutlined
     },
     setup() {
         const columns = [{

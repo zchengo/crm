@@ -14,7 +14,7 @@
             <div>
                 <a-button type="primary" @click="onExport">
                     <template #icon>
-                        <DownloadOutlined />
+                        <ExportOutlined />
                     </template>导出</a-button>
             </div>
         </div>
@@ -41,73 +41,75 @@
         </a-table>
         <!-- 新建、编辑产品 -->
         <a-modal v-model:visible="visible" :title="title" @ok="onSave" @cancel="onCancel" cancelText="取消" okText="保存"
-            width="800px" style="top: 80px">
-            <a-form ref="productFormRef" :model="product" layout="vertical" name="product" :rules="rules">
-                <a-row :gutter="16">
-                    <a-col :span="12">
-                        <a-form-item label="产品名称" name="name">
-                            <a-input v-model:value="product.name" />
-                        </a-form-item>
-                    </a-col>
-                    <a-col :span="12">
-                        <a-form-item label="产品类型" name="type">
-                            <a-select v-model:value="product.type" placeholder="请选择">
-                                <a-select-option :value="1">默认</a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-                <a-row :gutter="16">
-                    <a-col :span="12">
-                        <a-form-item label="产品单位" name="unit">
-                            <a-select v-model:value="product.unit" placeholder="请选择">
-                                <a-select-option value="个">个</a-select-option>
-                                <a-select-option value="只">只</a-select-option>
-                                <a-select-option value="块">块</a-select-option>
-                                <a-select-option value="瓶">瓶</a-select-option>
-                                <a-select-option value="盒">盒</a-select-option>
-                                <a-select-option value="台">台</a-select-option>
-                                <a-select-option value="箱">箱</a-select-option>
-                                <a-select-option value="吨">吨</a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-                    <a-col :span="12">
-                        <a-form-item label="产品编码" name="code">
-                            <a-input v-model:value="product.code" />
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-                <a-row :gutter="16">
-                    <a-col :span="12">
-                        <a-form-item label="价格" name="price">
-                            <a-input-number v-model:value="product.price" style="width: 100%" />
-                        </a-form-item>
-                    </a-col>
-                    <a-col :span="12">
-                        <a-form-item label="是否上下架" name="status">
-                            <a-select v-model:value="product.status" placeholder="请选择">
-                                <a-select-option :value="1">上架</a-select-option>
-                                <a-select-option :value="2">下架</a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-                <a-row :gutter="16">
-                    <a-col :span="24">
-                        <a-form-item label="产品描述" name="description">
-                            <a-textarea v-model:value="product.description" :rows="4" />
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-            </a-form>
+            width="800px" :centered="true">
+            <div style="height: 55vh;overflow-y: scroll;padding: 0 15px;">
+                <a-form ref="productFormRef" :model="product" layout="vertical" name="product" :rules="rules">
+                    <a-row :gutter="16">
+                        <a-col :span="12">
+                            <a-form-item label="产品名称" name="name">
+                                <a-input v-model:value="product.name" />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="12">
+                            <a-form-item label="产品类型" name="type">
+                                <a-select v-model:value="product.type" placeholder="请选择">
+                                    <a-select-option :value="1">默认</a-select-option>
+                                </a-select>
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                    <a-row :gutter="16">
+                        <a-col :span="12">
+                            <a-form-item label="产品单位" name="unit">
+                                <a-select v-model:value="product.unit" placeholder="请选择">
+                                    <a-select-option value="个">个</a-select-option>
+                                    <a-select-option value="只">只</a-select-option>
+                                    <a-select-option value="块">块</a-select-option>
+                                    <a-select-option value="瓶">瓶</a-select-option>
+                                    <a-select-option value="盒">盒</a-select-option>
+                                    <a-select-option value="台">台</a-select-option>
+                                    <a-select-option value="箱">箱</a-select-option>
+                                    <a-select-option value="吨">吨</a-select-option>
+                                </a-select>
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="12">
+                            <a-form-item label="产品编码" name="code">
+                                <a-input v-model:value="product.code" />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                    <a-row :gutter="16">
+                        <a-col :span="12">
+                            <a-form-item label="价格" name="price">
+                                <a-input-number v-model:value="product.price" style="width: 100%" />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="12">
+                            <a-form-item label="是否上下架" name="status">
+                                <a-select v-model:value="product.status" placeholder="请选择">
+                                    <a-select-option :value="1">上架</a-select-option>
+                                    <a-select-option :value="2">下架</a-select-option>
+                                </a-select>
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                    <a-row :gutter="16">
+                        <a-col :span="24">
+                            <a-form-item label="产品描述" name="description">
+                                <a-textarea v-model:value="product.description" :rows="4" />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                </a-form>
+            </div>
         </a-modal>
     </div>
 </template>
 
 <script>
 import { ref, reactive, onMounted, createVNode } from 'vue';
-import { SearchOutlined, ExclamationCircleOutlined, DownloadOutlined } from '@ant-design/icons-vue';
+import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
 import { createProduct, updateProduct, queryProductList, deleteProduct, queryProductInfo, productExport } from '../api/product';
 import { message, Modal } from 'ant-design-vue';
@@ -115,7 +117,7 @@ import { message, Modal } from 'ant-design-vue';
 export default {
     components: {
         SearchOutlined,
-        DownloadOutlined
+        ExportOutlined
     },
     setup() {
         // 表格字段
