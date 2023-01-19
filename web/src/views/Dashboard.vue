@@ -64,9 +64,9 @@
         </a-row>
         <a-row :gutter="16">
             <a-col :span="15">
-                <a-card class="card" style="height: 60vh;">
+                <a-card class="card" style="height: 60vh;margin-top: 20px;">
                     <div style="display:flex;align-items: center;justify-content: space-between;">
-                        <div style="color: #606266;font-size: 16px;font-weight: 600;margin-left: 10px;">
+                        <div style="color: #606266;font-size: 16px;font-weight: 600;">
                             <span>合同金额完成情况</span>
                             <a-tooltip placement="right">
                                 <template #title>
@@ -85,8 +85,8 @@
                 </a-card>
             </a-col>
             <a-col :span="9">
-                <a-card class="card" style="height: 60vh;">
-                    <div style="color: #606266;font-size: 16px;font-weight: 600;margin-left: 10px;">
+                <a-card class="card" style="height: 60vh;margin-top: 20px;">
+                    <div style="color: #606266;font-size: 16px;font-weight: 600;">
                         <span>客户行业分布</span>
                         <a-tooltip placement="right">
                             <template #title>
@@ -235,7 +235,6 @@ export default {
 
 <style scoped>
 .card {
-    margin-top: 20px;
     border: none;
     box-shadow: 0 1px 16px 0 rgb(33 41 48 / 5%);
 }

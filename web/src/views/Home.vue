@@ -1,12 +1,12 @@
 <template>
-  <a-layout style="min-height: 100vh">
-    <a-layout-sider width="180" class="sider" v-model:collapsed="collapsed" :trigger="null" collapsible>
+  <a-layout has-sider>
+    <a-layout-sider class="layout-sider" width="150">
       <div class="logo">
-        <div><img src="../assets/logo.svg" style="width: 35px;height: 35px;filter: drop-shadow(2px 2px 6px #79bbff);" />
+        <div><img src="../assets/logo.svg" style="width: 32px;height: 32px;filter: drop-shadow(2px 2px 6px #79bbff);" />
         </div>
         <div v-if="collapsed == false" class="title"><b>Z</b>O<b style="color: #1283FF;">C</b>RM</div>
       </div>
-      <a-menu style="border-right: none;" v-model:selectedKeys="selectedKeys" mode="inline">
+      <a-menu style="border-right: none;width: 149px;" v-model:selectedKeys="selectedKeys" mode="inline">
         <a-menu-item :key="item.key" v-for="item in menuItem">
           <router-link :to="item.to" @click="store.selectedKeys = item.key" replace>
             <component :is="item.icon" />
@@ -15,19 +15,11 @@
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
-    <a-layout>
+    <a-layout :style="{ marginLeft: '150px', background: '#FAFAFA' }">
       <a-layout-header class="header">
-        <div>
-          <menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
-          <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
-        </div>
-        <div style="display: flex;align-items: center;justify-items: center;">
-          <a-popover placement="bottomRight" :overlayStyle="{ width: '180px' }" trigger="click">
-            <template #content>
-              <a-image :width="150" src="https://zocrm.cloud/gzh_qrcode.jpg" :preview="false" />
-            </template>
-            <QuestionCircleFilled style="color: #909399; font-size: 18px;margin: 0 15px;" />
-          </a-popover>
+        <div style="display: flex;align-items: center;justify-items: center;margin-right: 10px;">
+          <QuestionCircleFilled @click="toDocs"
+            style="color: #909399;font-size: 18px;margin: 2px 15px 0 0;cursor: pointer;" />
           <a-popover placement="bottomRight" :overlayStyle="{ width: '320px' }" trigger="click">
             <template #content>
               <div style="max-height: 250px;overflow-y: scroll;">
@@ -37,12 +29,12 @@
                       <div style="display: inline-flex;align-items: center;">
                         <a-avatar shape="square" :size="20" v-if="item.status == 1">
                           <template #icon>
-                            <BellFilled style="font-size: 12px;" />
+                            <BellFilled style="font-size: 18px;" />
                           </template>
                         </a-avatar>
                         <a-avatar shape="square" style="color: #476FFF; background-color: #ccd6fa" :size="20" v-else>
                           <template #icon>
-                            <BellFilled style="font-size: 12px;" />
+                            <BellFilled style="font-size: 18px;" />
                           </template>
                         </a-avatar>
                         <div v-if="item.status == 1" style="color: #717171;">&nbsp;&nbsp;&nbsp;{{ item.content }}</div>
@@ -65,9 +57,8 @@
               <BellFilled style="color: #909399; font-size: 20px;cursor: pointer;" @click="onNotice" />
             </a-badge>
           </a-popover>
-
           <a-dropdown :trigger="['click']">
-            <a-avatar @click="onUserAvatar" class="avatar" :size="32">U</a-avatar>
+            <a-avatar @click="onUserAvatar" class="avatar" :size="28">U</a-avatar>
             <template #overlay>
               <a-menu>
                 <a-menu-item @click="visible = true">
@@ -82,8 +73,8 @@
         </div>
         <!-- 注销账号弹出框 -->
         <a-modal v-model:visible="visible" title="注销账号" @ok="onConfirm" @cancel="onCancel" cancelText="取消" okText="注销"
-          width="360px" :centered="true">
-          <a-alert message="账号注销后，会清空账号相关的所有数据" banner /><br />
+          width="400px" :centered="true">
+          <a-alert message="账号注销后，会清空账号相关的所有数据。" type="warning" show-icon /><br />
           <a-form :model="user" layout="vertical" @finish="onSubmit" :rules="rules">
             <a-form-item name="email">
               <a-input v-model:value="user.email" placeholder="邮箱" disabled />
@@ -96,7 +87,8 @@
           </a-form>
         </a-modal>
       </a-layout-header>
-      <a-layout-content :style="{ margin: '10px', padding: '18px 18px 12px 18px', background: '#fff' }">
+      <a-layout-content
+        :style="{ margin: '10px', padding: '20px 20px 12px 20px', background: '#fff', overflow: 'initial', borderRadius: '5px' }">
         <transition name="fade">
           <router-view v-slot="{ Component }">
             <component :is="Component" />
@@ -114,10 +106,8 @@ import { useStore } from '../store/index';
 import { message } from 'ant-design-vue';
 import { getUserInfo, getVerifyCode, userDelete } from '../api/user';
 import { updateNotice, getNoticeCount, getNoticeList, deleteNotice } from '../api/notice';
-import { DashboardOutlined, SmileOutlined, MehOutlined, ShoppingOutlined } from '@ant-design/icons-vue';
-import { CrownOutlined, MenuUnfoldOutlined, MenuFoldOutlined, WechatFilled } from '@ant-design/icons-vue';
-import { QuestionCircleFilled, BellFilled } from '@ant-design/icons-vue';
-import { ExclamationCircleOutlined, CrownFilled, LogoutOutlined, DownCircleOutlined, DeleteOutlined } from '@ant-design/icons-vue';
+import { DashboardOutlined, SmileOutlined, MehOutlined, ShoppingOutlined, CrownOutlined } from '@ant-design/icons-vue';
+import { QuestionCircleFilled, BellFilled, ExclamationCircleOutlined, LogoutOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
 
 export default {
@@ -127,16 +117,10 @@ export default {
     MehOutlined,
     ShoppingOutlined,
     CrownOutlined,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
-    WechatFilled,
     QuestionCircleFilled,
     BellFilled,
     ExclamationCircleOutlined,
-    CrownFilled,
     LogoutOutlined,
-    DownCircleOutlined,
-    DeleteOutlined
   },
   setup() {
     // 菜单选项
@@ -227,6 +211,11 @@ export default {
           user.version = res.data.data.version
         }
       })
+    }
+
+    // 跳转到项目文档
+    const toDocs = () => {
+      window.open("https://docs.zocrm.cloud")
     }
 
     // 点击获取验证码
@@ -356,14 +345,21 @@ export default {
       onCancel,
       store,
       formatDate,
-      data
+      data,
+      toDocs
     };
   },
 }
 </script>
 
 <style scoped>
-.sider {
+.layout-sider {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
   background: #fff;
   border-right: 0.5px solid #F0F2F5;
 }
@@ -372,7 +368,7 @@ export default {
   padding: 0 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   background: #fff;
 }
 
@@ -410,7 +406,7 @@ export default {
 }
 
 .title {
-  font-size: 25px;
+  font-size: 20px;
   color: rgba(31, 31, 31, 0.85);
   font-weight: 620;
   margin-left: 10px;
