@@ -1,22 +1,8 @@
-<p align="center">
-  <a href="https://zocrm.cloud">
-    <img src="https://docs.zocrm.cloud/logo.svg" width="150" height="150" style="filter: drop-shadow(2px 2px 6px #79bbff);"/>
-  </a>
-</p>
-
-<h1 align="center">
-  <a href="https://docs.zocrm.cloud" target="_blank">CRM</a>
-</h1>
-
-<div align="center">
-
-一个免费、开源的客户关系管理系统。
+# crm
 
 <a href="#公众号"><img src="https://img.shields.io/badge/公众号-GoCode-%2302DF6D" /></a>
 <a href="https://zocrm.cloud"><img src="https://img.shields.io/badge/在线演示-zocrm.cloud-%230092FF" /></a>
 <a href="https://docs.zocrm.cloud"><img src="https://img.shields.io/badge/项目文档-docs.zocrm.cloud-%230092FF" /></a>
-
-</div>
 
 ## 简介
 
@@ -62,7 +48,7 @@ $ npm run dev
 
 欢迎关注公众号「GoCode」，本公众号专注Go语言技术分享！
 
-<img src="https://docs.zocrm.cloud/gzh_qrcode.jpg" style="border-radius: 8px;" alt="gzh_qrcode"/>
+![公众号二维码](https://docs.zocrm.cloud/gzh_qrcode.jpg)
 
 ## 许可证
 
