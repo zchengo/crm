@@ -60,10 +60,7 @@
           <a-dropdown :trigger="['click']">
             <a-avatar @click="onUserAvatar" class="avatar" :size="28">U</a-avatar>
             <template #overlay>
-              <a-menu>
-                <a-menu-item @click="toWriteSurvey">
-                  <FormOutlined /> 填写问卷
-                </a-menu-item>
+              <a-menu style="width: 120px;">
                 <a-menu-item @click="visible = true">
                   <ExclamationCircleOutlined /> 注销账号
                 </a-menu-item>
@@ -110,7 +107,7 @@ import { message } from 'ant-design-vue';
 import { getUserInfo, getVerifyCode, userDelete } from '../api/user';
 import { updateNotice, getNoticeCount, getNoticeList, deleteNotice } from '../api/notice';
 import { DashboardOutlined, SmileOutlined, MehOutlined, ShoppingOutlined, CrownOutlined } from '@ant-design/icons-vue';
-import { QuestionCircleFilled, BellFilled, FormOutlined, ExclamationCircleOutlined, LogoutOutlined } from '@ant-design/icons-vue';
+import { QuestionCircleFilled, BellFilled, ExclamationCircleOutlined, LogoutOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
 
 export default {
@@ -122,7 +119,6 @@ export default {
     CrownOutlined,
     QuestionCircleFilled,
     BellFilled,
-    FormOutlined,
     ExclamationCircleOutlined,
     LogoutOutlined
   },
@@ -220,11 +216,6 @@ export default {
     // 跳转到项目文档
     const toDocs = () => {
       window.open("https://docs.zocrm.cloud")
-    }
-
-    // 跳转到满意度调查问卷页面
-    const toWriteSurvey = () => {
-      window.open("https://form.antdv.com/r/630bca293cbf0067")
     }
 
     // 点击获取验证码
@@ -355,8 +346,7 @@ export default {
       store,
       formatDate,
       data,
-      toDocs,
-      toWriteSurvey
+      toDocs
     };
   },
 }
