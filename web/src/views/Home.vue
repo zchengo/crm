@@ -88,7 +88,7 @@
         </a-modal>
       </a-layout-header>
       <a-layout-content
-        :style="{ margin: '10px', padding: '20px 20px 12px 20px', background: '#fff', overflow: 'initial', borderRadius: '5px' }">
+        :style="{ margin: '10px', background: '#fff', overflow: 'initial', borderRadius: '5px' }">
         <transition name="fade">
           <router-view v-slot="{ Component }">
             <component :is="Component" />
@@ -106,7 +106,7 @@ import { useStore } from '../store/index';
 import { message } from 'ant-design-vue';
 import { getUserInfo, getVerifyCode, userDelete } from '../api/user';
 import { updateNotice, getNoticeCount, getNoticeList, deleteNotice } from '../api/notice';
-import { DashboardOutlined, SmileOutlined, MehOutlined, ShoppingOutlined, CrownOutlined } from '@ant-design/icons-vue';
+import { DashboardOutlined, SmileOutlined, MehOutlined, ShoppingOutlined, ProfileOutlined, CrownOutlined } from '@ant-design/icons-vue';
 import { QuestionCircleFilled, BellFilled, ExclamationCircleOutlined, LogoutOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
 
@@ -116,6 +116,7 @@ export default {
     SmileOutlined,
     MehOutlined,
     ShoppingOutlined,
+    ProfileOutlined,
     CrownOutlined,
     QuestionCircleFilled,
     BellFilled,
@@ -144,6 +145,11 @@ export default {
       to: "/product",
       icon: "shopping-outlined",
       name: "产品"
+    }, {
+      key: "config",
+      to: "/config",
+      icon: "profile-outlined",
+      name: "配置"
     }, {
       key: "subscribe",
       to: "/subscribe",

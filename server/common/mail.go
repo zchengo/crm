@@ -2,13 +2,15 @@ package common
 
 import (
 	"crm/global"
+	"crm/models"
 	"crypto/tls"
 	"fmt"
+	"log"
 
 	"gopkg.in/gomail.v2"
 )
 
-// 发送邮件
+// 发送邮件（系统级别）
 // QQ邮箱：SMTP 服务器地址：smtp.qq.com（SSL协议端口：465/994 | 非SSL协议端口：25）
 // 163邮箱：SMTP 服务器地址：smtp.163.com（端口：25）
 func SendMail(email, content string) error {
@@ -30,4 +32,28 @@ func SendMail(email, content string) error {
 		return err
 	}
 	return nil
+}
+
+// 发送邮件给客户（客户级别）
+func SendMailToCustomer(mp models.MailParam) error {
+	m := gomail.NewMessage()
+	m.SetHeader("From", mp.Sender)
+	m.SetHeader("To", mp.Receiver)
+	m.SetHeader("Subject", mp.Subject)
+	m.SetBody("text/html", mp.Content)
+	d := gomail.NewDialer(mp.Smtp, mp.Port, mp.Sender, mp.AuthCode)
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	if err := d.DialAndSend(m); err != nil {
+		log.Printf("send mail to customer error : %s", err)
+		return err
+	}
+	return nil
+}
+
+// 检测STMP服务是否可连接
+func DialMail(smtp string, port int, sender, authCode string) error {
+	d := gomail.NewDialer(smtp, port, sender, authCode)
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	_, err := d.Dial()
+	return err
 }

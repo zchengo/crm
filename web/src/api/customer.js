@@ -18,6 +18,15 @@ export function updateCustomer(param) {
 	})
 }
 
+// 发送邮件给客户
+export function sendMailToCustomer(param) {
+    return request({
+		url: '/customer/send',
+		method: 'post',
+		data: param,
+	})
+}
+
 // 删除客户
 export function deleteCustomer(param) {
     return request({

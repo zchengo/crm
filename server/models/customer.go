@@ -45,6 +45,13 @@ type CustomerUpdateParam struct {
 	Status   int    `json:"status" binding:"-"`
 }
 
+type CustomerSendMailParam struct {
+	Uid      int64  `json:"uid" binding:"-"`
+	Receiver string `json:"receiver" binding:"required,email"`
+	Subject  string `json:"subject" binding:"omitempty,gt=0"`
+	Content  string `json:"content" binding:"required,gt=0"`
+}
+
 type CustomerDeleteParam struct {
 	Ids []int64 `json:"ids" binding:"required"`
 }

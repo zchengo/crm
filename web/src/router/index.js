@@ -11,6 +11,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Customer from '../views/Customer.vue'
 import Contract from '../views/Contract.vue'
 import Product from '../views/Product.vue'
+import Config from '../views/Config.vue'
 import Subscribe from '../views/Subscribe.vue'
 import Result from '../views/Result.vue'
 
@@ -58,6 +59,11 @@ const routes = [
         path: '/product',
         name: 'product',
         component: Product,
+      },
+      {
+        path: '/config',
+        name: 'config',
+        component: Config,
       },
       {
         path: '/subscribe',

@@ -23,6 +23,10 @@ const (
 	ErrCodePayFailed = 20001 // 支付宝支付失败
 
 	ErrCodeFileExportFailed = 30001 // 文件导出失败
+
+	ErrCodeMailConfigInvalid = 50001 // 邮件服务配置无效
+	ErrCodeMailSendFailed    = 50002 // 邮件发送失败
+	ErrCodeMailSendUnEnable  = 50003 // 邮件服务未开启
 )
 
 var msg = map[int]string{
@@ -42,4 +46,7 @@ var msg = map[int]string{
 	ErrCodeEmailFormatInvalid:   "email format invalid",
 	ErrCodeUserPassResetFailed:  "user password reset failed",
 	ErrCodeFileExportFailed:     "file export failed",
+	ErrCodeMailConfigInvalid:    "mail config invalid",
+	ErrCodeMailSendFailed:       "mail send failed",
+	ErrCodeMailSendUnEnable:     "mail send server unEnable",
 }

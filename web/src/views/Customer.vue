@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="{ padding: '20px 20px 12px 20px' }">
         <div style="display: flex;justify-content: space-between;margin-bottom: 20px;">
             <a-space>
                 <a-input v-model:value="keyWord" placeholder="客户名称" style="width: 280px; margin-right: 50px;">
@@ -26,6 +26,11 @@
             <template #bodyCell="{ column, text, record }">
                 <template v-if="column.dataIndex === 'name'">
                     <a @click="onEdit(record)">{{ text }}</a>
+                </template>
+                <template v-if="column.dataIndex === 'operation'">
+                    <a-button type="link"><template #icon>
+                            <MailTwoTone two-tone-color="#476FFF" @click="onMail(record.name, record.email)" />
+                        </template></a-button>
                 </template>
                 <template v-if="column.dataIndex === 'status'">
                     <a-tag v-if="text == 1" color="green">已成交</a-tag>
@@ -121,21 +126,53 @@
                 </a-form>
             </div>
         </a-modal>
+        <!-- 发送邮件对话框 -->
+        <a-modal v-model:visible="visibleMail" title="发送邮件" @ok="onSend" @cancel="onCancel" cancelText="取消" okText="发送"
+            width="800px" :centered="true">
+            <div style="height: 55vh;overflow-y: scroll;padding: 0 15px;">
+                <a-form :model="mail" layout="vertical">
+                    <a-row :gutter="16">
+                        <a-col :span="12">
+                            <a-form-item label="客户名称" name="customerName">
+                                <a-input v-model:value="mail.customerName" disabled />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="12">
+                            <a-form-item label="收件人" name="receiver">
+                                <a-input v-model:value="mail.receiver" disabled />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="24">
+                            <a-form-item label="邮件主题" name="subject">
+                                <a-input v-model:value="mail.subject" />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="24">
+                            <a-form-item label="邮件内容" name="content">
+                                <a-textarea v-model:value="mail.content" placeholder="邮件正文支持HTML语法"
+                                    :auto-size="{ minRows: 6, maxRows: 100 }" />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                </a-form>
+            </div>
+        </a-modal>
     </div>
 </template>
 
 <script>
 import { ref, reactive, onMounted, createVNode } from 'vue';
-import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined } from '@ant-design/icons-vue';
+import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined, MailTwoTone } from '@ant-design/icons-vue';
 import moment from 'moment'
-import { createCustomer, updateCustomer, queryCustomerList, queryCustomerInfo, deleteCustomer, customerExport } from '../api/customer';
+import { createCustomer, updateCustomer, sendMailToCustomer, queryCustomerList, queryCustomerInfo, deleteCustomer, customerExport } from '../api/customer';
 import { message, Modal } from 'ant-design-vue';
 import regionData from '../assets/region';
 
 export default {
     components: {
         SearchOutlined,
-        ExportOutlined
+        ExportOutlined,
+        MailTwoTone
     },
     setup() {
         const columns = [{
@@ -192,6 +229,12 @@ export default {
             customRender: text => {
                 return text.value == 0 ? '' : moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
             }
+        }, {
+            title: '操作',
+            dataIndex: 'operation',
+            width: 65,
+            fixed: 'right',
+            ellipsis: true,
         }];
 
         // 表单校验
@@ -263,6 +306,7 @@ export default {
         const operation = ref(0);
         const customerFormRef = ref();
         const keyWord = ref('')
+        const visibleMail = ref(false)
 
         // 点击新建客户
         const onCreate = () => {
@@ -375,7 +419,7 @@ export default {
         // 导出表格
         const onExport = () => {
             customerExport().then((res) => {
-                if (res.data.type == 'application/json'){
+                if (res.data.type == 'application/json') {
                     message.error('导出错误！')
                 } else {
                     let blob = new Blob([res.data], {
@@ -386,6 +430,40 @@ export default {
                     a.href = window.URL.createObjectURL(blob)
                     a.click()
                     window.URL.revokeObjectURL(a.href)
+                }
+            })
+        }
+
+        const mail = reactive({
+            customerName: '',
+            receiver: '',
+            subject: '',
+            content: ''
+        })
+
+        // 点击邮件
+        const onMail = (cname, email) => {
+            mail.customerName = cname
+            mail.receiver = email
+            visibleMail.value = true
+        }
+
+        // 点击发送邮件
+        const onSend = () => {
+            let param = {
+                receiver: mail.receiver,
+                subject: mail.subject,
+                content: mail.content
+            }
+            sendMailToCustomer(param).then((res) => {
+                if (res.data.code == 0) {
+                    message.success("邮件已发送")
+                }
+                if (res.data.code == 50002) {
+                    message.error("邮件发送失败")
+                }
+                if (res.data.code == 50003) {
+                    message.warn("邮件服务未开启")
                 }
             })
         }
@@ -429,6 +507,10 @@ export default {
             onPagination,
             pagination,
             selectedOptions,
+            mail,
+            visibleMail,
+            onMail,
+            onSend
         };
     },
 }

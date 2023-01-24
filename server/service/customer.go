@@ -9,6 +9,11 @@ import (
 	"time"
 )
 
+const (
+	Open  = 1
+	Close = 2
+)
+
 type CustomerService struct {
 }
 
@@ -53,6 +58,31 @@ func (c *CustomerService) Update(param *models.CustomerUpdateParam) int {
 	db := global.Db.Model(&customer).Select("*").Omit("id", "creator", "created")
 	if err := db.Updates(&customer).Error; err != nil {
 		return response.ErrCodeFailed
+	}
+	return response.ErrCodeSuccess
+}
+
+// 发送邮件给客户
+func (c *CustomerService) SendMail(param *models.CustomerSendMailParam) int {
+	var mc models.MailConfig
+	err := global.Db.Model(&models.MailConfig{}).Where("creator = ?", param.Uid).First(&mc).Error
+	if err != nil {
+		return response.ErrCodeMailSendFailed
+	}
+	if mc.Status == Close {
+		return response.ErrCodeMailSendUnEnable
+	}
+	mailParam := models.MailParam{
+		Smtp:     mc.Stmp,
+		Port:     mc.Port,
+		AuthCode: mc.AuthCode,
+		Sender:   mc.Email,
+		Subject:  param.Subject,
+		Content:  param.Content,
+		Receiver: param.Receiver,
+	}
+	if err := common.SendMailToCustomer(mailParam); err != nil {
+		return response.ErrCodeMailSendFailed
 	}
 	return response.ErrCodeSuccess
 }

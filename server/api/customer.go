@@ -4,6 +4,7 @@ import (
 	"crm/models"
 	"crm/response"
 	"crm/service"
+	"log"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -42,6 +43,21 @@ func (c *CustomerApi) Update(context *gin.Context) {
 		return
 	}
 	errCode := c.customerService.Update(&param)
+	response.Result(errCode, nil, context)
+}
+
+// 发送邮件给客户
+func (c *CustomerApi) SendMail(context *gin.Context) {
+	var param models.CustomerSendMailParam
+	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
+	err := context.ShouldBind(&param)
+	if uid <= 0 || err != nil {
+		response.Result(response.ErrCodeParamInvalid, nil, context)
+		log.Println(err)
+		return
+	}
+	param.Uid = int64(uid)
+	errCode := c.customerService.SendMail(&param)
 	response.Result(errCode, nil, context)
 }
 

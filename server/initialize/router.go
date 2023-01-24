@@ -39,6 +39,7 @@ func Router() {
 		route.GET("/customer/option", api.NewCustomerApi().QueryOption)
 		route.GET("/customer/export", api.NewCustomerApi().Export)
 		route.POST("/customer/create", api.NewCustomerApi().Create)
+		route.POST("/customer/send", api.NewCustomerApi().SendMail)
 		route.PUT("/customer/update", api.NewCustomerApi().Update)
 		route.DELETE("/customer/delete", api.NewCustomerApi().Delete)
 
@@ -61,6 +62,12 @@ func Router() {
 
 		// 仪表盘模块
 		route.GET("/dashboard/sum", api.NewDashboardApi().Summary)
+
+		// 配置模块
+		route.GET("/config/info", api.NewMailConfigApi().GetInfo)
+		route.GET("/config/check", api.NewMailConfigApi().Check)
+		route.PUT("/config/save", api.NewMailConfigApi().Save)
+		route.PUT("/config/status", api.NewMailConfigApi().UpdateStatus)
 
 		// 订阅模块
 		route.GET("/subscribe/info", api.NewSubscribeApi().GetInfo)
