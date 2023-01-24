@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="{ padding: '20px 20px 12px 20px' }">
         <div style="display: flex;justify-content: space-between;margin-bottom: 20px;">
             <a-space>
                 <a-input v-model:value="keyWord" placeholder="合同编号" style="width: 280px; margin-right: 50px;">

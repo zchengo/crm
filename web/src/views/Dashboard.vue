@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="{ padding: '20px 20px 12px 20px' }">
         <a-row :gutter="16">
             <a-col :span="6">
                 <a-card class="card">

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="{ padding: '20px 20px 12px 20px' }">
         <a-alert message="点击立即购买后，会跳转到支付宝支付页面（沙箱环境，账户名 emrpqt1589@sandbox.com 登录密码/支付密码 111111）" type="info"
             show-icon /><br />
         <a-row :gutter="30">
