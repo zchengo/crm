@@ -14,7 +14,7 @@ switch (host) {
 }
 
 const request = axios.create({
-    timeout: 5000,
+    // timeout: 5000,
     headers: {
         'Content-Type': 'application/json;charset=UTF-8'
     }
@@ -34,7 +34,7 @@ request.interceptors.response.use(response => {
     return response;
 }, error => {
     console.log(error)
-    router.push('/error');
+    // router.push('/error');
     return Promise.reject(error)
 })
 
