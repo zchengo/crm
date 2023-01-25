@@ -8,24 +8,16 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { useRouter } from 'vue-router'
 import { useStore } from '../store/index';
 
-export default {
-    setup() {
+const router = useRouter()
+const store = useStore()
 
-        const router = useRouter()
-        const store = useStore()
-        
-        const onBuy = () => {
-            store.selectedKeys = 'subscribe'
-            router.push('/subscribe')
-        }
-        return {
-            onBuy
-        }
-    }
+const onBuy = () => {
+    store.selectedKeys = 'subscribe'
+    router.push('/subscribe')
 }
 </script>
 

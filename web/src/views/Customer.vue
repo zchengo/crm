@@ -160,7 +160,7 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref, reactive, onMounted, createVNode } from 'vue';
 import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined, MailTwoTone } from '@ant-design/icons-vue';
 import moment from 'moment'
@@ -168,351 +168,310 @@ import { createCustomer, updateCustomer, sendMailToCustomer, queryCustomerList, 
 import { message, Modal } from 'ant-design-vue';
 import regionData from '../assets/region';
 
-export default {
-    components: {
-        SearchOutlined,
-        ExportOutlined,
-        MailTwoTone
-    },
-    setup() {
-        const columns = [{
-            title: '客户名称',
-            dataIndex: 'name',
-            width: 200,
-            fixed: 'left',
-            ellipsis: true,
-        }, {
-            title: '客户来源',
-            dataIndex: 'source',
-            width: 150,
-        }, {
-            title: '手机号',
-            dataIndex: 'phone',
-            width: 150,
-        }, {
-            title: '邮箱',
-            dataIndex: 'email',
-            width: 200,
-        }, {
-            title: '客户行业',
-            dataIndex: 'industry',
-            width: 150,
-        }, {
-            title: '客户级别',
-            dataIndex: 'level',
-            width: 150,
-        }, {
-            title: '备注',
-            dataIndex: 'remarks',
-            width: 150,
-            ellipsis: true,
-        }, {
-            title: '成交状态',
-            dataIndex: 'status',
-            width: 150,
-        }, {
-            title: '详细地址',
-            dataIndex: 'address',
-            width: 240,
-            ellipsis: true,
-        }, {
-            title: '创建时间',
-            dataIndex: 'created',
-            width: 185,
-            customRender: text => {
-                return text == 0 ? '' : moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
-            }
-        }, {
-            title: '更新时间',
-            dataIndex: 'updated',
-            width: 185,
-            customRender: text => {
-                return text.value == 0 ? '' : moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
-            }
-        }, {
-            title: '操作',
-            dataIndex: 'operation',
-            width: 65,
-            fixed: 'right',
-            ellipsis: true,
-        }];
+// 表格字段
+const columns = [{
+    title: '客户名称',
+    dataIndex: 'name',
+    width: 200,
+    fixed: 'left',
+    ellipsis: true,
+}, {
+    title: '客户来源',
+    dataIndex: 'source',
+    width: 150,
+}, {
+    title: '手机号',
+    dataIndex: 'phone',
+    width: 150,
+}, {
+    title: '邮箱',
+    dataIndex: 'email',
+    width: 200,
+}, {
+    title: '客户行业',
+    dataIndex: 'industry',
+    width: 150,
+}, {
+    title: '客户级别',
+    dataIndex: 'level',
+    width: 150,
+}, {
+    title: '备注',
+    dataIndex: 'remarks',
+    width: 150,
+    ellipsis: true,
+}, {
+    title: '成交状态',
+    dataIndex: 'status',
+    width: 150,
+}, {
+    title: '详细地址',
+    dataIndex: 'address',
+    width: 240,
+    ellipsis: true,
+}, {
+    title: '创建时间',
+    dataIndex: 'created',
+    width: 185,
+    customRender: text => {
+        return text == 0 ? '' : moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
+    }
+}, {
+    title: '更新时间',
+    dataIndex: 'updated',
+    width: 185,
+    customRender: text => {
+        return text.value == 0 ? '' : moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
+    }
+}, {
+    title: '操作',
+    dataIndex: 'operation',
+    width: 65,
+    fixed: 'right',
+    ellipsis: true,
+}];
 
-        // 表单校验
-        const rules = {
-            name: [{ required: true, message: '请输入客户名称', trigger: 'blur' }],
-            phone: [{
-                pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/,
-                message: '手机格式不正确',
-                trigger: 'blur',
-            }],
-            email: [{
-                pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
-                message: '邮箱格式不正确',
-                trigger: 'blur',
-            }],
-        };
+// 表单校验
+const rules = {
+    name: [{ required: true, message: '请输入客户名称', trigger: 'blur' }],
+    phone: [{
+        pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/,
+        message: '手机格式不正确',
+        trigger: 'blur',
+    }],
+    email: [{
+        pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
+        message: '邮箱格式不正确',
+        trigger: 'blur',
+    }],
+};
 
-        const data = reactive({
-            customerList: [],
-            selectedIds: []
-        })
+const data = reactive({
+    customerList: [],
+    selectedIds: []
+})
 
 
-        const onSelectChange = selectedRowKeys => {
-            data.selectedIds = selectedRowKeys
-            if (data.selectedIds.length !== 0) {
-                disabled.value = false
-            } else {
-                disabled.value = true
-            }
-        };
+const onSelectChange = selectedRowKeys => {
+    data.selectedIds = selectedRowKeys
+    if (data.selectedIds.length !== 0) {
+        disabled.value = false
+    } else {
+        disabled.value = true
+    }
+};
 
-        // 点击搜索
-        const onSearch = () => {
-            getCustomerList()
-        };
+// 点击搜索
+const onSearch = () => {
+    getCustomerList()
+};
 
-        // 点击全部客户
-        const onCustomers = () => {
-            keyWord.value = ''
-            getCustomerList()
+// 点击全部客户
+const onCustomers = () => {
+    keyWord.value = ''
+    getCustomerList()
+}
+
+// 客户属性
+let customer = reactive({
+    id: undefined,
+    name: undefined,
+    source: undefined,
+    phone: undefined,
+    email: undefined,
+    industry: undefined,
+    level: undefined,
+    remarks: undefined,
+    region: undefined,
+    address: undefined,
+    status: undefined,
+});
+
+// 表格分页
+let pagination = reactive({
+    current: 1,
+    pageSize: 10,
+    total: undefined,
+})
+
+const title = ref('');
+const visible = ref(false);
+const disabled = ref(true)
+const operation = ref(0);
+const customerFormRef = ref();
+const keyWord = ref('')
+const visibleMail = ref(false)
+
+// 点击新建客户
+const onCreate = () => {
+    title.value = '新建客户'
+    operation.value = 1
+    visible.value = true
+}
+
+// 点击客户名称
+const onEdit = (row) => {
+    title.value = '编辑客户'
+    operation.value = 2
+    let param = { id: row.id }
+    queryCustomerInfo(param).then((res) => {
+        if (res.data.code == 0) {
+            let p = res.data.data
+            customer.id = p.id
+            customer.name = p.name
+            customer.source = p.source
+            customer.phone = p.phone
+            customer.email = p.email
+            customer.industry = p.industry
+            customer.level = p.level
+            customer.remarks = p.remarks
+            customer.region = p.region
+            customer.region = p.region.split(',')
+            customer.address = p.address
+            customer.status = p.status
         }
+    })
+    visible.value = true
+}
 
-        // 客户属性
-        let customer = reactive({
-            id: undefined,
-            name: undefined,
-            source: undefined,
-            phone: undefined,
-            email: undefined,
-            industry: undefined,
-            level: undefined,
-            remarks: undefined,
-            region: undefined,
-            address: undefined,
-            status: undefined,
-        });
-
-        // 表格分页
-        let pagination = reactive({
-            current: 1,
-            pageSize: 10,
-            total: undefined,
-        })
-
-        const title = ref('');
-        const visible = ref(false);
-        const disabled = ref(true)
-        const operation = ref(0);
-        const customerFormRef = ref();
-        const keyWord = ref('')
-        const visibleMail = ref(false)
-
-        // 点击新建客户
-        const onCreate = () => {
-            title.value = '新建客户'
-            operation.value = 1
-            visible.value = true
+// 点击保存客户
+const onSave = () => {
+    customerFormRef.value.validateFields().then(() => {
+        if (customer.region !== undefined) {
+            customer.region = customer.region.toString()
         }
-
-        // 点击客户名称
-        const onEdit = (row) => {
-            title.value = '编辑客户'
-            operation.value = 2
-            let param = { id: row.id }
-            queryCustomerInfo(param).then((res) => {
+        if (operation.value == 1) {
+            createCustomer(customer).then((res) => {
                 if (res.data.code == 0) {
-                    let p = res.data.data
-                    customer.id = p.id
-                    customer.name = p.name
-                    customer.source = p.source
-                    customer.phone = p.phone
-                    customer.email = p.email
-                    customer.industry = p.industry
-                    customer.level = p.level
-                    customer.remarks = p.remarks
-                    customer.region = p.region
-                    customer.region = p.region.split(',')
-                    customer.address = p.address
-                    customer.status = p.status
+                    message.success('保存成功')
+                    getCustomerList()
                 }
             })
-            visible.value = true
         }
-
-        // 点击保存客户
-        const onSave = () => {
-            customerFormRef.value.validateFields().then(() => {
-                if (customer.region !== undefined) {
-                    customer.region = customer.region.toString()
-                }
-                if (operation.value == 1) {
-                    createCustomer(customer).then((res) => {
-                        if (res.data.code == 0) {
-                            message.success('保存成功')
-                            getCustomerList()
-                        }
-                    })
-                }
-                if (operation.value == 2) {
-                    updateCustomer(customer).then((res) => {
-                        if (res.data.code == 0) {
-                            message.success('保存成功')
-                            getCustomerList()
-                        }
-                    })
-                }
-                customerFormRef.value.resetFields()
-                visible.value = false;
-            });
-        };
-
-        // 点击删除客户
-        const onDelete = () => {
-            let param = {
-                ids: data.selectedIds
-            }
-            Modal.confirm({
-                title: '确定删除选中的' + data.selectedIds.length + '项吗?',
-                icon: createVNode(ExclamationCircleOutlined),
-                centered: true,
-                cancelText: '取消',
-                okText: '确定',
-                onOk() {
-                    deleteCustomer(param).then((res) => {
-                        if (res.data.code == 0) {
-                            getCustomerList()
-                            disabled.value = true
-                            message.success('删除成功')
-                        }
-                    })
-                },
-                onCancel() {
-                    console.log('Cancel');
-                },
-            });
-        }
-
-        // 分页查询客户列表
-        const onPagination = (page) => {
-            pagination.current = page
-            getCustomerList()
-        }
-
-        // 初始化数据
-        onMounted(() => { getCustomerList() })
-
-        const getCustomerList = () => {
-            let param = {
-                name: keyWord.value,
-                pageNum: pagination.current,
-                pageSize: pagination.pageSize,
-            }
-            queryCustomerList(param).then((res) => {
+        if (operation.value == 2) {
+            updateCustomer(customer).then((res) => {
                 if (res.data.code == 0) {
-                    pagination.total = res.data.data.total
-                    data.customerList = res.data.data.list
+                    message.success('保存成功')
+                    getCustomerList()
                 }
             })
         }
+        customerFormRef.value.resetFields()
+        visible.value = false;
+    });
+};
 
-        // 导出表格
-        const onExport = () => {
-            customerExport().then((res) => {
-                if (res.data.type == 'application/json') {
-                    message.error('导出错误！')
-                } else {
-                    let blob = new Blob([res.data], {
-                        type: "application/vnd.ms-excel"
-                    })
-                    let a = document.createElement('a')
-                    a.setAttribute("download", "客户信息.xlsx");
-                    a.href = window.URL.createObjectURL(blob)
-                    a.click()
-                    window.URL.revokeObjectURL(a.href)
-                }
-            })
-        }
-
-        const mail = reactive({
-            customerName: '',
-            receiver: '',
-            subject: '',
-            content: ''
-        })
-
-        // 点击邮件
-        const onMail = (cname, email) => {
-            mail.customerName = cname
-            mail.receiver = email
-            visibleMail.value = true
-        }
-
-        // 点击发送邮件
-        const onSend = () => {
-            let param = {
-                receiver: mail.receiver,
-                subject: mail.subject,
-                content: mail.content
-            }
-            sendMailToCustomer(param).then((res) => {
+// 点击删除客户
+const onDelete = () => {
+    let param = {
+        ids: data.selectedIds
+    }
+    Modal.confirm({
+        title: '确定删除选中的' + data.selectedIds.length + '项吗?',
+        icon: createVNode(ExclamationCircleOutlined),
+        centered: true,
+        cancelText: '取消',
+        okText: '确定',
+        onOk() {
+            deleteCustomer(param).then((res) => {
                 if (res.data.code == 0) {
-                    message.success("邮件已发送")
-                }
-                if (res.data.code == 50002) {
-                    message.error("邮件发送失败")
-                }
-                if (res.data.code == 50003) {
-                    message.warn("邮件服务未开启")
+                    getCustomerList()
+                    disabled.value = true
+                    message.success('删除成功')
                 }
             })
+        },
+        onCancel() {
+            console.log('Cancel');
+        },
+    });
+}
+
+// 分页查询客户列表
+const onPagination = (page) => {
+    pagination.current = page
+    getCustomerList()
+}
+
+// 初始化数据
+onMounted(() => { getCustomerList() })
+
+const getCustomerList = () => {
+    let param = {
+        name: keyWord.value,
+        pageNum: pagination.current,
+        pageSize: pagination.pageSize,
+    }
+    queryCustomerList(param).then((res) => {
+        if (res.data.code == 0) {
+            pagination.total = res.data.data.total
+            data.customerList = res.data.data.list
         }
+    })
+}
 
-        // 点击取消按钮
-        const onCancel = () => {
-            customerFormRef.value.resetFields()
-            visible.value = false
-        };
-
-        const options = regionData
-
-        const selectedOptions = (value) => {
-            customer.region = value
+// 导出表格
+const onExport = () => {
+    customerExport().then((res) => {
+        if (res.data.type == 'application/json') {
+            message.error('导出错误！')
+        } else {
+            let blob = new Blob([res.data], {
+                type: "application/vnd.ms-excel"
+            })
+            let a = document.createElement('a')
+            a.setAttribute("download", "客户信息.xlsx");
+            a.href = window.URL.createObjectURL(blob)
+            a.click()
+            window.URL.revokeObjectURL(a.href)
         }
+    })
+}
 
-        return {
-            data,
-            columns,
-            rules,
-            onSearch,
-            visible,
-            disabled,
-            onSelectChange,
-            onSearch,
-            customer,
-            title,
-            visible,
-            operation,
-            onCustomers,
-            onCreate,
-            onEdit,
-            customerFormRef,
-            onSave,
-            onCancel,
-            onDelete,
-            getCustomerList,
-            onExport,
-            keyWord,
-            options,
-            onPagination,
-            pagination,
-            selectedOptions,
-            mail,
-            visibleMail,
-            onMail,
-            onSend
-        };
-    },
+const mail = reactive({
+    customerName: '',
+    receiver: '',
+    subject: '',
+    content: ''
+})
+
+// 点击邮件
+const onMail = (cname, email) => {
+    mail.customerName = cname
+    mail.receiver = email
+    visibleMail.value = true
+}
+
+// 点击发送邮件
+const onSend = () => {
+    let param = {
+        receiver: mail.receiver,
+        subject: mail.subject,
+        content: mail.content
+    }
+    sendMailToCustomer(param).then((res) => {
+        if (res.data.code == 0) {
+            message.success("邮件已发送")
+        }
+        if (res.data.code == 50002) {
+            message.error("邮件发送失败")
+        }
+        if (res.data.code == 50003) {
+            message.warn("邮件服务未开启")
+        }
+    })
+}
+
+// 点击取消按钮
+const onCancel = () => {
+    customerFormRef.value.resetFields()
+    visible.value = false
+};
+
+const options = regionData
+
+const selectedOptions = (value) => {
+    customer.region = value
 }
 </script>
 

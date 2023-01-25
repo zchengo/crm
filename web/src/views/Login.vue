@@ -31,7 +31,7 @@
     </a-form>
 </template>
 
-<script>
+<script setup>
 import { reactive } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router'
@@ -39,79 +39,62 @@ import { userLogin } from '../api/user';
 import { message } from 'ant-design-vue';
 import { initData } from '../api/common';
 
-export default {
-    components: {
-        UserOutlined,
-        LockOutlined,
-    },
-    setup() {
-        const router = useRouter()
+const router = useRouter()
 
-        // 用户登录
-        const formData = reactive({
-            email: '1655064994@qq.com',
-            password: '1655064994',
-            remember: true,
-        });
-        const onLogin = () => {
-            let param = {
-                email: formData.email,
-                password: formData.password
-            }
-            // 初始化数据
-            if (formData.email == '1655064994@qq.com') {
-                initSysData()
-            }
-            userLogin(param).then((res) => {
-                if (res.data.code == 0) {
-                    localStorage.setItem('uid', res.data.data.uid)
-                    localStorage.setItem('token', res.data.data.token)
-                    router.push("/home")
-                }
-                if (res.data.code == 10002) {
-                    message.error('用户不存在');
-                }
-                if (res.data.code == 10003) {
-                    message.error('用户名或密码错误');
-                }
-            })
-        };
-        const onLoginFailed = errorInfo => {
-            console.log('Failed:', errorInfo);
-        };
-
-        // 忘记密码
-        const forgotPass = () => {
-            router.push("/pass")
-        }
-
-        // 用户注册
-        const toRegister = () => {
-            router.push("/register")
-        }
-
-        // 初始化数据（只会在生产环境中初始化）
-        const initSysData = () => {
-            initData().then((res) => {
-                if (res.data.code == 10) {
-                    message.success('初始化数据成功！')
-                }
-                if (res.data.code == 11) {
-                    message.error('初始化数据失败！')
-                }
-            })
-        }
-
-        return {
-            formData,
-            onLogin,
-            onLoginFailed,
-            forgotPass,
-            toRegister,
-            initSysData,
-        };
+// 用户登录
+const formData = reactive({
+    email: '1655064994@qq.com',
+    password: '1655064994',
+    remember: true,
+});
+const onLogin = () => {
+    let param = {
+        email: formData.email,
+        password: formData.password
     }
+    // 初始化数据
+    if (formData.email == '1655064994@qq.com') {
+        initSysData()
+    }
+    userLogin(param).then((res) => {
+        if (res.data.code == 0) {
+            localStorage.setItem('uid', res.data.data.uid)
+            localStorage.setItem('token', res.data.data.token)
+            router.push("/home")
+        }
+        if (res.data.code == 10002) {
+            message.error('用户不存在');
+        }
+        if (res.data.code == 10003) {
+            message.error('用户名或密码错误');
+        }
+    })
 };
+const onLoginFailed = errorInfo => {
+    console.log('Failed:', errorInfo);
+};
+
+// 忘记密码
+const forgotPass = () => {
+    router.push("/pass")
+}
+
+// 用户注册
+const toRegister = () => {
+    router.push("/register")
+}
+
+// 初始化数据（只会在生产环境中初始化）
+const initSysData = () => {
+    initData().then((res) => {
+        if (res.data.code == 10) {
+            message.success('初始化数据成功！')
+        }
+        if (res.data.code == 11) {
+            message.error('初始化数据失败！')
+        }
+    })
+}
 </script>
 
 <style scoped>

@@ -107,275 +107,242 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref, reactive, onMounted, createVNode } from 'vue';
 import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
 import { createProduct, updateProduct, queryProductList, deleteProduct, queryProductInfo, productExport } from '../api/product';
 import { message, Modal } from 'ant-design-vue';
 
-export default {
-    components: {
-        SearchOutlined,
-        ExportOutlined
-    },
-    setup() {
-        // 表格字段
-        const columns = [{
-            title: '产品名称',
-            dataIndex: 'name',
-            width: 100,
-            fixed: 'left',
-            ellipsis: true,
-        }, {
-            title: '是否上下架',
-            dataIndex: 'status',
-            width: 120,
-        }, {
-            title: '产品类型',
-            dataIndex: 'type',
-            width: 100,
-        }, {
-            title: '产品单位',
-            dataIndex: 'unit',
-            width: 100,
-        }, {
-            title: '产品编码',
-            dataIndex: 'code',
-            width: 150,
-        }, {
-            title: '价格',
-            dataIndex: 'price',
-            width: 150,
-        }, {
-            title: '产品描述',
-            dataIndex: 'description',
-            width: 240,
-            ellipsis: true,
-        }, {
-            title: '创建时间',
-            dataIndex: 'created',
-            width: 185,
-            customRender: text => {
-                return text.value == 0 ? '' : moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
-            }
-        }, {
-            title: '更新时间',
-            dataIndex: 'updated',
-            width: 185,
-            customRender: text => {
-                return text.value == 0 ? '' : moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
-            }
-        }];
+// 表格字段
+const columns = [{
+    title: '产品名称',
+    dataIndex: 'name',
+    width: 100,
+    fixed: 'left',
+    ellipsis: true,
+}, {
+    title: '是否上下架',
+    dataIndex: 'status',
+    width: 120,
+}, {
+    title: '产品类型',
+    dataIndex: 'type',
+    width: 100,
+}, {
+    title: '产品单位',
+    dataIndex: 'unit',
+    width: 100,
+}, {
+    title: '产品编码',
+    dataIndex: 'code',
+    width: 150,
+}, {
+    title: '价格',
+    dataIndex: 'price',
+    width: 150,
+}, {
+    title: '产品描述',
+    dataIndex: 'description',
+    width: 240,
+    ellipsis: true,
+}, {
+    title: '创建时间',
+    dataIndex: 'created',
+    width: 185,
+    customRender: text => {
+        return text.value == 0 ? '' : moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
+    }
+}, {
+    title: '更新时间',
+    dataIndex: 'updated',
+    width: 185,
+    customRender: text => {
+        return text.value == 0 ? '' : moment(text.value * 1000).format('YYYY-MM-DD HH:mm:ss')
+    }
+}];
 
-        // 表单校验
-        const rules = {
-            name: [{ required: true, message: '请输入产品名称', trigger: 'blur' }],
-            type: [{ required: true, message: '请选择产品类型' }],
-            code: [{ pattern: /^\d+$/, message: '产品编码格式不正确', trigger: 'blur' }],
-            price: [{ required: true, message: '请输入产品价格' }],
-            status: [{ required: true, message: '请选择是否上下架' }]
-        };
+// 表单校验
+const rules = {
+    name: [{ required: true, message: '请输入产品名称', trigger: 'blur' }],
+    type: [{ required: true, message: '请选择产品类型' }],
+    code: [{ pattern: /^\d+$/, message: '产品编码格式不正确', trigger: 'blur' }],
+    price: [{ required: true, message: '请输入产品价格' }],
+    status: [{ required: true, message: '请选择是否上下架' }]
+};
 
-        // 产品属性
-        let product = reactive({
-            id: undefined,
-            name: undefined,
-            type: undefined,
-            unit: undefined,
-            code: undefined,
-            price: undefined,
-            status: undefined,
-            description: undefined,
-        });
+// 产品属性
+let product = reactive({
+    id: undefined,
+    name: undefined,
+    type: undefined,
+    unit: undefined,
+    code: undefined,
+    price: undefined,
+    status: undefined,
+    description: undefined,
+});
 
-        // 产品列表
-        const data = reactive({
-            productList: [],
-            selectedIds: []
-        })
+// 产品列表
+const data = reactive({
+    productList: [],
+    selectedIds: []
+})
 
-        // 表格分页
-        let pagination = reactive({
-            current: 1,
-            pageSize: 10,
-            total: undefined,
-        })
+// 表格分页
+let pagination = reactive({
+    current: 1,
+    pageSize: 10,
+    total: undefined,
+})
 
-        const title = ref('');
-        const visible = ref(false);
-        const disabled = ref(true)
-        const operation = ref(0);
-        const productFormRef = ref();
-        const keyWord = ref('')
+const title = ref('');
+const visible = ref(false);
+const disabled = ref(true)
+const operation = ref(0);
+const productFormRef = ref();
+const keyWord = ref('')
 
-        // 初始化数据
-        onMounted(() => { getProductList() })
+// 初始化数据
+onMounted(() => { getProductList() })
 
-        // 表格记录多选
-        const onSelectChange = selectedRowKeys => {
-            data.selectedIds = selectedRowKeys
-            if (data.selectedIds.length !== 0) {
-                disabled.value = false
-            } else {
-                disabled.value = true
-            }
-        };
+// 表格记录多选
+const onSelectChange = selectedRowKeys => {
+    data.selectedIds = selectedRowKeys
+    if (data.selectedIds.length !== 0) {
+        disabled.value = false
+    } else {
+        disabled.value = true
+    }
+};
 
-        // 点击搜索
-        const onSearch = () => { getProductList() };
+// 点击搜索
+const onSearch = () => { getProductList() };
 
-        // 点击全部产品
-        const onProducts = () => {
-            keyWord.value = ''
-            getProductList()
+// 点击全部产品
+const onProducts = () => {
+    keyWord.value = ''
+    getProductList()
+}
+
+// 点击新建产品
+const onCreate = () => {
+    title.value = '新建产品'
+    operation.value = 1
+    visible.value = true
+}
+
+// 点击产品名称
+const onEdit = (row) => {
+    title.value = '编辑产品'
+    operation.value = 2
+    let param = { id: row.id }
+    queryProductInfo(param).then((res) => {
+        if (res.data.code == 0) {
+            let p = res.data.data
+            product.id = p.id
+            product.name = p.name
+            product.type = p.type
+            product.unit = p.unit
+            product.code = p.code
+            product.price = p.price
+            product.status = p.status
+            product.description = p.description
         }
+    })
+    visible.value = true
+}
 
-        // 点击新建产品
-        const onCreate = () => {
-            title.value = '新建产品'
-            operation.value = 1
-            visible.value = true
-        }
-
-        // 点击产品名称
-        const onEdit = (row) => {
-            title.value = '编辑产品'
-            operation.value = 2
-            let param = { id: row.id }
-            queryProductInfo(param).then((res) => {
+// 点击保存产品
+const onSave = () => {
+    productFormRef.value.validateFields().then(() => {
+        if (operation.value == 1) {
+            createProduct(product).then((res) => {
                 if (res.data.code == 0) {
-                    let p = res.data.data
-                    product.id = p.id
-                    product.name = p.name
-                    product.type = p.type
-                    product.unit = p.unit
-                    product.code = p.code
-                    product.price = p.price
-                    product.status = p.status
-                    product.description = p.description
+                    message.success('保存成功')
+                    getProductList()
                 }
             })
-            visible.value = true
         }
-
-        // 点击保存产品
-        const onSave = () => {
-            productFormRef.value.validateFields().then(() => {
-                if (operation.value == 1) {
-                    createProduct(product).then((res) => {
-                        if (res.data.code == 0) {
-                            message.success('保存成功')
-                            getProductList()
-                        }
-                    })
-                }
-                if (operation.value == 2) {
-                    updateProduct(product).then((res) => {
-                        if (res.data.code == 0) {
-                            message.success('保存成功')
-                            getProductList()
-                        }
-                    })
-                }
-                productFormRef.value.resetFields()
-                visible.value = false;
-            });
-        };
-
-        // 点击删除产品
-        const onDelete = () => {
-            Modal.confirm({
-                title: '确定删除选中的' + data.selectedIds.length + '项吗?',
-                icon: createVNode(ExclamationCircleOutlined),
-                centered: true,
-                cancelText: '取消',
-                okText: '确定',
-                onOk() {
-                    deleteProduct({ ids: data.selectedIds }).then((res) => {
-                        if (res.data.code == 0) {
-                            getProductList()
-                            disabled.value = true
-                            message.success('删除成功')
-                        }
-                    })
-                },
-                onCancel() {
-                    console.log('Cancel');
-                },
-            });
-        }
-
-        // 分页查询产品列表
-        const onPagination = (page) => {
-            pagination.current = page
-            getProductList()
-        }
-
-        // 查询产列表
-        const getProductList = () => {
-            let param = {
-                name: keyWord.value,
-                pageNum: pagination.current,
-                pageSize: pagination.pageSize,
-            }
-            queryProductList(param).then((res) => {
+        if (operation.value == 2) {
+            updateProduct(product).then((res) => {
                 if (res.data.code == 0) {
-                    pagination.total = res.data.data.total
-                    data.productList = res.data.data.list
+                    message.success('保存成功')
+                    getProductList()
                 }
             })
         }
+        productFormRef.value.resetFields()
+        visible.value = false;
+    });
+};
 
-        // 导出表格
-        const onExport = () => {
-            productExport().then((res) => {
-                if (res.data.type == 'application/json'){
-                    message.error('导出错误！')
-                } else {
-                    let blob = new Blob([res.data], {
-                        type: "application/vnd.ms-excel"
-                    })
-                    let a = document.createElement('a')
-                    a.setAttribute("download", "产品信息.xlsx");
-                    a.href = window.URL.createObjectURL(blob)
-                    a.click()
-                    window.URL.revokeObjectURL(a.href)
+// 点击删除产品
+const onDelete = () => {
+    Modal.confirm({
+        title: '确定删除选中的' + data.selectedIds.length + '项吗?',
+        icon: createVNode(ExclamationCircleOutlined),
+        centered: true,
+        cancelText: '取消',
+        okText: '确定',
+        onOk() {
+            deleteProduct({ ids: data.selectedIds }).then((res) => {
+                if (res.data.code == 0) {
+                    getProductList()
+                    disabled.value = true
+                    message.success('删除成功')
                 }
             })
+        },
+        onCancel() {
+            console.log('Cancel');
+        },
+    });
+}
+
+// 分页查询产品列表
+const onPagination = (page) => {
+    pagination.current = page
+    getProductList()
+}
+
+// 查询产列表
+const getProductList = () => {
+    let param = {
+        name: keyWord.value,
+        pageNum: pagination.current,
+        pageSize: pagination.pageSize,
+    }
+    queryProductList(param).then((res) => {
+        if (res.data.code == 0) {
+            pagination.total = res.data.data.total
+            data.productList = res.data.data.list
         }
+    })
+}
 
-        // 点击取消按钮
-        const onCancel = () => {
-            productFormRef.value.resetFields()
-            visible.value = false
-        };
+// 导出表格
+const onExport = () => {
+    productExport().then((res) => {
+        if (res.data.type == 'application/json') {
+            message.error('导出错误！')
+        } else {
+            let blob = new Blob([res.data], {
+                type: "application/vnd.ms-excel"
+            })
+            let a = document.createElement('a')
+            a.setAttribute("download", "产品信息.xlsx");
+            a.href = window.URL.createObjectURL(blob)
+            a.click()
+            window.URL.revokeObjectURL(a.href)
+        }
+    })
+}
 
-        return {
-            columns,
-            rules,
-            data,
-            onSelectChange,
-            onSearch,
-            product,
-            title,
-            visible,
-            disabled,
-            operation,
-            onProducts,
-            onCreate,
-            onEdit,
-            productFormRef,
-            onSave,
-            onCancel,
-            onDelete,
-            getProductList,
-            onExport,
-            keyWord,
-            pagination,
-            onPagination,
-        };
-    },
+// 点击取消按钮
+const onCancel = () => {
+    productFormRef.value.resetFields()
+    visible.value = false
 }
 </script>
 

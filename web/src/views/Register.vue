@@ -22,111 +22,95 @@
     </a-form>
 </template>
 
-<script>
+<script setup>
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { userRegister, getVerifyCode } from '../api/user';
 import { message } from 'ant-design-vue';
 
-export default {
-    setup() {
-        const router = useRouter()
+const router = useRouter()
 
-        // 用户注册
-        const formData = reactive({
-            email: '',
-            code: '',
-            password1: '',
-            password2: '',
-        });
+// 用户注册
+const formData = reactive({
+    email: '',
+    code: '',
+    password1: '',
+    password2: '',
+});
 
-        // 表单校验
-        const rules = {
-            email: [{
-                required: true,
-                message: '请输入邮箱!',
-                trigger: 'blur',
-            }, {
-                pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
-                message: '邮箱格式不正确',
-                trigger: 'blur',
-            }],
-            code: [{ required: true, message: '请输入验证码!' }],
-            password1: [{ required: true, message: '请输入密码!' }],
-            password2: [{ required: true, message: '请输入密码!' }],
-        };
+// 表单校验
+const rules = {
+    email: [{
+        required: true,
+        message: '请输入邮箱!',
+        trigger: 'blur',
+    }, {
+        pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
+        message: '邮箱格式不正确',
+        trigger: 'blur',
+    }],
+    code: [{ required: true, message: '请输入验证码!' }],
+    password1: [{ required: true, message: '请输入密码!' }],
+    password2: [{ required: true, message: '请输入密码!' }],
+};
 
-        const loading = ref(false)
-        const disabled = ref(false)
-        const registerFormRef = ref()
-        const buttonText = ref('获取验证码')
+const loading = ref(false)
+const disabled = ref(false)
+const registerFormRef = ref()
+const buttonText = ref('获取验证码')
 
-        const onRegister = () => {
-            registerFormRef.value.validateFields().then(() => {
-                if (formData.password1 != formData.password2) {
-                    message.warn('密码不一致');
-                    return
-                }
-                let param = {
-                    email: formData.email,
-                    code: formData.code,
-                    password: formData.password2,
-                }
-                userRegister(param).then((res) => {
-                    if (res.data.code == 0) {
-                        message.success('注册成功');
-                        onLogin()
-                    }
-                    if (res.data.code == 10001) {
-                        message.warn('该用户已经存在');
-                    }
-                    if (res.data.code == 10005) {
-                        message.error('验证码错误');
-                    }
-                })
-            })
-        };
-
-        // 获取验证码
-        const onGetCode = () => {
-            if (formData.email == '') {
-                message.warn('邮箱不能为空')
-                return
-            }
-            loading.value = true
-            let param = {
-                email: formData.email
-            }
-            getVerifyCode(param).then((res) => {
-                if (res.data.code == 0) {
-                    loading.value = false
-                    disabled.value = true
-                    buttonText.value = '验证码已发送'
-                }
-                if (res.data.code == 10004) {
-                    loading.value = false
-                    message.error('验证码发送失败')
-                }
-            })
+const onRegister = () => {
+    registerFormRef.value.validateFields().then(() => {
+        if (formData.password1 != formData.password2) {
+            message.warn('密码不一致');
+            return
         }
-
-        // 跳转到登录页面
-        const onLogin = () => {
-            router.push("/login")
+        let param = {
+            email: formData.email,
+            code: formData.code,
+            password: formData.password2,
         }
+        userRegister(param).then((res) => {
+            if (res.data.code == 0) {
+                message.success('注册成功');
+                onLogin()
+            }
+            if (res.data.code == 10001) {
+                message.warn('该用户已经存在');
+            }
+            if (res.data.code == 10005) {
+                message.error('验证码错误');
+            }
+        })
+    })
+};
 
-        return {
-            formData,
-            rules,
-            registerFormRef,
-            loading,
-            disabled,
-            buttonText,
-            onRegister,
-            onLogin,
-            onGetCode,
-        };
-    },
+// 获取验证码
+const onGetCode = () => {
+    if (formData.email == '') {
+        message.warn('邮箱不能为空')
+        return
+    }
+    loading.value = true
+    let param = {
+        email: formData.email
+    }
+    getVerifyCode(param).then((res) => {
+        if (res.data.code == 0) {
+            loading.value = false
+            disabled.value = true
+            buttonText.value = '验证码已发送'
+        }
+        if (res.data.code == 10004) {
+            loading.value = false
+            message.error('验证码发送失败')
+        }
+    })
+}
+
+// 跳转到登录页面
+const onLogin = () => {
+    router.push("/login")
 }
 </script>
 

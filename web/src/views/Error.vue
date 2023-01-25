@@ -8,18 +8,11 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import router from '../router/index';
 
-export default {
-    setup() {
-        const refresh = () => {
-            router.push('/')
-        }
-        return {
-            refresh
-        }
-    }
+const refresh = () => {
+    router.push('/')
 }
 </script>
 

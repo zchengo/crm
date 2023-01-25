@@ -25,7 +25,8 @@
                     <div class="content">能力不设限，新功能优先体验</div><br />
                     <a-button v-if="version == 1 || version == 3" type="primary" size="large" class="btn-buy"
                         @click="onPay(2)" shape="round" :disabled="disabled">立即购买</a-button>
-                    <a-button v-if="version == 2" type="primary" size="large" class="btn-buy" shape="round">{{ expired
+                    <a-button v-if="version == 2" type="primary" size="large" class="btn-buy" shape="round">{{
+                        expired
                     }} 到期</a-button>
                     <br />
                     <div class="subscribe-list" v-for="item in ['客户管理', '合同管理', '产品管理', '仪表盘可体验30天']">
@@ -41,7 +42,8 @@
                     <div class="content">能力不设限，新功能优先体验</div><br />
                     <a-button v-if="version == 1 || version == 2" type="primary" size="large" class="btn-buy"
                         @click="onPay(3)" shape="round" :disabled="disabled">立即购买</a-button>
-                    <a-button v-if="version == 3" type="primary" size="large" class="btn-buy" shape="round">{{ expired
+                    <a-button v-if="version == 3" type="primary" size="large" class="btn-buy" shape="round">{{
+                        expired
                     }} 到期</a-button>
                     <br />
                     <div class="subscribe-list" v-for="item in ['客户管理', '合同管理', '产品管理', '仪表盘可体验365天']">
@@ -54,87 +56,64 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref, reactive, onBeforeMount } from 'vue';
 import { CheckCircleFilled } from '@ant-design/icons-vue';
 import { subscribePay, getSubscribeInfo } from '../api/subscribe';
 import { useRouter } from 'vue-router'
 import moment from 'moment'
 
-export default {
-    components: {
-        CheckCircleFilled
-    },
-    setup() {
+const router = useRouter()
 
-        const router = useRouter()
+const version = ref(0)
+const expired = ref(undefined)
+const payUrl = ref()
+const visible = ref(false)
+const disabled = ref(false)
+const activedClass = reactive(['card', 'card', 'card'])
 
-        const version = ref(0)
-        const expired = ref(undefined)
-        const payUrl = ref()
-        const visible = ref(false)
-        const disabled = ref(false)
-        const activedClass = reactive(['card', 'card', 'card'])
+const payResult = ref(false)
+const title = ref('')
+const buttonText = ref(undefined)
 
-        const payResult = ref(false)
-        const title = ref('')
-        const buttonText = ref(undefined)
+const isClick = (index) => {
+    active.value = index
+}
 
-        const isClick = (index) => {
-            active.value = index
-        }
+// 初始化数据
+onBeforeMount(() => { subscribeInfo() })
 
-        // 初始化数据
-        onBeforeMount(() => { subscribeInfo() })
-
-        // 点击支付
-        const onPay = (ver) => {
-            let param = {
-                version: ver
-            }
-            subscribePay(param).then((res) => {
-                if (res.data.code == 0) {
-                    visible.value = false
-                    payResult.value = true
-                    window.open(res.data.data.payUrl, '_self')
-                }
-            })
-        }
-
-        // 获取用户订阅信息
-        const subscribeInfo = () => {
-            getSubscribeInfo().then((res) => {
-                if (res.data.code == 0) {
-                    version.value = res.data.data.version
-                    expired.value = moment(res.data.data.expired * 1000).format('YYYY-MM-DD')
-                    if (res.data.data.version !== 1) {
-                        disabled.value = true
-                    }
-                    if (res.data.data.version == 1) {
-                        activedClass[0] = 'selected-free-card'
-                    }
-                    if (res.data.data.version == 2 || res.data.data.version == 3) {
-                        activedClass[res.data.data.version-1] = 'selected-card'
-                    }
-                }
-            })
-        }
-
-        return {
-            version,
-            expired,
-            onPay,
-            payUrl,
-            visible,
-            disabled,
-            payResult,
-            title,
-            activedClass,
-            buttonText,
-            isClick,
-            subscribeInfo,
-        }
+// 点击支付
+const onPay = (ver) => {
+    let param = {
+        version: ver
     }
+    subscribePay(param).then((res) => {
+        if (res.data.code == 0) {
+            visible.value = false
+            payResult.value = true
+            window.open(res.data.data.payUrl, '_self')
+        }
+    })
+}
+
+// 获取用户订阅信息
+const subscribeInfo = () => {
+    getSubscribeInfo().then((res) => {
+        if (res.data.code == 0) {
+            version.value = res.data.data.version
+            expired.value = moment(res.data.data.expired * 1000).format('YYYY-MM-DD')
+            if (res.data.data.version !== 1) {
+                disabled.value = true
+            }
+            if (res.data.data.version == 1) {
+                activedClass[0] = 'selected-free-card'
+            }
+            if (res.data.data.version == 2 || res.data.data.version == 3) {
+                activedClass[res.data.data.version - 1] = 'selected-card'
+            }
+        }
+    })
 }
 </script>
 

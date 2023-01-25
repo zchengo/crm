@@ -102,7 +102,7 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { QuestionCircleTwoTone } from '@ant-design/icons-vue'
 import * as echarts from "echarts";
 import { reactive, ref, onBeforeMount } from 'vue';
@@ -110,126 +110,111 @@ import { getSummary } from "../api/dashboard";
 import { getSubscribeInfo } from '../api/subscribe';
 import { useRouter } from 'vue-router'
 
-export default {
-    components: {
-        QuestionCircleTwoTone
-    },
-    setup() {
+const daysRange = ref(7);
 
-        const daysRange = ref(7);
+const router = useRouter()
 
-        const router = useRouter()
+const data = reactive({
+    customers: 0,
+    contracts: 0,
+    contractAmount: 0.00,
+    products: 0,
+})
 
-        const data = reactive({
-            customers: 0,
-            contracts: 0,
-            contractAmount: 0.00,
-            products: 0,
-        })
+onBeforeMount(() => {
+    subscribeInfo();
+    initChart();
+});
 
-        onBeforeMount(() => {
-            subscribeInfo();
-            initChart();
-        });
-
-        const initChart = () => {
-            let param = {
-                daysRange: daysRange.value
-            }
-            getSummary(param).then((res) => {
-                if (res.data.code == 0) {
-                    data.customers = res.data.data.customers
-                    data.contracts = res.data.data.contracts
-                    data.contractAmount = res.data.data.contractAmount
-                    data.products = res.data.data.products
-                    echarts.init(document.getElementById("contract")).setOption({
-                        xAxis: {
-                            type: 'category',
-                            data: res.data.data.date,
-                        },
-                        tooltip: {
-                            trigger: 'axis',
-                            axisPointer: {
-                                type: 'shadow'
-                            }
-                        },
-                        legend: {
-                            data: ['实际完成金额'],
-                            orient: 'vertical',
-                            bottom: 10,
-                        },
-                        yAxis: {
-                            type: 'value',
-                        },
-                        series: [
-                            {
-                                name: '实际完成金额',
-                                data: res.data.data.amount,
-                                type: 'line',
-                                smooth: true,
-                                lineStyle: {
-                                    width: 3
-                                }
-                            }
-                        ]
-                    });
-                    echarts.init(document.getElementById("customer")).setOption({
-                        tooltip: {
-                            trigger: 'item'
-                        },
-                        legend: {
-                            top: 'bottom',
-                            left: 'center',
-                        },
-                        series: [
-                            {
-                                type: 'pie',
-                                bottom: '15%',
-                                radius: ['40%', '70%'],
-                                avoidLabelOverlap: false,
-                                itemStyle: {
-                                    borderRadius: 10,
-                                    borderColor: '#fff',
-                                    borderWidth: 2,
-                                },
-                                label: {
-                                    show: false,
-                                    position: 'center'
-                                },
-                                emphasis: {
-                                    label: {
-                                        show: true,
-                                        fontSize: 25,
-                                        fontWeight: 'bold'
-                                    }
-                                },
-                                labelLine: {
-                                    show: false
-                                },
-                                data: res.data.data.customerIndustry,
-                            }
-                        ]
-                    })
-                }
-            })
-        }
-
-        // 获取用户订阅信息
-        const subscribeInfo = () => {
-            getSubscribeInfo().then((res) => {
-                if (res.data.code == 0 && res.data.data.version == 1) {
-                    router.push('/result')
-                }
-            })
-        }
-
-        return {
-            data,
-            daysRange,
-            initChart,
-            subscribeInfo,
-        }
+const initChart = () => {
+    let param = {
+        daysRange: daysRange.value
     }
+    getSummary(param).then((res) => {
+        if (res.data.code == 0) {
+            data.customers = res.data.data.customers
+            data.contracts = res.data.data.contracts
+            data.contractAmount = res.data.data.contractAmount
+            data.products = res.data.data.products
+            echarts.init(document.getElementById("contract")).setOption({
+                xAxis: {
+                    type: 'category',
+                    data: res.data.data.date,
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    data: ['实际完成金额'],
+                    orient: 'vertical',
+                    bottom: 10,
+                },
+                yAxis: {
+                    type: 'value',
+                },
+                series: [
+                    {
+                        name: '实际完成金额',
+                        data: res.data.data.amount,
+                        type: 'line',
+                        smooth: true,
+                        lineStyle: {
+                            width: 3
+                        }
+                    }
+                ]
+            });
+            echarts.init(document.getElementById("customer")).setOption({
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    top: 'bottom',
+                    left: 'center',
+                },
+                series: [
+                    {
+                        type: 'pie',
+                        bottom: '15%',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        itemStyle: {
+                            borderRadius: 10,
+                            borderColor: '#fff',
+                            borderWidth: 2,
+                        },
+                        label: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: 25,
+                                fontWeight: 'bold'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        },
+                        data: res.data.data.customerIndustry,
+                    }
+                ]
+            })
+        }
+    })
+}
+
+// 获取用户订阅信息
+const subscribeInfo = () => {
+    getSubscribeInfo().then((res) => {
+        if (res.data.code == 0 && res.data.data.version == 1) {
+            router.push('/result')
+        }
+    })
 }
 </script>
 
