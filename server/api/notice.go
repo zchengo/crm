@@ -32,13 +32,13 @@ func (n *NoticeApi) Update(context *gin.Context) {
 	response.Result(errCode, nil, context)
 }
 
-func (n *NoticeApi) GetCount(context *gin.Context) {
+func (n *NoticeApi) GetUnReadCount(context *gin.Context) {
 	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
 	if uid <= 0 {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return
 	}
-	unReadNotice, errCode := n.noticeService.UnReadCount(int64(uid))
+	unReadNotice, errCode := n.noticeService.GetUnReadCount(int64(uid))
 	response.Result(errCode, unReadNotice, context)
 }
 

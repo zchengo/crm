@@ -34,9 +34,9 @@ func Router() {
 		route.Use(middleware.JwtAuth())
 
 		// 客户模块
-		route.GET("/customer/list", api.NewCustomerApi().QueryList)
-		route.GET("/customer/info", api.NewCustomerApi().QueryInfo)
-		route.GET("/customer/option", api.NewCustomerApi().QueryOption)
+		route.GET("/customer/list", api.NewCustomerApi().GetList)
+		route.GET("/customer/info", api.NewCustomerApi().GetInfo)
+		route.GET("/customer/option", api.NewCustomerApi().GetOption)
 		route.GET("/customer/export", api.NewCustomerApi().Export)
 		route.POST("/customer/create", api.NewCustomerApi().Create)
 		route.POST("/customer/send", api.NewCustomerApi().SendMail)
@@ -44,17 +44,17 @@ func Router() {
 		route.DELETE("/customer/delete", api.NewCustomerApi().Delete)
 
 		// 合同模块
-		route.GET("/contract/list", api.NewContractApi().QueryList)
-		route.GET("/contract/info", api.NewContractApi().QueryInfo)
+		route.GET("/contract/list", api.NewContractApi().GetList)
+		route.GET("/contract/info", api.NewContractApi().GetInfo)
 		route.GET("/contract/export", api.NewContractApi().Export)
-		route.POST("/contract/plist", api.NewContractApi().QueryPlist)
+		route.POST("/contract/plist", api.NewContractApi().GetProductList)
 		route.PUT("/contract/update", api.NewContractApi().Update)
 		route.POST("/contract/create", api.NewContractApi().Create)
 		route.DELETE("/contract/delete", api.NewContractApi().Delete)
 
 		// 产品模块
-		route.GET("/product/list", api.NewProductApi().QueryList)
-		route.GET("/product/info", api.NewProductApi().QueryInfo)
+		route.GET("/product/list", api.NewProductApi().GetList)
+		route.GET("/product/info", api.NewProductApi().GetInfo)
 		route.GET("/product/export", api.NewProductApi().Export)
 		route.POST("/product/create", api.NewProductApi().Create)
 		route.PUT("/product/update", api.NewProductApi().Update)
@@ -76,7 +76,7 @@ func Router() {
 
 		// 通知模块
 		route.GET("/notice/list", api.NewNoticeApi().GetList)
-		route.GET("/notice/count", api.NewNoticeApi().GetCount)
+		route.GET("/notice/count", api.NewNoticeApi().GetUnReadCount)
 		route.PUT("/notice/update", api.NewNoticeApi().Update)
 		route.DELETE("/notice/delete", api.NewNoticeApi().Delete)
 	}

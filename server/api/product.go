@@ -57,7 +57,7 @@ func (p *ProductApi) Delete(context *gin.Context) {
 }
 
 // 查询产品列表
-func (p *ProductApi) QueryList(context *gin.Context) {
+func (p *ProductApi) GetList(context *gin.Context) {
 	var param models.ProductQueryParam
 	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
 	err := context.ShouldBind(&param)
@@ -66,18 +66,18 @@ func (p *ProductApi) QueryList(context *gin.Context) {
 		return
 	}
 	param.Creator = int64(uid)
-	productList, rows, errCode := p.productService.QueryList(&param)
+	productList, rows, errCode := p.productService.GetList(&param)
 	response.PageResult(errCode, productList, rows, context)
 }
 
 // 查询产品信息
-func (p *ProductApi) QueryInfo(context *gin.Context) {
+func (p *ProductApi) GetInfo(context *gin.Context) {
 	var param models.ProductQueryParam
 	if err := context.ShouldBind(&param); err != nil {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return
 	}
-	productInfo, errCode := p.productService.QueryInfo(&param)
+	productInfo, errCode := p.productService.GetInfo(&param)
 	response.Result(errCode, productInfo, context)
 }
 

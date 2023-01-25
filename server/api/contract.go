@@ -57,7 +57,7 @@ func (c *ContractApi) Delete(context *gin.Context) {
 }
 
 // 查询合同列表
-func (c *ContractApi) QueryList(context *gin.Context) {
+func (c *ContractApi) GetList(context *gin.Context) {
 	var param models.ContractQueryParam
 	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
 	err := context.ShouldBind(&param)
@@ -66,29 +66,29 @@ func (c *ContractApi) QueryList(context *gin.Context) {
 		return
 	}
 	param.Creator = int64(uid)
-	productList, rows, errCode := c.contractService.QueryList(&param)
+	productList, rows, errCode := c.contractService.GetList(&param)
 	response.PageResult(errCode, productList, rows, context)
 }
 
 // 查询合同信息
-func (c *ContractApi) QueryInfo(context *gin.Context) {
+func (c *ContractApi) GetInfo(context *gin.Context) {
 	var param models.ContractQueryParam
 	if err := context.ShouldBind(&param); err != nil {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return
 	}
-	productInfo, errCode := c.contractService.QueryInfo(&param)
+	productInfo, errCode := c.contractService.GetInfo(&param)
 	response.Result(errCode, productInfo, context)
 }
 
 // 编辑合同时，查询产品列表
-func (p *ContractApi) QueryPlist(context *gin.Context) {
+func (p *ContractApi) GetProductList(context *gin.Context) {
 	var param models.ContractQueryParam
 	if err := context.ShouldBind(&param); err != nil {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return
 	}
-	productList, errCode := p.contractService.QueryPlist(&param)
+	productList, errCode := p.contractService.GetProductList(&param)
 	response.Result(errCode, productList, context)
 }
 

@@ -73,7 +73,7 @@ func (c *CustomerApi) Delete(context *gin.Context) {
 }
 
 // 查询客户列表
-func (c *CustomerApi) QueryList(context *gin.Context) {
+func (c *CustomerApi) GetList(context *gin.Context) {
 	var param models.CustomerQueryParam
 	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
 	err := context.ShouldBind(&param)
@@ -82,29 +82,29 @@ func (c *CustomerApi) QueryList(context *gin.Context) {
 		return
 	}
 	param.Creator = int64(uid)
-	customerList, rows, errCode := c.customerService.QueryList(&param)
+	customerList, rows, errCode := c.customerService.GetList(&param)
 	response.PageResult(errCode, customerList, rows, context)
 }
 
 // 查询客户信息
-func (c *CustomerApi) QueryInfo(context *gin.Context) {
+func (c *CustomerApi) GetInfo(context *gin.Context) {
 	var param models.CustomerQueryParam
 	if err := context.ShouldBind(&param); err != nil {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return
 	}
-	customerInfo, errCode := c.customerService.QueryInfo(&param)
+	customerInfo, errCode := c.customerService.GetInfo(&param)
 	response.Result(errCode, customerInfo, context)
 }
 
 // 查询客户选项
-func (c *CustomerApi) QueryOption(context *gin.Context) {
+func (c *CustomerApi) GetOption(context *gin.Context) {
 	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
 	if uid <= 0 {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return
 	}
-	customerOption, errCode := c.customerService.QueryOption(int64(uid))
+	customerOption, errCode := c.customerService.GetOption(int64(uid))
 	response.Result(errCode, customerOption, context)
 }
 
