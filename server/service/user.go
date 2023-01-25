@@ -2,16 +2,13 @@ package service
 
 import (
 	"crm/common"
-	"crm/global"
+	"crm/dao"
 	"crm/models"
 	"crm/response"
 	"fmt"
 	"log"
-	"strconv"
-	"time"
 
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 )
 
 const (
@@ -19,12 +16,16 @@ const (
 )
 
 type UserService struct {
-	noticeService *NoticeService
+	userDao      *dao.UserDao
+	subscribeDao *dao.SubscribeDao
+	noticeDao    *dao.NoticeDao
 }
 
 func NewUserService() *UserService {
 	userService := UserService{
-		noticeService: &NoticeService{},
+		userDao:      dao.NewUserDao(),
+		subscribeDao: dao.NewSubscribeDao(),
+		noticeDao:    dao.NewNoticeDao(),
 	}
 	return &userService
 }
@@ -33,15 +34,12 @@ func NewUserService() *UserService {
 func (u *UserService) Register(param *models.UserCreateParam) int {
 
 	// 判断用户是否存在
-	var user = models.User{}
-	err := global.Db.Where("email = ?", param.Email).First(&user).Error
-	if err == nil && user.Id > 0 {
+	if u.userDao.IsExists(param.Email) {
 		return response.ErrCodeUserHasExist
 	}
 
 	// 校验验证码是否正确
-	key := fmt.Sprintf("user:%s:code", param.Email)
-	code := global.Rdb.Get(ctx, key).Val()
+	code := u.userDao.GetCode(param.Email)
 	if code != param.Code {
 		return response.ErrCodeVerityCodeInvalid
 	}
@@ -51,42 +49,41 @@ func (u *UserService) Register(param *models.UserCreateParam) int {
 	if err != nil {
 		return response.ErrCodeFailed
 	}
+	param.Password = string(password)
 
 	// 创建用户
-	newUser := models.User{
-		Email:    param.Email,
-		Password: string(password),
-		Status:   1,
-		Created:  time.Now().Unix(),
+	if err := u.userDao.Create(param); err != nil {
+		return response.ErrCodeFailed
 	}
-	if err := global.Db.Create(&newUser).Error; err != nil {
+	// 获取UID
+	uid, err := u.userDao.GetUid(param.Email)
+	if err != nil {
 		return response.ErrCodeFailed
 	}
 
 	// 新用户默认订阅免费版
-	subscribe := models.Subscribe{
-		Version: 1,
-		Created: time.Now().Unix(),
-	}
-	if global.Db.Table(SUBSCRIBE).Where("uid = ?", newUser.Id).First(&models.Subscribe{}).RowsAffected == 0 {
-		subscribe.Uid = newUser.Id
-		subscribe.Created = time.Now().Unix()
-		err := global.Db.Table(SUBSCRIBE).Create(&subscribe).Error
-		if err != nil {
+	if !u.subscribeDao.IsExists(uid) {
+		subscribe := models.SubscribeCreateParam{
+			Uid:     uid,
+			Version: 1,
+		}
+		if err := u.subscribeDao.Create(&subscribe); err != nil {
 			return response.ErrCodeFailed
 		}
 	} else {
-		subscribe.Updated = time.Now().Unix()
-		err = global.Db.Model(&models.Subscribe{}).Where("uid = ?", newUser.Id).Updates(&subscribe).Error
-		if err != nil {
+		subscribe := models.SubscribeUpdateParam{
+			Uid:     uid,
+			Version: 1,
+		}
+		if err := u.subscribeDao.Update(&subscribe); err != nil {
 			return response.ErrCodeFailed
 		}
 	}
 
 	// 注册通知
-	u.noticeService.Create(&models.NoticeParam{
+	u.noticeDao.Create(&models.NoticeCreateParam{
 		Content: REGISTER_NOTICE_TEMPLATE,
-		Creator: newUser.Id,
+		Creator: uid,
 	})
 
 	return response.ErrCodeSuccess
@@ -96,10 +93,14 @@ func (u *UserService) Register(param *models.UserCreateParam) int {
 func (u *UserService) Login(param *models.UserLoginParam) (*models.UserInfo, int) {
 
 	// 判断用户是否存在
-	var user = models.User{}
-	err := global.Db.Where("email = ?", param.Email).First(&user).Error
-	if err != nil {
+	if !u.userDao.IsExists(param.Email) {
 		return nil, response.ErrCodeUserNotExist
+	}
+
+	// 获取用户信息
+	user, err := u.userDao.GetUser(param.Email)
+	if err != nil {
+		return nil, response.ErrCodeFailed
 	}
 
 	// 校验账号密码
@@ -121,7 +122,7 @@ func (u *UserService) Login(param *models.UserLoginParam) (*models.UserInfo, int
 	}
 
 	// 登录通知
-	u.noticeService.Create(&models.NoticeParam{
+	u.noticeDao.Create(&models.NoticeCreateParam{
 		Content: LOGIN_NOTICE_TEMPLATE,
 		Creator: userInfo.Uid,
 	})
@@ -135,8 +136,7 @@ func (u *UserService) GetVerifyCode(email string) int {
 	code := common.RandInt(100000, 999998)
 
 	// 保存验证码
-	key := fmt.Sprintf("user:%s:code", email)
-	if err := global.Rdb.SetEx(ctx, key, strconv.Itoa(code), 10*time.Minute).Err(); err != nil {
+	if err := u.userDao.SetCode(code, email); err != nil {
 		return response.ErrCodeFailed
 	}
 
@@ -152,14 +152,12 @@ func (u *UserService) GetVerifyCode(email string) int {
 // 忘记密码
 func (u *UserService) ForgotPass(param *models.UserPassParam) int {
 	// 判断用户是否存在
-	var user = models.User{}
-	if err := global.Db.Where("email = ?", param.Email).First(&user).Error; err != nil {
+	if !u.userDao.IsExists(param.Email) {
 		return response.ErrCodeUserNotExist
 	}
 
 	// 校验验证码是否正确
-	key := fmt.Sprintf("user:%s:code", param.Email)
-	code := global.Rdb.Get(ctx, key).Val()
+	code := u.userDao.GetCode(param.Email)
 	if code != param.Code {
 		return response.ErrCodeVerityCodeInvalid
 	}
@@ -169,12 +167,7 @@ func (u *UserService) ForgotPass(param *models.UserPassParam) int {
 	if err != nil {
 		return response.ErrCodeFailed
 	}
-	upass := models.User{
-		Password: string(password),
-		Updated:  time.Now().Unix(),
-	}
-	err = global.Db.Model(&models.User{}).Where("email = ?", param.Email).Updates(&upass).Error
-	if err != nil {
+	if err := u.userDao.UpdatePass(param.Email, string(password)); err != nil {
 		return response.ErrCodeUserPassResetFailed
 	}
 	return response.ErrCodeSuccess
@@ -183,27 +176,12 @@ func (u *UserService) ForgotPass(param *models.UserPassParam) int {
 // 注销账号
 func (u *UserService) Delete(param models.UserDeleteParam) int {
 	// 校验验证码是否正确
-	key := fmt.Sprintf("user:%s:code", param.Email)
-	code := global.Rdb.Get(ctx, key).Val()
+	code := u.userDao.GetCode(param.Email)
 	if code != param.Code {
 		return response.ErrCodeVerityCodeInvalid
 	}
-	err := global.Db.Transaction(func(tx *gorm.DB) error {
-		mw := map[interface{}]string{
-			&models.Product{}:   "creator = ?",
-			&models.Customer{}:  "creator = ?",
-			&models.Contract{}:  "creator = ?",
-			&models.Subscribe{}: "uid = ?",
-			&models.User{}:      "id = ?",
-		}
-		for k, v := range mw {
-			if err := tx.Where(v, param.Id).Delete(k).Error; err != nil {
-				return err
-			}
-		}
-		return nil
-	})
-	if err != nil {
+	// 删除用户所有数据
+	if err := u.userDao.DeleteData(param); err != nil {
 		return response.ErrCodeFailed
 	}
 	return response.ErrCodeSuccess
@@ -211,25 +189,9 @@ func (u *UserService) Delete(param models.UserDeleteParam) int {
 
 // 获取用户信息
 func (u *UserService) GetInfo(uid int64) (*models.UserPersonInfo, int) {
-	var user models.UserPersonInfo
-	err := global.Db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Table(USER).Where("id = ?", uid).First(&user).Error; err != nil {
-			return err
-		}
-		var subscribe models.Subscribe
-		if err := tx.Table(SUBSCRIBE).Select("version").Where("uid = ?", uid).First(&subscribe).Error; err != nil {
-			return err
-		}
-		user.Version = subscribe.Version
-		return nil
-	})
+	userInfo, err := u.userDao.GetInfo(uid)
 	if err != nil {
 		return nil, response.ErrCodeFailed
 	}
-	return &user, response.ErrCodeSuccess
-}
-
-// 校验用户Token
-func (u *UserService) VerifyToken(token string) error {
-	return global.Rdb.Exists(ctx, token).Err()
+	return userInfo, response.ErrCodeSuccess
 }

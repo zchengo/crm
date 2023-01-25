@@ -1,6 +1,7 @@
 package service
 
 import (
+	"crm/dao"
 	"crm/global"
 	"crm/models"
 	"crm/response"
@@ -20,12 +21,14 @@ const (
 )
 
 type SubscribeService struct {
-	noticeService *NoticeService
+	subscribeDao *dao.SubscribeDao
+	noticeDao    *dao.NoticeDao
 }
 
 func NewSubscribeService() *SubscribeService {
 	subscribeService := SubscribeService{
-		noticeService: &NoticeService{},
+		subscribeDao: dao.NewSubscribeDao(),
+		noticeDao:    dao.NewNoticeDao(),
 	}
 	return &subscribeService
 }
@@ -38,7 +41,6 @@ func (s *SubscribeService) Pay(param models.SubscribePayParam) (*models.Subscrib
 	var p = alipay.TradePagePay{}
 	p.NotifyURL = global.Config.Alipay.NotifyURL
 	p.ReturnURL = global.Config.Alipay.ReturnURL
-	fmt.Println(p.ReturnURL)
 	p.Subject = "支付测试:" + tradeNo
 	p.OutTradeNo = tradeNo
 	p.ProductCode = "FAST_INSTANT_TRADE_PAY"
@@ -50,18 +52,11 @@ func (s *SubscribeService) Pay(param models.SubscribePayParam) (*models.Subscrib
 	}
 
 	// 缓存订单信息
-	order, _ := json.Marshal(&models.SubscribePayOrder{
-		Uid:  param.Uid,
+	order := &models.SubscribePayOrder{
+		Uid:     param.Uid,
 		Version: param.Version,
-	})
-	err := global.Rdb.Set(ctx, tradeNo, string(order), time.Minute*30).Err()
-	if err != nil {
-		return nil, response.ErrCodeFailed
 	}
-
-	// 设置支付状态
-	key := fmt.Sprintf("uid:%v:pay:status", param.Uid)
-	if err := global.Rdb.Set(ctx, key, Paying, time.Minute*10).Err(); err != nil {
+	if err := s.subscribeDao.SetOrder(tradeNo, order); err != nil {
 		return nil, response.ErrCodeFailed
 	}
 
@@ -94,7 +89,7 @@ func (s *SubscribeService) Callback(outTradeNo string) (string, int) {
 
 	// 获取订单信息
 	var order models.SubscribePayOrder
-	orderJson, err := global.Rdb.Get(ctx, outTradeNo).Result()
+	orderJson, err := s.subscribeDao.GetOrder(outTradeNo)
 	if err != nil {
 		return StringNull, response.ErrCodeFailed
 	}
@@ -113,27 +108,28 @@ func (s *SubscribeService) Callback(outTradeNo string) (string, int) {
 		expired = time.Now().Unix() + int64(31104000)
 		content = SUBSCRIBE_NOTICE_TEMPLATE2
 	}
-	subscribe := models.Subscribe{
-		Version: order.Version,
-		Expired: expired,
-	}
-	if global.Db.Table(SUBSCRIBE).Where("uid = ?", order.Uid).First(&models.Subscribe{}).RowsAffected == 0 {
-		subscribe.Uid = order.Uid
-		subscribe.Created = time.Now().Unix()
-		err := global.Db.Table(SUBSCRIBE).Create(&subscribe).Error
-		if err != nil {
+	if !s.subscribeDao.IsExists(order.Uid) {
+		subscribe := models.SubscribeCreateParam{
+			Uid:     order.Uid,
+			Version: order.Version,
+			Expired: expired,
+		}
+		if err := s.subscribeDao.Create(&subscribe); err != nil {
 			return StringNull, response.ErrCodeFailed
 		}
 	} else {
-		subscribe.Updated = time.Now().Unix()
-		err = global.Db.Model(&models.Subscribe{}).Where("uid = ?", order.Uid).Updates(&subscribe).Error
-		if err != nil {
+		subscribe := models.SubscribeUpdateParam{
+			Uid:     order.Uid,
+			Version: order.Version,
+			Expired: expired,
+		}
+		if err := s.subscribeDao.Update(&subscribe); err != nil {
 			return StringNull, response.ErrCodeFailed
 		}
 	}
 
 	// 订阅通知
-	s.noticeService.Create(&models.NoticeParam{
+	s.noticeDao.Create(&models.NoticeCreateParam{
 		Content: content,
 		Creator: order.Uid,
 	})
@@ -174,19 +170,19 @@ func (s *SubscribeService) Notify(data url.Values, outTradeNo string) int {
 
 // 获取订阅信息
 func (s *SubscribeService) GetInfo(uid int64) (*models.SubscribeInfo, int) {
-	var si models.SubscribeInfo
-	if err := global.Db.Table(SUBSCRIBE).First(&si, "uid = ?", uid).Error; err != nil {
+	si, err := s.subscribeDao.GetInfo(uid)
+	if err != nil {
 		return nil, response.ErrCodeFailed
 	}
 	// 判断用户订阅是否过期
 	if si.Version == 2 && time.Now().Unix() > int64(si.Expired) {
-		err := global.Db.Model(&models.Subscribe{}).Where("uid = ?", uid).Update("version", 1).Error
-		if err != nil {
+		if err := s.subscribeDao.UpdateVersion(uid, 1); err != nil {
 			return nil, response.ErrCodeFailed
 		}
 	}
-	if err := global.Db.Table(SUBSCRIBE).First(&si, "uid = ?", uid).Error; err != nil {
+	subscribeInfo, err := s.subscribeDao.GetInfo(uid)
+	if err != nil {
 		return nil, response.ErrCodeFailed
 	}
-	return &si, response.ErrCodeSuccess
+	return subscribeInfo, response.ErrCodeSuccess
 }

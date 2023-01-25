@@ -2,7 +2,7 @@ package service
 
 import (
 	"crm/common"
-	"crm/global"
+	"crm/dao"
 	"crm/models"
 	"crm/response"
 	"strconv"
@@ -15,25 +15,23 @@ const (
 )
 
 type CustomerService struct {
+	customerDao   *dao.CustomerDao
+	mailConfigDao *dao.MailConfigDao
+}
+
+func NewCustomerService() *CustomerService {
+	return &CustomerService{
+		customerDao:   dao.NewCustomerDao(),
+		mailConfigDao: dao.NewMailConfigDao(),
+	}
 }
 
 // 创建客户
 func (c *CustomerService) Create(param *models.CustomerCreateParam) int {
-	customer := models.Customer{
-		Name:     param.Name,
-		Source:   param.Source,
-		Phone:    param.Phone,
-		Email:    param.Email,
-		Industry: param.Industry,
-		Level:    param.Level,
-		Remarks:  param.Remarks,
-		Region:   param.Region,
-		Address:  param.Address,
-		Status:   1,
-		Creator:  param.Creator,
-		Created:  time.Now().Unix(),
+	if c.customerDao.IsExists(param.Name, param.Creator) {
+		return response.ErrCodeCustomerHasExist
 	}
-	if err := global.Db.Create(&customer).Error; err != nil {
+	if err := c.customerDao.Create(param); err != nil {
 		return response.ErrCodeFailed
 	}
 	return response.ErrCodeSuccess
@@ -41,22 +39,7 @@ func (c *CustomerService) Create(param *models.CustomerCreateParam) int {
 
 // 更新客户
 func (c *CustomerService) Update(param *models.CustomerUpdateParam) int {
-	customer := models.Customer{
-		Id:       param.Id,
-		Name:     param.Name,
-		Source:   param.Source,
-		Phone:    param.Phone,
-		Email:    param.Email,
-		Industry: param.Industry,
-		Level:    param.Level,
-		Remarks:  param.Remarks,
-		Region:   param.Region,
-		Address:  param.Address,
-		Status:   param.Status,
-		Updated:  time.Now().Unix(),
-	}
-	db := global.Db.Model(&customer).Select("*").Omit("id", "creator", "created")
-	if err := db.Updates(&customer).Error; err != nil {
+	if err := c.customerDao.Update(param); err != nil {
 		return response.ErrCodeFailed
 	}
 	return response.ErrCodeSuccess
@@ -64,8 +47,7 @@ func (c *CustomerService) Update(param *models.CustomerUpdateParam) int {
 
 // 发送邮件给客户
 func (c *CustomerService) SendMail(param *models.CustomerSendMailParam) int {
-	var mc models.MailConfig
-	err := global.Db.Model(&models.MailConfig{}).Where("creator = ?", param.Uid).First(&mc).Error
+	mc, err := c.mailConfigDao.GetInfo(param.Uid)
 	if err != nil {
 		return response.ErrCodeMailSendFailed
 	}
@@ -89,46 +71,33 @@ func (c *CustomerService) SendMail(param *models.CustomerSendMailParam) int {
 
 // 删除客户
 func (c *CustomerService) Delete(param *models.CustomerDeleteParam) int {
-	if err := global.Db.Delete(&models.Customer{}, param.Ids).Error; err != nil {
+	if err := c.customerDao.Delete(param); err != nil {
 		return response.ErrCodeFailed
 	}
 	return response.ErrCodeSuccess
 }
 
 // 查询客户列表
-func (c *CustomerService) QueryList(param *models.CustomerQueryParam) ([]*models.CustomerList, int64, int) {
-	customer := models.Customer{
-		Name:    param.Name,
-		Creator: param.Creator,
-	}
-	customerList := make([]*models.CustomerList, 0)
-	rows, err := restPage(param.Page, CUSTOMER, customer, &customerList, &[]*models.CustomerList{})
+func (c *CustomerService) GetList(param *models.CustomerQueryParam) ([]*models.CustomerList, int64, int) {
+	customerList, rows, err := c.customerDao.GetList(param)
 	if err != nil {
-		return nil, 0, response.ErrCodeFailed
+		return nil, NumberNull, response.ErrCodeFailed
 	}
 	return customerList, rows, response.ErrCodeSuccess
 }
 
 // 查询客户信息
-func (c *CustomerService) QueryInfo(param *models.CustomerQueryParam) (*models.CustomerInfo, int) {
-	customer := models.Customer{
-		Id: param.Id,
-	}
-	customerInfo := models.CustomerInfo{}
-	err := global.Db.Table(CUSTOMER).Where(&customer).First(&customerInfo).Error
+func (c *CustomerService) GetInfo(param *models.CustomerQueryParam) (*models.CustomerInfo, int) {
+	customerInfo, err := c.customerDao.GetInfo(param)
 	if err != nil {
 		return nil, response.ErrCodeFailed
 	}
-	return &customerInfo, response.ErrCodeSuccess
+	return customerInfo, response.ErrCodeSuccess
 }
 
 // 查询客户选项
-func (c *CustomerService) QueryOption(uid int64) ([]*models.CustomerOption, int) {
-	customer := models.Customer{
-		Creator: uid,
-	}
-	option := make([]*models.CustomerOption, 0)
-	err := global.Db.Table(CUSTOMER).Where(&customer).Find(&option).Error
+func (c *CustomerService) GetOption(uid int64) ([]*models.CustomerOption, int) {
+	option, err := c.customerDao.GetOption(uid)
 	if err != nil {
 		return nil, response.ErrCodeFailed
 	}
@@ -137,8 +106,7 @@ func (c *CustomerService) QueryOption(uid int64) ([]*models.CustomerOption, int)
 
 // 导出Excel文件
 func (c *CustomerService) Export(uid int64) (string, int) {
-	customers := make([]models.Customer, 0)
-	err := global.Db.Where("creator = ?", uid).Find(&customers).Error
+	customers, err := c.customerDao.GetListByUid(uid)
 	if err != nil {
 		return StringNull, response.ErrCodeFailed
 	}

@@ -2,7 +2,7 @@ package service
 
 import (
 	"crm/common"
-	"crm/global"
+	"crm/dao"
 	"crm/models"
 	"crm/response"
 	"strconv"
@@ -10,22 +10,21 @@ import (
 )
 
 type ProductService struct {
+	productDao *dao.ProductDao
+}
+
+func NewProductService() *ProductService {
+	return &ProductService{
+		productDao: dao.NewProductDao(),
+	}
 }
 
 // 创建产品
 func (p *ProductService) Create(param *models.ProductCreateParam) int {
-	product := models.Product{
-		Name:        param.Name,
-		Type:        param.Type,
-		Unit:        param.Unit,
-		Code:        param.Code,
-		Price:       param.Price,
-		Description: param.Description,
-		Status:      param.Status,
-		Creator:     param.Creator,
-		Created:     time.Now().Unix(),
+	if p.productDao.IsExists(param.Name, param.Creator) {
+		return response.ErrCodeProductHasExist
 	}
-	if err := global.Db.Create(&product).Error; err != nil {
+	if err := p.productDao.Create(param); err != nil {
 		return response.ErrCodeFailed
 	}
 	return response.ErrCodeSuccess
@@ -33,19 +32,7 @@ func (p *ProductService) Create(param *models.ProductCreateParam) int {
 
 // 更新产品
 func (p *ProductService) Update(param *models.ProductUpdateParam) int {
-	product := models.Product{
-		Id:          param.Id,
-		Name:        param.Name,
-		Type:        param.Type,
-		Unit:        param.Unit,
-		Code:        param.Code,
-		Price:       param.Price,
-		Description: param.Description,
-		Status:      param.Status,
-		Updated:     time.Now().Unix(),
-	}
-	db := global.Db.Model(&product).Select("*").Omit("id", "creator", "created")
-	if err := db.Updates(&product).Error; err != nil {
+	if err := p.productDao.Update(param); err != nil {
 		return response.ErrCodeFailed
 	}
 	return response.ErrCodeSuccess
@@ -53,45 +40,33 @@ func (p *ProductService) Update(param *models.ProductUpdateParam) int {
 
 // 删除产品
 func (p *ProductService) Delete(param *models.ProductDeleteParam) int {
-	err := global.Db.Delete(&models.Product{}, param.Ids).Error
-	if err != nil {
+	if err := p.productDao.Delete(param); err != nil {
 		return response.ErrCodeFailed
 	}
 	return response.ErrCodeSuccess
 }
 
 // 查询产品列表
-func (p *ProductService) QueryList(param *models.ProductQueryParam) ([]*models.ProductList, int64, int) {
-	product := models.Product{
-		Name:    param.Name,
-		Status:  param.Status,
-		Creator: param.Creator,
-	}
-	productList := make([]*models.ProductList, 0)
-	rows, err := restPage(param.Page, PRODUCT, product, &productList, &[]*models.ProductList{})
+func (p *ProductService) GetList(param *models.ProductQueryParam) ([]*models.ProductList, int64, int) {
+	productList, rows, err := p.productDao.GetList(param)
 	if err != nil {
-		return nil, 0, response.ErrCodeFailed
+		return nil, NumberNull, response.ErrCodeFailed
 	}
 	return productList, rows, response.ErrCodeSuccess
 }
 
 // 查询产品信息
-func (p *ProductService) QueryInfo(param *models.ProductQueryParam) (*models.ProductInfo, int) {
-	product := models.Product{
-		Id: param.Id,
-	}
-	productInfo := models.ProductInfo{}
-	err := global.Db.Table(PRODUCT).Where(&product).First(&productInfo).Error
+func (p *ProductService) GetInfo(param *models.ProductQueryParam) (*models.ProductInfo, int) {
+	productInfo, err := p.productDao.GetInfo(param)
 	if err != nil {
 		return nil, response.ErrCodeFailed
 	}
-	return &productInfo, response.ErrCodeSuccess
+	return productInfo, response.ErrCodeSuccess
 }
 
 // 导出Excel文件
 func (p *ProductService) Export(uid int64) (string, int) {
-	products := make([]models.Product, 0)
-	err := global.Db.Where("creator = ?", uid).Find(&products).Error
+	products, err := p.productDao.GetListByUid(uid)
 	if err != nil {
 		return StringNull, response.ErrCodeFileExportFailed
 	}

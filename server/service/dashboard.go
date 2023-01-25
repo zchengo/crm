@@ -1,35 +1,34 @@
 package service
 
 import (
-	"crm/global"
+	"crm/dao"
 	"crm/models"
 	"time"
 )
 
 type DashboardService struct {
+	dashboardDao *dao.DashboardDao
+}
+
+func NewDashboardService() *DashboardService {
+	return &DashboardService{
+		dashboardDao: dao.NewDashboardDao(),
+	}
 }
 
 // 数据汇总
 func (d *DashboardService) Summary(uid int64, days int) models.DashboardSum {
-	var ds models.DashboardSum
-	global.Db.Raw("select count(*) from customer where creator = ?", uid).Scan(&ds.Customers)
-	global.Db.Raw("select count(*) from contract where creator = ?", uid).Scan(&ds.Contracts)
-	global.Db.Raw("select sum(amount) from contract where creator = ?", uid).Scan(&ds.ContractAmount)
-	global.Db.Raw("select count(*) from product where creator = ?", uid).Scan(&ds.Products)
-
+	ds := d.dashboardDao.Count(uid, days)
 	now := time.Now().Unix()
-	con := "created > ? and created < ? and status = 1 and creator = ?"
 	ds.Amount = make([]float64, days)
 	ds.Date = make([]string, days)
-	for i, d := 0, days; i < days; i++ {
-		day := now - (int64(d) * 24 * 60 * 60)
+	for i, dd := 0, days; i < days; i++ {
+		day := now - (int64(dd) * 24 * 60 * 60)
 		start, end := dayRange(day)
-		global.Db.Table(CONTRACT).Where(con, start, end, uid).Pluck("amount", &ds.Amount[i])
+		ds.Amount[i] = d.dashboardDao.AmountSum(start, end, uid)
 		ds.Date[i] = time.Unix(day, 0).Format("01-02")
-		d--
+		dd--
 	}
-	s := "industry as name, count(*) as value"
-	global.Db.Model(&models.Customer{}).Select(s).Where("creator = ?", uid).Group("industry").Find(&ds.CustomerIndustry)
 	return ds
 }
 
