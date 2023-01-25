@@ -9,7 +9,7 @@ type Notice struct {
 	Updated int64  `gorm:"updated"`
 }
 
-type NoticeParam struct {
+type NoticeCreateParam struct {
 	Content string `json:"content"`
 	Creator int64  `gorm:"creator"`
 }

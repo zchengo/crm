@@ -9,6 +9,19 @@ type Subscribe struct {
 	Updated int64 `gorm:"updated"`
 }
 
+type SubscribeCreateParam struct {
+	Uid     int64 `json:"uid"`
+	Version int   `json:"version"`
+	Expired int64 `json:"expired"`
+}
+
+type SubscribeUpdateParam struct {
+	Id      int64 `json:"id"`
+	Uid     int64 `json:"uid"`
+	Version int   `json:"version"`
+	Expired int64 `json:"expired"`
+}
+
 type SubscribePayParam struct {
 	Uid     int64 `json:"uid" binding:"-"`
 	Version int   `json:"version" binding:"required,oneof=2 3"`
