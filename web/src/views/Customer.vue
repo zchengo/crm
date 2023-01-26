@@ -33,8 +33,8 @@
                         </template></a-button>
                 </template>
                 <template v-if="column.dataIndex === 'status'">
-                    <a-tag v-if="text == 1" color="green">已成交</a-tag>
-                    <a-tag v-if="text == 2" color="blue">未成交</a-tag>
+                    <Spot v-if="text == 1" type="success" title="已成交" />
+                    <Spot v-if="text == 2" type="danger" title="未成交" />
                 </template>
                 <template v-if="column.dataIndex === 'address'">
                     <span>{{ record.region + " " + record.address }}</span>
@@ -166,6 +166,7 @@ import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined, MailTwoTone 
 import moment from 'moment'
 import { createCustomer, updateCustomer, sendMailToCustomer, queryCustomerList, queryCustomerInfo, deleteCustomer, customerExport } from '../api/customer';
 import { message, Modal } from 'ant-design-vue';
+import Spot from '../components/Spot.vue';
 import regionData from '../assets/region';
 
 // 表格字段
@@ -344,7 +345,12 @@ const onSave = () => {
             createCustomer(customer).then((res) => {
                 if (res.data.code == 0) {
                     message.success('保存成功')
+                    customerFormRef.value.resetFields()
+                    visible.value = false;
                     getCustomerList()
+                }
+                if (res.data.code == 20001) {
+                    message.error('客户名称已经存在')
                 }
             })
         }
@@ -352,12 +358,12 @@ const onSave = () => {
             updateCustomer(customer).then((res) => {
                 if (res.data.code == 0) {
                     message.success('保存成功')
+                    customerFormRef.value.resetFields()
+                    visible.value = false;
                     getCustomerList()
                 }
             })
         }
-        customerFormRef.value.resetFields()
-        visible.value = false;
     });
 };
 

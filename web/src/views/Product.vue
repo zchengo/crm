@@ -28,8 +28,8 @@
                     <a @click="onEdit(record)">{{ text }}</a>
                 </template>
                 <template v-if="column.dataIndex === 'status'">
-                    <a-tag v-if="text == 1" color="green">上架</a-tag>
-                    <a-tag v-if="text == 2" color="blue">下架</a-tag>
+                    <Spot v-if="text == 1" type="success" title="上架" />
+                    <Spot v-if="text == 2" type="danger" title="下架" />
                 </template>
                 <template v-if="column.dataIndex === 'type'">
                     <span v-if="text == 1">默认</span>
@@ -88,8 +88,12 @@
                         <a-col :span="12">
                             <a-form-item label="是否上下架" name="status">
                                 <a-select v-model:value="product.status" placeholder="请选择">
-                                    <a-select-option :value="1">上架</a-select-option>
-                                    <a-select-option :value="2">下架</a-select-option>
+                                    <a-select-option :value="1">
+                                        <Spot type="success" title="上架" />
+                                    </a-select-option>
+                                    <a-select-option :value="2">
+                                        <Spot type="danger" title="下架" />
+                                    </a-select-option>
                                 </a-select>
                             </a-form-item>
                         </a-col>
@@ -112,6 +116,7 @@ import { ref, reactive, onMounted, createVNode } from 'vue';
 import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
 import { createProduct, updateProduct, queryProductList, deleteProduct, queryProductInfo, productExport } from '../api/product';
+import Spot from '../components/Spot.vue';
 import { message, Modal } from 'ant-design-vue';
 
 // 表格字段
@@ -260,20 +265,25 @@ const onSave = () => {
             createProduct(product).then((res) => {
                 if (res.data.code == 0) {
                     message.success('保存成功')
+                    productFormRef.value.resetFields()
+                    visible.value = false;
                     getProductList()
+                }
+                if (res.data.code == 40001) {
+                    message.error('产品名称已经存在')
                 }
             })
         }
         if (operation.value == 2) {
             updateProduct(product).then((res) => {
                 if (res.data.code == 0) {
+                    productFormRef.value.resetFields()
+                    visible.value = false;
                     message.success('保存成功')
                     getProductList()
                 }
             })
         }
-        productFormRef.value.resetFields()
-        visible.value = false;
     });
 };
 

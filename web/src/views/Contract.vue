@@ -32,8 +32,8 @@
                     <span style="color: #ff991f">{{ text }}</span>
                 </template>
                 <template v-if="column.dataIndex === 'status'">
-                    <a-tag v-if="text == 1" color="green">已签约</a-tag>
-                    <a-tag v-if="text == 2" color="red">未签约</a-tag>
+                    <Spot v-if="text == 1" type="success" title="已签约" />
+                    <Spot v-if="text == 2" type="danger" title="未签约" />
                 </template>
             </template>
         </a-table>
@@ -178,6 +178,7 @@ import { createContract, updateContract, queryContractList, queryContractInfo, d
 import { queryProductList } from "../api/product";
 import { queryCustomerOption } from "../api/customer";
 import { message, Modal } from 'ant-design-vue';
+import Spot from '../components/Spot.vue';
 
 // 合同表格字段
 const columns = [{
