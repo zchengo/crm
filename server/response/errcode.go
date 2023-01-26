@@ -31,6 +31,7 @@ const (
 	ErrCodeMailConfigInvalid = 50001 // 邮件服务配置无效
 	ErrCodeMailSendFailed    = 50002 // 邮件发送失败
 	ErrCodeMailSendUnEnable  = 50003 // 邮件服务未开启
+	ErrCodeMailConfigUnSet   = 50004 // 邮件服务未配置
 )
 
 var msg = map[int]string{
@@ -54,4 +55,5 @@ var msg = map[int]string{
 	ErrCodeMailConfigInvalid:    "mail config invalid",
 	ErrCodeMailSendFailed:       "mail send failed",
 	ErrCodeMailSendUnEnable:     "mail send server unEnable",
+	ErrCodeMailConfigUnSet:      "mail config un set",
 }

@@ -25,8 +25,19 @@ func (m *MailConfigService) Save(param *models.MailConfigSaveParam) int {
 	return response.ErrCodeSuccess
 }
 
+// 删除邮件服务配置
+func (m *MailConfigService) Delete(param *models.MailConfigDeleteParam) int {
+	if err := m.mailConfigDao.Delete(param); err != nil {
+		return response.ErrCodeFailed
+	}
+	return response.ErrCodeSuccess
+}
+
 // 开启或关闭邮件服务
 func (m *MailConfigService) UpdateStatus(param *models.MailConfigStatusParam) int {
+	if !m.mailConfigDao.IsExists(param.Creator) {
+		return response.ErrCodeMailConfigUnSet
+	}
 	if err := m.mailConfigDao.UpdateStatus(param); err != nil {
 		return response.ErrCodeFailed
 	}
@@ -35,6 +46,9 @@ func (m *MailConfigService) UpdateStatus(param *models.MailConfigStatusParam) in
 
 // 获取邮件配置信息
 func (m *MailConfigService) GetInfo(uid int64) (*models.MailConfigInfo, int) {
+	if !m.mailConfigDao.IsExists(uid) {
+		return nil, response.ErrCodeMailConfigUnSet
+	}
 	mc, err := m.mailConfigDao.GetInfo(uid)
 	if err != nil {
 		return nil, response.ErrCodeFailed

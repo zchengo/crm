@@ -40,6 +40,18 @@ func (m *MailConfigApi) Save(context *gin.Context) {
 	response.Result(errCode, nil, context)
 }
 
+// 删除邮件服务配置
+func (m *MailConfigApi) Delete(context *gin.Context) {
+	var param models.MailConfigDeleteParam
+	if err := context.ShouldBind(&param); err != nil {
+		response.Result(response.ErrCodeParamInvalid, nil, context)
+		log.Println(err)
+		return
+	}
+	errCode := m.mailConfigService.Delete(&param)
+	response.Result(errCode, nil, context)
+}
+
 // 开启或关闭邮件服务
 func (m *MailConfigApi) UpdateStatus(context *gin.Context) {
 	var param models.MailConfigStatusParam

@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+const (
+	Closed = 2
+)
+
 type MailConfigDao struct {
 }
 
@@ -14,10 +18,14 @@ func NewMailConfigDao() *MailConfigDao {
 }
 
 func (m *MailConfigDao) Save(param *models.MailConfigSaveParam) error {
-	if !isExists(param.Creator) {
+	if !m.IsExists(param.Creator) {
 		return create(param)
 	}
 	return update(param)
+}
+
+func (m *MailConfigDao) Delete(param *models.MailConfigDeleteParam) error {
+	return global.Db.Delete(&models.MailConfig{}, param.Id).Error
 }
 
 func (m *MailConfigDao) GetInfo(uid int64) (*models.MailConfig, error) {
@@ -41,7 +49,7 @@ func (m *MailConfigDao) UpdateStatus(param *models.MailConfigStatusParam) error 
 	return nil
 }
 
-func isExists(uid int64) bool {
+func (m *MailConfigDao) IsExists(uid int64) bool {
 	var mc models.MailConfig
 	db := global.Db.Table(MAIL_CONFIG).Where("creator = ?", uid).First(&mc)
 	return db.RowsAffected != NumberNull
@@ -53,7 +61,7 @@ func create(param *models.MailConfigSaveParam) error {
 		Port:     param.Port,
 		AuthCode: param.AuthCode,
 		Email:    param.Email,
-		Status:   1,
+		Status:   Closed,
 		Creator:  param.Creator,
 		Created:  time.Now().Unix(),
 	}

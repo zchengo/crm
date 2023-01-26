@@ -68,6 +68,7 @@ func Router() {
 		route.GET("/config/check", api.NewMailConfigApi().Check)
 		route.PUT("/config/save", api.NewMailConfigApi().Save)
 		route.PUT("/config/status", api.NewMailConfigApi().UpdateStatus)
+		route.DELETE("/config/delete", api.NewMailConfigApi().Delete)
 
 		// 订阅模块
 		route.GET("/subscribe/info", api.NewSubscribeApi().GetInfo)

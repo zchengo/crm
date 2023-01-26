@@ -9,6 +9,15 @@ export function saveMailConfig(param) {
 	})
 }
 
+// 删除邮件服务配置
+export function deleteMailConfig(param) {
+    return request({
+		url: '/config/delete',
+		method: 'delete',
+		data: param,
+	})
+}
+
 // 开启或关闭邮件服务
 export function updateMailConfigStmpStatus(param) {
     return request({

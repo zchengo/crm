@@ -73,11 +73,8 @@
                             </a-col>
                             <a-col :span="12">
                                 <a-form-item label="服务状态" name="status">
-                                    <a-select ref="select" v-model:value="mailConfig.status" placeholder="自动检测服务有效性"
+                                    <a-select ref="select" v-model:value="mailConfig.status" placeholder="自动检测服务状态"
                                         disabled>
-                                        <a-select-option :value="0">
-                                            <Spot type="warning" title="服务未配置" />
-                                        </a-select-option>
                                         <a-select-option :value="1">
                                             <Spot type="success" title="服务已开启" />
                                         </a-select-option>
@@ -90,7 +87,8 @@
                             <a-col :span="12">
                                 <a-form-item><br />
                                     <a-button type="primary" html-type="submit">保存</a-button>
-                                    <a-button style="margin-left: 20px;" @click="reset">重置</a-button>
+                                    <a-button type="primary" style="margin-left: 20px;" @click="reset" ghost>重置</a-button>
+                                    <a-button style="margin-left: 20px;" @click="delConfig" danger>删除</a-button>
                                 </a-form-item>
                             </a-col>
                         </a-row>
@@ -102,16 +100,15 @@
 </template>
 
 <script setup>
-import { reactive, ref, onBeforeMount } from 'vue';
-import { InfoCircleOutlined } from '@ant-design/icons-vue';
+import { reactive, ref, onBeforeMount, createVNode } from 'vue';
+import { InfoCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import Spot from '../components/Spot.vue';
-import { saveMailConfig, updateMailConfigStmpStatus, getMailConfig, checkMailConfig } from '../api/config';
+import { saveMailConfig, deleteMailConfig, updateMailConfigStmpStatus, getMailConfig, checkMailConfig } from '../api/config';
 import { message, Modal } from 'ant-design-vue';
 
 // 初始化
 onBeforeMount(() => {
     getMailConfigInfo()
-    checkConfig()
 })
 
 // 邮件服务配置
@@ -124,22 +121,25 @@ const mailConfig = reactive({
     status: undefined
 })
 const mailConfigRef = ref()
-const usability = ref(1)
+const usability = ref(undefined)
 
 // 表单校验
 const rules = {
     stmp: [{
+        required: true,
         pattern: /^(?=^.{3,255}$)(http(s)?:\/\/)?(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/\w+\.\w+)*$/,
         message: '域名格式不正确',
         trigger: 'blur',
     }],
     port: [{
+        required: true,
         pattern: /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/,
         message: '端口号格式不正确',
         trigger: 'blur',
     }],
-    authCode: [{ message: '产品编码格式不正确', trigger: 'blur' }],
+    authCode: [{ required: true, message: '产品编码格式不正确', trigger: 'blur' }],
     email: [{
+        required: true,
         pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
         message: '邮箱格式不正确',
         trigger: 'blur',
@@ -159,7 +159,31 @@ const onSave = () => {
     })
 }
 
-// 保存邮件服务配置
+// 删除配置
+const delConfig = () => {
+    Modal.confirm({
+        title: '您确定要删除邮件服务配置？',
+        icon: createVNode(ExclamationCircleOutlined),
+        centered: true,
+        cancelText: '取消',
+        okText: '确定',
+        onOk() {
+            deleteMailConfig({ id: mailConfig.id }).then((res) => {
+                if (res.data.code == 0) {
+                    message.success("删除成功")
+                    reset()
+                } else {
+                    message.error("删除失败")
+                }
+            })
+        },
+        onCancel() {
+            console.log('Cancel');
+        },
+    });
+}
+
+// 开启或关闭邮件服务
 const onSwitch = () => {
     updateMailConfigStmpStatus({
         id: mailConfig.id,
@@ -172,6 +196,10 @@ const onSwitch = () => {
                 message.warning("服务已关闭")
             }
         }
+        if (res.data.code == 50004) {
+            mailConfig.status = undefined
+            message.info("您还没有配置邮件服务！")
+        }
     })
 }
 
@@ -180,6 +208,11 @@ const getMailConfigInfo = () => {
     getMailConfig().then((res) => {
         if (res.data.code == 0) {
             setData(res.data.data)
+            checkConfig()
+        }
+        if (res.data.code == 50004) {
+            usability.value = undefined
+            mailConfig.status = undefined
         }
     })
 }
@@ -199,6 +232,7 @@ const checkConfig = () => {
 // 重置
 const reset = () => {
     mailConfigRef.value.resetFields()
+    usability.value = undefined
 }
 
 // 数据赋值
