@@ -64,5 +64,4 @@ type Alipay struct {
 	AlipayPublicCert string `mapstructure:"alipayPublicCert"`
 	ReturnURL        string `mapstructure:"returnURL"`
 	NotifyURL        string `mapstructure:"notifyURL"`
-	PaySuccessURL    string `mapstructure:"paySuccessURL"`
 }

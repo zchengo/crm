@@ -43,6 +43,5 @@ alipay:
   appPublicCert: /home/ubuntu/crm/cert/appPublicCert.crt
   alipayRootCert: /home/ubuntu/crm/cert/alipayRootCert.crt
   alipayPublicCert: /home/ubuntu/crm/cert/alipayPublicCert.crt
-  returnURL: http://127.0.0.1:8000/api/subscribe/callback
-  notifyURL: http://127.0.0.1:8000/api/subscribe/notify
-  paySuccessURL: http://127.0.0.1:8060/#/subscribe
+  returnURL: http://127.0.0.1:8060/#/subscribe
+  notifyURL: http://127.0.0.1:8000/api/subscribe/payback
