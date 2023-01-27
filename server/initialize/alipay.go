@@ -4,31 +4,27 @@ import (
 	"crm/global"
 	"log"
 
-	"github.com/smartwalle/alipay/v3"
+	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/alipay"
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 func Alipay() {
-	var err error
-	appId := global.Config.Alipay.AppId
-	privateKey := global.Config.Alipay.PrivateKey
-	global.Alipay, err = alipay.New(appId, privateKey, false);
+	pay := global.Config.Alipay
+	client, err := alipay.NewClient(pay.AppId, pay.PrivateKey, false)
 	if err != nil {
-		log.Println("初始化支付宝支付服务失败", err)
+		xlog.Error(err)
 		return
 	}
 
-	// 加载支付宝证书
-	if err = global.Alipay.LoadAppPublicCertFromFile(global.Config.Alipay.AppPublicCert); err != nil {
-		log.Println("加载证书发生错误", err)
-		return
-	}
+	client.DebugSwitch = gopay.DebugOn
 
-	if err = global.Alipay.LoadAliPayRootCertFromFile(global.Config.Alipay.AlipayRootCert); err != nil {
-		log.Println("加载证书发生错误", err)
+	// 设置支付宝请求、公钥证书模式
+	client.SetReturnUrl(pay.ReturnURL).SetNotifyUrl(pay.NotifyURL)
+	err = client.SetCertSnByPath(pay.AppPublicCert, pay.AlipayRootCert, pay.AlipayPublicCert)
+	if err != nil {
+		log.Printf("init alipay cert error: %s", err)
 		return
 	}
-	if err = global.Alipay.LoadAliPayPublicCertFromFile(global.Config.Alipay.AlipayPublicCert); err != nil {
-		log.Println("加载证书发生错误", err)
-		return
-	}
+	global.Alipay = client
 }
