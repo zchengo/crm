@@ -56,8 +56,8 @@ func (s *SubscribeDao) SetOrder(tradeNo string, param *models.SubscribePayOrder)
 	return global.Rdb.Set(ctx, tradeNo, string(order), time.Minute*30).Err()
 }
 
-func (s *SubscribeDao) GetOrder(orderNo string) (string, error) {
-	orderJson, err := global.Rdb.Get(ctx, orderNo).Result()
+func (s *SubscribeDao) GetOrder(tradeNo string) (string, error) {
+	orderJson, err := global.Rdb.Get(ctx, tradeNo).Result()
 	if err != nil {
 		return StringNull, err
 	}

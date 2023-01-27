@@ -1,6 +1,7 @@
 package api
 
 import (
+	"crm/common"
 	"crm/models"
 	"crm/response"
 	"crm/service"
@@ -25,8 +26,8 @@ func NewSubscribeApi() *SubscribeApi {
 func (s *SubscribeApi) Pay(context *gin.Context) {
 	var param models.SubscribePayParam
 	uid, _ := strconv.Atoi(context.Request.Header.Get("uid"))
-	err := context.ShouldBind(&param);
-	if int64(uid) <= 0 ||  err != nil {
+	err := context.ShouldBind(&param)
+	if int64(uid) <= 0 || err != nil {
 		response.Result(response.ErrCodeParamInvalid, nil, context)
 		return
 	}
@@ -36,18 +37,10 @@ func (s *SubscribeApi) Pay(context *gin.Context) {
 }
 
 // 支付成功回调
-func (s *SubscribeApi) Callback(context *gin.Context) {
-	context.Request.ParseForm()
-	var outTradeNo = context.Request.Form.Get("out_trade_no")
-	paySuccessURL, _ := s.subscribeService.Callback(outTradeNo)
-	context.Redirect(http.StatusMovedPermanently, paySuccessURL)
-}
-
-// 支付通知
-func (s *SubscribeApi) Notify(context *gin.Context) {
-	context.Request.ParseForm()
-	var outTradeNo = context.Request.Form.Get("out_trade_no")
-	errCode := s.subscribeService.Notify(context.Request.Form, outTradeNo)
+func (s *SubscribeApi) PayBack(context *gin.Context) {
+	notifyReq := common.GetAlipay().VerifySign(context.Request)
+	errCode := s.subscribeService.PayBack(notifyReq.GetString("out_trade_no"))
+	context.String(http.StatusOK, "%s", "success")
 	response.Result(errCode, nil, context)
 }
 

@@ -3,8 +3,8 @@ package global
 import (
 	"crm/config"
 
+	"github.com/go-pay/gopay/alipay"
 	"github.com/go-redis/redis/v9"
-	"github.com/smartwalle/alipay/v3"
 	"gorm.io/gorm"
 )
 

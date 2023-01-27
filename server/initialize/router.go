@@ -25,7 +25,7 @@ func Router() {
 		route.POST("/user/register", api.NewUserApi().Register)
 		route.POST("/user/pass", api.NewUserApi().ForgotPass)
 		route.DELETE("/user/delete", api.NewUserApi().Delete)
-		route.GET("/subscribe/callback", api.NewSubscribeApi().Callback)
+		route.POST("/subscribe/payback", api.NewSubscribeApi().PayBack)
 
 		// 初始化数据
 		route.POST("/init/data", api.InitData)
@@ -73,7 +73,6 @@ func Router() {
 		// 订阅模块
 		route.GET("/subscribe/info", api.NewSubscribeApi().GetInfo)
 		route.POST("/subscribe/pay", api.NewSubscribeApi().Pay)
-		route.POST("/subscribe/notify", api.NewSubscribeApi().Notify)
 
 		// 通知模块
 		route.GET("/notice/list", api.NewNoticeApi().GetList)

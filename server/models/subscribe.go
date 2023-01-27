@@ -23,13 +23,14 @@ type SubscribeUpdateParam struct {
 }
 
 type SubscribePayParam struct {
-	Uid     int64 `json:"uid" binding:"-"`
-	Version int   `json:"version" binding:"required,oneof=2 3"`
+	Uid      int64 `json:"uid" binding:"-"`
+	Duration int64 `json:"duration" binding:"required,oneof=30 90 180 365 730"`
 }
 
 type SubscribePayOrder struct {
-	Uid     int64 `json:"uid"`
-	Version int   `json:"version"`
+	Uid      int64  `json:"uid"`
+	TradeNo  string `json:"tradeNo"`
+	Duration int64  `json:"duration"`
 }
 
 type SubscribePayUrl struct {
