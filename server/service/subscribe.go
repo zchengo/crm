@@ -63,20 +63,25 @@ func (s *SubscribeService) PayBack(outTradeNo string) int {
 	}
 
 	// 创建订阅信息
-	expired := order.Duration * 24 * 60 * 60
+	duration := order.Duration * 24 * 60 * 60
 	if !s.subscribeDao.IsExists(order.Uid) {
 		subscribe := models.SubscribeCreateParam{
 			Uid:     order.Uid,
 			Version: 2,
-			Expired: expired,
+			Expired: time.Now().Unix() + duration,
 		}
 		if err := s.subscribeDao.Create(&subscribe); err != nil {
 			return response.ErrCodeFailed
 		}
 	} else {
+		si, err := s.subscribeDao.GetInfo(order.Uid)
+		if err != nil {
+			return response.ErrCodeFailed
+		}
 		subscribe := models.SubscribeUpdateParam{
 			Uid:     order.Uid,
-			Expired: expired,
+			Version: 2,
+			Expired: si.Expired + duration,
 		}
 		if err := s.subscribeDao.Update(&subscribe); err != nil {
 			return response.ErrCodeFailed
