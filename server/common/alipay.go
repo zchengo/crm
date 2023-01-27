@@ -47,7 +47,7 @@ func (a *Alipay) VerifySign(req *http.Request) gopay.BodyMap {
 	}
 
 	// 支付宝异步通知验签（公钥模式）
-	if _, err = alipay.VerifySign(global.Config.Alipay.AlipayPublicCert, notifyReq); err != nil {
+	if _, err = alipay.VerifySignWithCert(global.Config.Alipay.AlipayPublicCert, notifyReq); err != nil {
 		xlog.Error(err)
 		return nil
 	}

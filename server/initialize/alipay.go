@@ -4,7 +4,6 @@ import (
 	"crm/global"
 	"log"
 
-	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/alipay"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
@@ -16,8 +15,6 @@ func Alipay() {
 		xlog.Error(err)
 		return
 	}
-
-	client.DebugSwitch = gopay.DebugOn
 
 	// 设置支付宝请求、公钥证书模式
 	client.SetReturnUrl(pay.ReturnURL).SetNotifyUrl(pay.NotifyURL)
