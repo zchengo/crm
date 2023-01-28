@@ -1,12 +1,8 @@
 package service
 
 import (
-	"crm/global"
+	"crm/dao"
 	"crm/response"
-	"os"
-
-	"log"
-	"strings"
 )
 
 const (
@@ -37,28 +33,20 @@ const (
 	SUBSCRIBE_NOTICE_TEMPLATE2 = "你订阅了高级版"
 )
 
-// 初始化数据库数据
-func InitData() int {
-	env := global.Config.Server.Runenv
-	if env == Prod {
-		fn := "/home/ubuntu/crmapi/crm.sql"
-		sql, err := os.ReadFile(fn)
-		if err != nil {
-			log.Printf("[ERROR] read file %s error: %s", fn, err)
-			return response.ErrCodeInitDataFailed
-		}
-		sqls := strings.Split(string(sql), ";")
-		for _, sql := range sqls {
-			s := strings.TrimSpace(sql)
-			if s == StringNull {
-				continue
-			}
-			if err := global.Db.Exec(s).Error; err != nil {
-				log.Printf("[ERROR] datebase flie import error: %s", err)
-				return response.ErrCodeInitDataFailed
-			}
-		}
-		return response.ErrCodeInitDataSuccess
+type CommonService struct {
+	commonDao *dao.CommonDao
+}
+
+func NewCommonService() *CommonService {
+	return &CommonService{
+		commonDao: dao.NewCommonDao(),
+	}
+}
+
+// 初始化数据库
+func (c *CommonService) InitDatabase() int {
+	if err := c.commonDao.InitDatabase(); err != nil {
+		return response.ErrCodeInitDataFailed
 	}
 	return response.ErrCodeSuccess
 }

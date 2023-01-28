@@ -27,8 +27,8 @@ func Router() {
 		route.DELETE("/user/delete", api.NewUserApi().Delete)
 		route.POST("/subscribe/payback", api.NewSubscribeApi().PayBack)
 
-		// 初始化数据
-		route.POST("/init/data", api.InitData)
+		// 通用接口
+		route.POST("/common/database/init", api.NewCommonApi().InitDatabase)
 
 		// Jwt中间件
 		route.Use(middleware.JwtAuth())

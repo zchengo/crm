@@ -4,6 +4,9 @@ import (
 	"context"
 	"crm/global"
 	"crm/models"
+	"log"
+	"os"
+	"strings"
 )
 
 const (
@@ -20,6 +23,10 @@ const (
 	// 空值
 	NumberNull = 0
 	StringNull = ""
+
+	// 运行环境
+	Dev  = "dev"
+	Prod = "prod"
 )
 
 var ctx = context.Background()
@@ -37,4 +44,38 @@ func restPage(page models.Page, name string, query interface{}, dest interface{}
 	}
 	res := global.Db.Table(name).Where(query).Find(bind)
 	return res.RowsAffected, res.Error
+}
+
+type CommonDao struct {
+}
+
+func NewCommonDao() *CommonDao {
+	return &CommonDao{}
+}
+
+func (c *CommonDao) InitDatabase() error {
+	env := global.Config.Server.Runenv
+	if env == Prod {
+		// fn := "/home/ubuntu/crmapi/crm.sql"
+		// fn := "/Users/xuzxc/Downloads/crm.sql"
+		dbFile := global.Config.Mysql.DbFile
+		sql, err := os.ReadFile(dbFile)
+		if err != nil {
+			log.Printf("Common.InitDatabase.Error: read file %s error: %s", dbFile, err)
+			return err
+		}
+		sqls := strings.Split(string(sql), ";")
+		for _, sql := range sqls {
+			s := strings.TrimSpace(sql)
+			if s == StringNull {
+				continue
+			}
+			if err := global.Db.Exec(s).Error; err != nil {
+				log.Printf("Common.InitDatabase.Error: %s", err)
+				return err
+			}
+		}
+		return nil
+	}
+	return nil
 }
