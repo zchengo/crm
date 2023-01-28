@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 24/01/2023 20:00:20
+ Date: 28/01/2023 19:19:16
 */
 
 SET NAMES utf8mb4;
@@ -36,7 +36,38 @@ CREATE TABLE `contract` (
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_creator` (`creator`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=20026 DEFAULT CHARSET=utf8mb3;
+
+-- ----------------------------
+-- Records of contract
+-- ----------------------------
+BEGIN;
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20001, '电动车交易1', 89880.00, '2023-01-28', '2023-01-30', '无备注', 1, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20002, '电动车交易2', 89880.00, '2023-01-28', '2023-01-30', '无备注', 2, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20003, '电动车交易3', 89880.00, '2023-01-28', '2023-01-30', '无备注', 3, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20004, '电动车交易4', 89880.00, '2023-01-28', '2023-01-30', '无备注', 4, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 1674901109);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20005, '电动车交易5', 89880.00, '2023-01-28', '2023-01-30', '无备注', 5, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20006, '电动车交易6', 89880.00, '2023-01-28', '2023-01-30', '无备注', 6, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20007, '电动车交易7', 89880.00, '2023-01-28', '2023-01-30', '无备注', 7, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20008, '电动车交易8', 89880.00, '2023-01-28', '2023-01-30', '无备注', 8, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20009, '电动车交易9', 89880.00, '2023-01-28', '2023-01-30', '无备注', 9, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 1674901130);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20010, '电动车交易10', 89880.00, '2023-01-28', '2023-01-30', '无备注', 10, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20011, '电动车交易11', 89880.00, '2023-01-28', '2023-01-30', '无备注', 11, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20012, '电动车交易12', 89880.00, '2023-01-28', '2023-01-30', '无备注', 12, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20013, '电动车交易13', 89880.00, '2023-01-28', '2023-01-30', '无备注', 13, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20014, '电动车交易14', 89880.00, '2023-01-28', '2023-01-30', '无备注', 14, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20015, '电动车交易15', 89880.00, '2023-01-28', '2023-01-30', '无备注', 15, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20016, '电动车交易16', 89880.00, '2023-01-28', '2023-01-30', '无备注', 16, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20017, '电动车交易17', 89880.00, '2023-01-28', '2023-01-30', '无备注', 17, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20018, '电动车交易18', 89880.00, '2023-01-28', '2023-01-30', '无备注', 18, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20019, '电动车交易19', 89880.00, '2023-01-28', '2023-01-30', '无备注', 19, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20020, '电动车交易20', 89880.00, '2023-01-28', '2023-01-30', '无备注', 20, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20021, '电动车交易21', 89880.00, '2023-01-28', '2023-01-30', '无备注', 21, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20022, '电动车交易22', 89880.00, '2023-01-28', '2023-01-30', '无备注', 22, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20023, '电动车交易23', 89880.00, '2023-01-28', '2023-01-30', '无备注', 23, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 2, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20024, '电动车交易24', 89880.00, '2023-01-28', '2023-01-30', '无备注', 24, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+INSERT INTO `contract` (`id`, `name`, `amount`, `begin_time`, `over_time`, `remarks`, `cid`, `productlist`, `status`, `creator`, `created`, `updated`) VALUES (20025, '电动车交易25', 89880.00, '2023-01-28', '2023-01-30', '无备注', 25, '[{\"id\": 1, \"name\": \"电动车1\", \"type\": 1, \"unit\": \"台\", \"count\": 10, \"price\": 1498, \"total\": 14980}, {\"id\": 2, \"name\": \"电动车2\", \"type\": 1, \"unit\": \"台\", \"count\": 20, \"price\": 1498, \"total\": 29960}, {\"id\": 3, \"name\": \"电动车3\", \"type\": 1, \"unit\": \"台\", \"count\": 30, \"price\": 1498, \"total\": 44940}]', 1, 29, 1674900672, 0);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for customer
@@ -59,7 +90,38 @@ CREATE TABLE `customer` (
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_creator` (`creator`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8mb3;
+
+-- ----------------------------
+-- Records of customer
+-- ----------------------------
+BEGIN;
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (1, '北京文化有限公司1', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (2, '北京文化有限公司2', '线上注册', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 1674899808);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (3, '北京文化有限公司3', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (4, '北京文化有限公司4', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '互联网', '普通客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 1674900143);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (5, '北京文化有限公司5', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (6, '北京文化有限公司6', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 2, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (7, '北京文化有限公司7', '搜索引擎', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 2, 29, 1674899545, 1674900036);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (8, '北京文化有限公司8', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '互联网', '非优先客户', '', '北京市,朝阳区', '望京东园615号', 2, 29, 1674899545, 1674899824);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (9, '北京文化有限公司9', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (10, '北京文化有限公司10', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '文化传媒', '重点客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 1674899838);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (11, '北京文化有限公司11', '促销', '13050803360', 'bjwenhua@gmail.com', '互联网', '非优先客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 1674900100);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (12, '北京文化有限公司12', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 2, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (13, '北京文化有限公司13', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (14, '北京文化有限公司14', '邮件咨询', '13050803360', 'bjwenhua@gmail.com', '文化传媒', '非优先客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 1674899962);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (15, '北京文化有限公司15', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 2, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (16, '北京文化有限公司16', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (17, '北京文化有限公司17', '转介绍', '13050803360', 'bjwenhua@gmail.com', '文化传媒', '非优先客户', '', '北京市,朝阳区', '望京东园615号', 2, 29, 1674899545, 1674900109);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (18, '北京文化有限公司18', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 2, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (19, '北京文化有限公司19', '线上注册', '13050803360', 'bjwenhua@gmail.com', '政府', '普通客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 1674900124);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (20, '北京文化有限公司20', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 2, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (21, '北京文化有限公司21', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '物流运输', '普通客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 1674899902);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (22, '北京文化有限公司22', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (23, '北京文化有限公司23', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 2, 29, 1674899545, 0);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (24, '北京文化有限公司24', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '房地产', '重点客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 1674899914);
+INSERT INTO `customer` (`id`, `name`, `source`, `phone`, `email`, `industry`, `level`, `remarks`, `region`, `address`, `status`, `creator`, `created`, `updated`) VALUES (25, '北京文化有限公司25', '电话咨询', '13050803360', 'bjwenhua@gmail.com', '金融业', '重点客户', '', '北京市,朝阳区', '望京东园615号', 1, 29, 1674899545, 0);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for mail_config
@@ -77,7 +139,14 @@ CREATE TABLE `mail_config` (
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_creator` (`creator`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3;
+
+-- ----------------------------
+-- Records of mail_config
+-- ----------------------------
+BEGIN;
+INSERT INTO `mail_config` (`id`, `stmp`, `port`, `auth_code`, `email`, `status`, `creator`, `created`, `updated`) VALUES (11, 'smtp.qq.com', 465, 'zrzxsebacrpfdaeg', '200300666@qq.com', 2, 29, 1674901189, 1674901237);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for notice
@@ -92,7 +161,26 @@ CREATE TABLE `notice` (
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_creator` (`creator`)
-) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=154 DEFAULT CHARSET=utf8mb3;
+
+-- ----------------------------
+-- Records of notice
+-- ----------------------------
+BEGIN;
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (133, '你订阅了专业版', 2, 0, 1674803772, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (142, '你登录了账号', 2, 29, 1674819114, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (143, '你登录了账号', 2, 29, 1674821501, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (144, '你登录了账号', 2, 29, 1674821522, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (145, '你登录了账号', 2, 29, 1674821570, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (146, '你登录了账号', 2, 29, 1674821584, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (147, '你登录了账号', 2, 29, 1674821635, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (148, '你登录了账号', 2, 29, 1674821669, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (149, '你登录了账号', 2, 29, 1674872716, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (150, '你登录了账号', 2, 29, 1674872767, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (151, '你登录了账号', 2, 29, 1674874711, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (152, '你登录了账号', 2, 29, 1674899094, 0);
+INSERT INTO `notice` (`id`, `content`, `status`, `creator`, `created`, `updated`) VALUES (153, '你登录了账号', 2, 29, 1674904112, 0);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for product
@@ -112,7 +200,19 @@ CREATE TABLE `product` (
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_creator` (`creator`)
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8mb3;
+
+-- ----------------------------
+-- Records of product
+-- ----------------------------
+BEGIN;
+INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (1, '电动车1', 1, '台', '004', 1498.00, '代驾折叠电动车电动自行车成人代步外卖锂电池小型轻便电瓶车迷你便携电单车 G2/汽车电芯-能量回收-6Ah约60km', 1, 29, 1671191995, 0);
+INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (2, '电动车2', 1, '台', '004', 1498.00, '代驾折叠电动车电动自行车成人代步外卖锂电池小型轻便电瓶车迷你便携电单车 G2/汽车电芯-能量回收-6Ah约60km', 1, 29, 1671191995, 0);
+INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (3, '电动车3', 1, '台', '004', 1498.00, '代驾折叠电动车电动自行车成人代步外卖锂电池小型轻便电瓶车迷你便携电单车 G2/汽车电芯-能量回收-6Ah约60km', 2, 29, 1671191995, 0);
+INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (4, '电动车4', 1, '台', '004', 1498.00, '代驾折叠电动车电动自行车成人代步外卖锂电池小型轻便电瓶车迷你便携电单车 G2/汽车电芯-能量回收-6Ah约60km', 2, 29, 1671191995, 0);
+INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (5, '电动车5', 1, '台', '004', 1498.00, '代驾折叠电动车电动自行车成人代步外卖锂电池小型轻便电瓶车迷你便携电单车 G2/汽车电芯-能量回收-6Ah约60km', 1, 29, 1671191995, 0);
+INSERT INTO `product` (`id`, `name`, `type`, `unit`, `code`, `price`, `description`, `status`, `creator`, `created`, `updated`) VALUES (6, '电动车6', 1, '台', '004', 1498.00, '代驾折叠电动车电动自行车成人代步外卖锂电池小型轻便电瓶车迷你便携电单车 G2/汽车电芯-能量回收-6Ah约60km', 1, 29, 1671191995, 0);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for subscribe
@@ -127,7 +227,14 @@ CREATE TABLE `subscribe` (
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+
+-- ----------------------------
+-- Records of subscribe
+-- ----------------------------
+BEGIN;
+INSERT INTO `subscribe` (`id`, `uid`, `version`, `expired`, `created`, `updated`) VALUES (4, 29, 2, 1701895772, 1674803772, 0);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for user
@@ -143,5 +250,12 @@ CREATE TABLE `user` (
   `updated` bigint DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb3;
+
+-- ----------------------------
+-- Records of user
+-- ----------------------------
+BEGIN;
+INSERT INTO `user` (`id`, `email`, `password`, `name`, `status`, `created`, `updated`) VALUES (29, '1655064994@qq.com', '$2a$10$62yO.fxSfNlstacxZfTtdO2uuR9YKG6hykuVTBIMc06CEJ3BWW/Ny', '', 1, 1671191625, 0);
+COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
