@@ -1,5 +1,8 @@
 <template>
-    <a-form ref="passFormRef" :model="formData" layout="vertical" @finish="onSubmit" :rules="rules">
+    <a-form ref="passFormRef" :model="formData" layout="vertical" style="width: 65%;" @finish="onSubmit" :rules="rules">
+        <a-form-item>
+            <div class="title">密码重置</div>
+        </a-form-item>
         <a-form-item name="email">
             <a-input v-model:value="formData.email" size="large" placeholder="邮箱" />
         </a-form-item>
@@ -16,8 +19,10 @@
             <a-input-password v-model:value="formData.password2" size="large" placeholder="确认密码" />
         </a-form-item>
         <a-form-item>
-            <a-button type="primary" html-type="submit" size="large" style="width: 50%;">确定</a-button>
-            <a-button type="link" style="width: 50%;" @click="onLogin">使用已有账户登录</a-button>
+            <a-button type="primary" html-type="submit" size="large" style="width: 100%;">确定</a-button>
+        </a-form-item>
+        <a-form-item>
+            已想起密码？<a @click="onLogin"> 直接登录</a>
         </a-form-item>
     </a-form>
 </template>
@@ -107,5 +112,10 @@ const onLogin = () => {
 </script>
 
 <style scoped>
-
+.title {
+    color: #303133;
+    font-size: 30px;
+    line-height: 65px;
+    font-weight: 500;
+}
 </style>

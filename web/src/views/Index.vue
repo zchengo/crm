@@ -1,26 +1,19 @@
 <template>
     <div class="container">
-        <div class="header">
-            <img src="../assets/logo.svg" style="width: 80px;height: 80px;filter: drop-shadow(2px 2px 6px #79bbff);" />
-            <span class="title">ZO<b style="color: #1283FF;">C</b>RM</span>
-        </div>
-        <div class="content">
-            <div class="main">
-                <transition name="fade">
-                    <router-view v-slot="{ Component }">
-                        <component :is="Component" />
-                    </router-view>
-                </transition>
-            </div>
-            <div class="footer">
-                <div class="links">
-                    <a href="https://github.com/zchengo/crm">开源地址</a>
-                    <a href="https://github.com/zchengo/crm/blob/main/LICENSE">许可证</a>
-                    <a href="https://mail.qq.com/">企鹅邮箱</a>
+        <a-row>
+            <a-col :span="14">
+                <div class="back"></div>
+            </a-col>
+            <a-col :span="10">
+                <div class="form">
+                    <transition name="fade">
+                        <router-view v-slot="{ Component }">
+                            <component :is="Component" />
+                        </router-view>
+                    </transition>
                 </div>
-                <div class="copyright">Copyright © 2022 www.zocrm.cloud</div>
-            </div>
-        </div>
+            </a-col>
+        </a-row>
     </div>
 </template>
 
@@ -32,7 +25,29 @@
 .container {
     width: 100%;
     height: 100vh;
-    background: #F0F2F5;
+    background: #FFFFFF;
+}
+
+.back {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f9f9fb;
+    background-image: url('../assets/back.png');
+    background-size: 75% 75%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.form {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .header {

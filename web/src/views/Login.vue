@@ -1,5 +1,8 @@
 <template>
-    <a-form :model="formData" name="normal_login" class="login-form" @finish="onLogin" @finishFailed="onLoginFailed">
+    <a-form :model="formData" @finish="onLogin" @finishFailed="onLoginFailed" style="width: 65%;">
+        <a-form-item>
+            <div class="title">账号登录</div>
+        </a-form-item>
         <a-form-item name="email" :rules="[{ required: true, message: '请输入邮箱!' }]">
             <a-input v-model:value="formData.email" size="large" placeholder="邮箱">
                 <template #prefix>
@@ -98,6 +101,13 @@ const initSysData = () => {
 </script>
 
 <style scoped>
+.title {
+    color: #303133;
+    font-size: 30px;
+    line-height: 65px;
+    font-weight: 500;
+}
+
 .site-form-item-icon {
     color: rgba(0, 0, 0, .45);
 }
