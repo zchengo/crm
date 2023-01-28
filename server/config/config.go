@@ -27,6 +27,7 @@ type Mysql struct {
 	MaxIdleConns    int    `mapstructure:"maxIdleConns"`
 	MaxOpenConns    int    `mapstructure:"maxOpenConns"`
 	ConnMaxLifetime int    `mapstructure:"connMaxLifetime"`
+	DbFile          string `mapstructure:"dbFile"`
 }
 
 // Redis数据库配置

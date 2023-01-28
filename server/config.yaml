@@ -13,6 +13,7 @@ mysql:
   maxIdleConns: 10
   maxOpenConns: 100
   connMaxLifetime: 3600
+  dbFile: /home/ubuntu/crmapi/crm.sql
 
 # Redis数据库配置
 redis:
