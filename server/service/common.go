@@ -2,7 +2,9 @@ package service
 
 import (
 	"crm/dao"
+	"crm/models"
 	"crm/response"
+	"mime/multipart"
 )
 
 const (
@@ -47,6 +49,23 @@ func NewCommonService() *CommonService {
 func (c *CommonService) InitDatabase() int {
 	if err := c.commonDao.InitDatabase(); err != nil {
 		return response.ErrCodeInitDataFailed
+	}
+	return response.ErrCodeSuccess
+}
+
+// 文件上传
+func (c *CommonService) FileUpload(file *multipart.FileHeader) (*models.FileInfo, int) {
+	fileInfo, err := c.commonDao.FileUpload(file)
+	if err != nil {
+		return nil, response.ErrCodeFileUploadFailed
+	}
+	return fileInfo, response.ErrCodeSuccess
+}
+
+// 文件移除
+func (c *CommonService) FileRemove(param *models.FileParam) int {
+	if err := c.commonDao.FileRemove(param.Name); err != nil {
+		return response.ErrCodeFileUploadFailed
 	}
 	return response.ErrCodeSuccess
 }

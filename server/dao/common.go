@@ -2,10 +2,14 @@ package dao
 
 import (
 	"context"
+	"crm/common"
 	"crm/global"
 	"crm/models"
+	"io"
 	"log"
+	"mime/multipart"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -56,8 +60,6 @@ func NewCommonDao() *CommonDao {
 func (c *CommonDao) InitDatabase() error {
 	env := global.Config.Server.Runenv
 	if env == Prod {
-		// fn := "/home/ubuntu/crmapi/crm.sql"
-		// fn := "/Users/xuzxc/Downloads/crm.sql"
 		dbFile := global.Config.Mysql.DbFile
 		sql, err := os.ReadFile(dbFile)
 		if err != nil {
@@ -78,4 +80,36 @@ func (c *CommonDao) InitDatabase() error {
 		return nil
 	}
 	return nil
+}
+
+func (c *CommonDao) FileUpload(file *multipart.FileHeader) (*models.FileInfo, error) {
+	dist := global.Config.File.Path
+	name := common.GenUUID() + path.Ext(file.Filename)
+	dn := dist + name
+	src, err := file.Open()
+	if err != nil {
+		return nil, err
+	}
+	defer src.Close()
+
+	out, err := os.Create(dn)
+	if err != nil {
+		return nil, err
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, src)
+	if err != nil {
+		return nil, err
+	}
+	flieInfo := models.FileInfo{
+		Url:  dn,
+		Name: name,
+	}
+	return &flieInfo, err
+}
+
+func (c *CommonDao) FileRemove(fileName string) error {
+	file := global.Config.File.Path + fileName
+	return os.Remove(file)
 }

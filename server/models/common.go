@@ -8,11 +8,23 @@ type Page struct {
 
 // 发送邮件参数模型
 type MailParam struct {
-	Smtp     string
-	Port     int
-	AuthCode string
-	Sender   string
-	Subject  string
-	Content  string
-	Receiver string
+	Smtp       string
+	Port       int
+	AuthCode   string
+	Sender     string
+	Subject    string
+	Content    string
+	Attachment string
+	Receiver   string
+}
+
+// 文件参数模型
+type FileParam struct {
+	Name string `json:"name" binding:"required,gt=0"`
+}
+
+// 文件信息
+type FileInfo struct {
+	Url  string `json:"url"`
+	Name string `json:"name"`
 }

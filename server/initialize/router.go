@@ -29,6 +29,8 @@ func Router() {
 
 		// 通用接口
 		route.POST("/common/database/init", api.NewCommonApi().InitDatabase)
+		route.POST("/common/file/upload", api.NewCommonApi().FileUpload)
+		route.DELETE("/common/file/remove", api.NewCommonApi().FileRemove)
 
 		// Jwt中间件
 		route.Use(middleware.JwtAuth())
