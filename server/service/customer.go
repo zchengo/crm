@@ -54,16 +54,17 @@ func (c *CustomerService) SendMail(param *models.CustomerSendMailParam) int {
 	if mc.Status == Close {
 		return response.ErrCodeMailSendUnEnable
 	}
-	mailParam := models.MailParam{
-		Smtp:     mc.Stmp,
-		Port:     mc.Port,
-		AuthCode: mc.AuthCode,
-		Sender:   mc.Email,
-		Subject:  param.Subject,
-		Content:  param.Content,
-		Receiver: param.Receiver,
+	mail := models.MailParam{
+		Smtp:       mc.Stmp,
+		Port:       mc.Port,
+		AuthCode:   mc.AuthCode,
+		Sender:     mc.Email,
+		Subject:    param.Subject,
+		Content:    param.Content,
+		Attachment: param.Attachment,
+		Receiver:   param.Receiver,
 	}
-	if err := common.SendMailToCustomer(mailParam); err != nil {
+	if err := common.SendMailToCustomer(mail); err != nil {
 		return response.ErrCodeMailSendFailed
 	}
 	return response.ErrCodeSuccess

@@ -18,11 +18,11 @@ func SendMail(email, content string) error {
 	secret := global.Config.Mail.Secret
 	sender := global.Config.Mail.Sender
 	m := gomail.NewMessage()
-	m.SetHeader("From", sender) 		// 发件人
-	m.SetHeader("To", email)   			// 收件人，可以多个收件人，但必须使用相同的 SMTP 连接
-	m.SetHeader("Cc", email)   			// 抄送，可以多个
-	m.SetHeader("Bcc", email)  			// 暗送，可以多个
-	m.SetHeader("Subject", "ZOCRM")     // 邮件主题
+	m.SetHeader("From", sender)     // 发件人
+	m.SetHeader("To", email)        // 收件人，可以多个收件人，但必须使用相同的 SMTP 连接
+	m.SetHeader("Cc", email)        // 抄送，可以多个
+	m.SetHeader("Bcc", email)       // 暗送，可以多个
+	m.SetHeader("Subject", "ZOCRM") // 邮件主题
 	m.SetBody("text/html", content)
 	d := gomail.NewDialer(smtp, 465, sender, secret)
 	// 关闭SSL协议认证
@@ -41,6 +41,9 @@ func SendMailToCustomer(mp models.MailParam) error {
 	m.SetHeader("To", mp.Receiver)
 	m.SetHeader("Subject", mp.Subject)
 	m.SetBody("text/html", mp.Content)
+	if mp.Attachment != "" {
+		m.Attach(mp.Attachment)
+	}
 	d := gomail.NewDialer(mp.Smtp, mp.Port, mp.Sender, mp.AuthCode)
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	if err := d.DialAndSend(m); err != nil {

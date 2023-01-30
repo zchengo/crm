@@ -46,10 +46,11 @@ type CustomerUpdateParam struct {
 }
 
 type CustomerSendMailParam struct {
-	Uid      int64  `json:"uid" binding:"-"`
-	Receiver string `json:"receiver" binding:"required,email"`
-	Subject  string `json:"subject" binding:"omitempty,gt=0"`
-	Content  string `json:"content" binding:"required,gt=0"`
+	Uid        int64  `json:"uid" binding:"-"`
+	Receiver   string `json:"receiver" binding:"required,email"`
+	Subject    string `json:"subject" binding:"omitempty,gt=0"`
+	Content    string `json:"content" binding:"required,gt=0"`
+	Attachment string `json:"attachment" binding:"omitempty,gt=0"`
 }
 
 type CustomerDeleteParam struct {

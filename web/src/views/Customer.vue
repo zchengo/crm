@@ -119,7 +119,7 @@
                     <a-row :gutter="16">
                         <a-col :span="12">
                             <a-form-item label="备注" name="remarks">
-                                <a-textarea v-model:value="customer.remarks" :rows="3" />
+                                <a-textarea v-model:value="customer.remarks" :auto-size="{ minRows: 3, maxRows: 3 }" />
                             </a-form-item>
                         </a-col>
                     </a-row>
@@ -128,9 +128,9 @@
         </a-modal>
         <!-- 发送邮件对话框 -->
         <a-modal v-model:visible="visibleMail" title="发送邮件" @ok="onSend" @cancel="onCancel" cancelText="取消" okText="发送"
-            width="800px" :centered="true">
+            width="600px" :centered="true">
             <div style="height: 55vh;overflow-y: scroll;padding: 0 15px;">
-                <a-form :model="mail" layout="vertical">
+                <a-form ref="mailSendFormRef" :model="mail" layout="vertical" :rules="mailRules">
                     <a-row :gutter="16">
                         <a-col :span="12">
                             <a-form-item label="客户名称" name="customerName">
@@ -153,6 +153,18 @@
                                     :auto-size="{ minRows: 6, maxRows: 100 }" />
                             </a-form-item>
                         </a-col>
+                        <a-col :span="24">
+                            <a-form-item label="上传附件" name="attachment">
+                                <a-upload-dragger v-model:fileList="fileList" name="file" :multiple="true"
+                                    :headers="{ 'X-Requested-With': null }" :action="action" @change="upload"
+                                    @drop="upload" @remove="remove">
+                                    <p class="ant-upload-drag-icon">
+                                        <inbox-outlined></inbox-outlined>
+                                    </p>
+                                    <p style="font-size: 14px;color: #00000073;">单击或拖动文件到此区域</p>
+                                </a-upload-dragger>
+                            </a-form-item>
+                        </a-col>
                     </a-row>
                 </a-form>
             </div>
@@ -162,11 +174,12 @@
 
 <script setup>
 import { ref, reactive, onMounted, createVNode } from 'vue';
-import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined, MailTwoTone } from '@ant-design/icons-vue';
+import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined, MailTwoTone, InboxOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
 import { createCustomer, updateCustomer, sendMailToCustomer, queryCustomerList, queryCustomerInfo, deleteCustomer, customerExport } from '../api/customer';
 import { message, Modal } from 'ant-design-vue';
 import Spot from '../components/Spot.vue';
+import { fileRemove } from '../api/common';
 import regionData from '../assets/region';
 
 // 表格字段
@@ -438,8 +451,23 @@ const mail = reactive({
     customerName: '',
     receiver: '',
     subject: '',
-    content: ''
+    content: '',
+    attachment: undefined
 })
+
+const mailSendFormRef = ref()
+
+// 邮件发送表单校验
+const mailRules = {
+    receiver: [{
+        required: true,
+        pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
+        message: '邮箱格式不正确',
+        trigger: 'blur',
+    }],
+    subject: [{ required: true, message: '请输入邮件主题', trigger: 'blur' }],
+    content: [{ required: true, message: '请输入邮件内容', trigger: 'blur' }],
+};
 
 // 点击邮件
 const onMail = (cname, email) => {
@@ -448,23 +476,48 @@ const onMail = (cname, email) => {
     visibleMail.value = true
 }
 
+// 上传附件
+const action = ref(import.meta.env.VITE_FILE_UPLOAD_URL)
+const upload = (file) => {
+    if (file.file.status == 'done') {
+        if (file.file.response.code == 0) {
+            mail.attachment = file.file.response.data.url
+            fileName.value = file.file.response.data.name
+        } else {
+            message.error('附件上传失败')
+        }
+    }
+}
+
+// 移除附件
+const fileName = ref(undefined)
+const remove = (file) => {
+    if (file.status == 'done') {
+        fileRemove({ name: fileName.value })
+    }
+}
+
 // 点击发送邮件
 const onSend = () => {
-    let param = {
-        receiver: mail.receiver,
-        subject: mail.subject,
-        content: mail.content
-    }
-    sendMailToCustomer(param).then((res) => {
-        if (res.data.code == 0) {
-            message.success("邮件已发送")
+    mailSendFormRef.value.validateFields().then(() => {
+        let param = {
+            receiver: mail.receiver,
+            subject: mail.subject,
+            content: mail.content,
+            attachment: mail.attachment
         }
-        if (res.data.code == 50002) {
-            message.error("邮件发送失败")
-        }
-        if (res.data.code == 50003) {
-            message.warn("邮件服务未开启")
-        }
+        sendMailToCustomer(param).then((res) => {
+            if (res.data.code == 0) {
+                message.success("邮件已发送")
+                visibleMail.value = false
+            }
+            if (res.data.code == 50002) {
+                message.error("邮件发送失败")
+            }
+            if (res.data.code == 50003) {
+                message.warn("邮件服务未开启")
+            }
+        })
     })
 }
 
