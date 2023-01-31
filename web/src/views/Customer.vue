@@ -29,6 +29,9 @@
                 </template>
                 <template v-if="column.dataIndex === 'operation'">
                     <a-button type="link"><template #icon>
+                            <PhoneTwoTone two-tone-color="#31C27C" @click="callUp(record.phone)" />
+                        </template></a-button>
+                    <a-button type="link"><template #icon>
                             <MailTwoTone two-tone-color="#476FFF" @click="onMail(record.name, record.email)" />
                         </template></a-button>
                 </template>
@@ -174,7 +177,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, createVNode } from 'vue';
-import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined, MailTwoTone, InboxOutlined } from '@ant-design/icons-vue';
+import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined, PhoneTwoTone, MailTwoTone, InboxOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
 import { createCustomer, updateCustomer, sendMailToCustomer, queryCustomerList, queryCustomerInfo, deleteCustomer, customerExport } from '../api/customer';
 import { message, Modal } from 'ant-design-vue';
@@ -240,7 +243,7 @@ const columns = [{
 }, {
     title: '操作',
     dataIndex: 'operation',
-    width: 65,
+    width: 100,
     fixed: 'right',
     ellipsis: true,
 }];
@@ -445,6 +448,11 @@ const onExport = () => {
             window.URL.revokeObjectURL(a.href)
         }
     })
+}
+
+// 打电话
+const callUp = (phone) => {
+    window.location.href = 'tel://' + phone
 }
 
 const mail = reactive({
