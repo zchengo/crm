@@ -6,7 +6,7 @@
 
 ## 环境安装
 
-在您自己的电脑上，安装如下运行环境：
+你需要在你的系统中，安装如下运行环境：
 
 | 环境 | 版本 | 下载地址 |
 |---|---|---|
@@ -68,9 +68,8 @@ alipay:
   appPublicCert: /home/ubuntu/crm/cert/appPublicCert.crt
   alipayRootCert: /home/ubuntu/crm/cert/alipayRootCert.crt
   alipayPublicCert: /home/ubuntu/crm/cert/alipayPublicCert.crt
-  returnURL: http://127.0.0.1:8000/api/subscribe/callback
-  notifyURL: http://127.0.0.1:8000/api/subscribe/notify
-  paySuccessURL: http://127.0.0.1:8060/#/subscribe
+  returnURL: http://127.0.0.1:8060/#/subscribe
+  notifyURL: http://127.0.0.1:8000/api/subscribe/payback
 ```
 
 **如何获取支付宝支付服务的 appId、privateKey、appPublicCert、alipayRootCert、alipayPublicCert ？**
@@ -85,7 +84,7 @@ alipay:
 
 ### 初始化并运行
 
-使用电脑自带的终端执行执行如下命令，也可以使用 VS Code 或者 Goland 等开发工具，打开 crm 目录，找到 Terminal 终端。
+使用 VS Code 或者 Goland 等开发工具，打开 crm 目录，找到 Terminal 终端。
 
 执行如下命令：
 
@@ -106,7 +105,7 @@ $ ./server (windows运行命令为 server.exe)
 Node 环境正常。
 :::
 
-使用电脑自带的终端执行执行如下命令，也可以使用 VSCode 或者 WebStom 等开发工具，打开 crm 目录，找到 Terminal 终端。
+使用 VSCode 或 WebStom 等开发工具，打开 crm 目录，找到 Terminal 终端。
 
 执行如下命令：
 

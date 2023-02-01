@@ -34,7 +34,8 @@ export default {
                     text: '前端',
                     collapsible: true,
                     items: [
-                        { text: '封装 axios 请求库', link: '/project/frontend/axios-package' },
+                        { text: '环境变量和模式', link: '/project/frontend/env-var-modes' },
+                        { text: '网络请求库封装', link: '/project/frontend/axios-package' },
                         { text: '页面中的加载进度条', link: '/project/frontend/nprogress' },
                     ]
                 },

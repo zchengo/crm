@@ -42,4 +42,4 @@ $ npm run dev
 
 项目初始化并运行成功后，打开浏览器访问http://127.0.0.1:8060。
 
-详细部署，请参考[部署指南](/project/docs/deploy-guide)。
+有关 Crm 的详细部署文档，请参考[部署指南](/project/docs/deploy-guide)。

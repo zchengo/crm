@@ -5,7 +5,7 @@
   
   /* 图标背景 */
   --vp-home-hero-image-background-image: linear-gradient( 135deg, #97abf5 10%, #476FFF 100%);
-  --vp-home-hero-image-filter: blur(150px);
+  --vp-home-hero-image-filter: blur(100px);
 
   /* brand按钮 */
   --vp-button-brand-border: #476FFF;

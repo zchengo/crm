@@ -6,13 +6,15 @@
 
 ## 什么是 Crm ？
 
-Crm（英文全称 Customer relationship management ）是一个客户关系管理系统，主要功能有仪表盘、客户管理、合同管理、产品管理、订阅等功能。
+Crm（英文全称 Customer relationship management ）是一个客户关系管理系统，主要功能有仪表盘、客户管理、合同管理、产品管理、配置、订阅等功能。
 
 - 在线演示：[zocrm.cloud](https://zocrm.cloud)
 
 - 项目文档：[docs.zocrm.cloud](https://docs.zocrm.cloud)
 
 ## 技术栈
+
+Crm 系统主要采用 Vue3 和 Golang 实现。
 
 ### 前端技术
 
@@ -36,7 +38,8 @@ Crm（英文全称 Customer relationship management ）是一个客户关系管�
 | Jwt | 用户认证 | https://github.com/golang-jwt/jwt |
 | Viper | 配置管理 | https://github.com/spf13/viper |
 | Redis | 数据缓存 | https://github.com/go-redis/redis |
-| Mail | 邮件服务SDK | https://github.com/go-gomail/gomail |
+| Gomail | 邮件服务SDK | https://github.com/go-gomail/gomail |
+| Gopay | 支付服务SDK | https://github.com/go-pay/gopay |
 
 ## 目录结构
 
@@ -59,6 +62,7 @@ crm
      ├── api                 // API层
      ├── common              // 通用的工具
      ├── config              // 配置文件
+     ├── dao                 // 数据访问层
      ├── db                  // 数据库 SQL 文件
      ├── global              // 全局对象
      ├── initialize          // 初始化
@@ -76,11 +80,14 @@ crm
          |── api             // API接口
          ├── assets          // 资源
          ├── axios           // 网络请求
+         ├── components      // 自定义组件
          ├── router          // 页面路由
          ├── store           // 状态管理
          ├── views           // 页面
          ├── App.vue         // 组件入口
          ├── main.js         // 程序启动的入口
+     ├── .env.dev            // 开发模式环境变量
+     ├── .env.prod           // 生产模式环境变量
      ├── index.html          // 首页
      ├── package-lock.json   // Npm依赖管理
      ├── package.json        // Npm依赖管理
@@ -90,8 +97,6 @@ crm
  ├── LICENSE                 // 许可证
  ├── README.md               // 项目简介文档
 ```
-
-想要了解有关 Crm 目录结构中的文件，请访问[github.com/zchengo/crm](https://github.com/zchengo/crm)代码库。
 
 ## 系统架构
 
@@ -103,4 +108,4 @@ Crm 系统采用前后端分离架构，前端与后端分开部署，且部署�
 
 ## 许可证
 
-Crm 是采用 MIT 许可的开源项目，使用完全免费。要了解有关 MIT 许可证的更多信息，请访问[MIT License](https://github.com/zchengo/crm/blob/main/LICENSE)。
+Crm 是采用 MIT 许可的开源项目，使用完全免费。想要了解有关 MIT 许可证的更多信息，请访问[MIT License](https://github.com/zchengo/crm/blob/main/LICENSE)。

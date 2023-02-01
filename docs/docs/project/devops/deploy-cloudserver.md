@@ -1,6 +1,6 @@
 # 部署到云服务器
 
-如果您打算将 Crm 系统部署到您自己的云服务器，您需要先注册一个域名和购买一台云服务器，然后在云服务器上进行环境安装、服务启动与配置、项目的构建与部署。
+如果您打算将 Crm 系统部署到您自己的云服务器上，您需要先注册一个域名和购买一台云服务器，然后在云服务器上进行环境安装、服务启动与配置、项目的构建与部署。
 
 ## 注册域名
 
@@ -501,9 +501,8 @@ alipay:
   appPublicCert: /home/ubuntu/crm/cert/appPublicCert.crt
   alipayRootCert: /home/ubuntu/crm/cert/alipayRootCert.crt
   alipayPublicCert: /home/ubuntu/crm/cert/alipayPublicCert.crt
-  returnURL: http://127.0.0.1:8000/api/subscribe/callback
-  notifyURL: http://127.0.0.1:8000/api/subscribe/notify
-  paySuccessURL: http://127.0.0.1:8060/#/subscribe
+  returnURL: http://127.0.0.1:8060/#/subscribe
+  notifyURL: http://127.0.0.1:8000/api/subscribe/payback
 ```
 
 **如何获取支付宝支付服务的 appId、privateKey、appPublicCert、alipayRootCert、alipayPublicCert ？**
@@ -673,7 +672,6 @@ http {
 
 如果您在部署过程中遇到了问题，您可以通过以下方式反馈：
 
-- [在公众号后台反馈](/about/about)
 - [New Issues In Github](https://github.com/zchengo/crm/issues)
 
 ## 支持作者

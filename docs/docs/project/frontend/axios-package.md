@@ -1,6 +1,8 @@
-# 封装 axios 请求库
+# 网络请求库封装
 
-## 什么是 axios？
+Crm 系统采用 axios 作为网络请求库。
+
+## 什么是 axios ？
 
 axios 是浏览器和 node.js 的一个简单的基于 promise 的 HTTP 客户端。axios 在一个具有非常可扩展界面的小软件包中提供了一个简单易用的库。
 
@@ -12,26 +14,16 @@ axios 是浏览器和 node.js 的一个简单的基于 promise 的 HTTP 客户�
 
 ```js
 import axios from 'axios';
-import router from '../router/index';
 import { message } from 'ant-design-vue';
 
-const host = window.location.hostname
-
-switch (host) {
-    case 'zocrm.cloud':
-        axios.defaults.baseURL = 'https://zocrm.cloud/api'
-        break;
-    default:
-        axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
-        break;
-}
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL
 
 const request = axios.create({
-    timeout: 5000,
+    // timeout: 5000,`
     headers: {
         'Content-Type': 'application/json;charset=UTF-8'
     }
-});
+})
 
 request.interceptors.request.use(config => {
     config.headers['uid'] = localStorage.getItem('uid')
@@ -47,7 +39,6 @@ request.interceptors.response.use(response => {
     return response;
 }, error => {
     console.log(error)
-    router.push('/error');
     return Promise.reject(error)
 })
 
@@ -57,29 +48,20 @@ export default request;
 ### 初始化请求的 baseURL
 
 ```js
-const host = window.location.hostname
-
-switch (host) {
-    case 'zocrm.cloud':
-        axios.defaults.baseURL = 'https://zocrm.cloud/api'
-        break;
-    default:
-        axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
-        break;
-}
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL
 ```
 
-通过 ```window.location.hostname``` 获取主机名（不包含端口号），主机名指的是 ```IP地址``` 或 ```域名```，然后根据不同的主机名，设置不同的 ```axios.defaults.baseURL```。
+通过 ```import.meta.env.VITE_API_BASE_URL``` 获取环境变量。
 
 ### 设置请求超时时间与请求头
 
 ```js
 const request = axios.create({
-    timeout: 5000,
+    // timeout: 5000,`
     headers: {
         'Content-Type': 'application/json;charset=UTF-8'
     }
-});
+})
 ```
 
 ### 请求拦截与响应拦截
@@ -107,12 +89,9 @@ request.interceptors.response.use(response => {
     return response;
 }, error => {
     console.log(error)
-    router.push('/error');
     return Promise.reject(error)
 })
 ```
-
-后端响应的数据会先被 axios 拦截，如果响应的结果是正确的，会直接返回响应结果，然后将数据渲染到指定的页面；如果响应的结果是错误的，会路由到错误页面。
 
 了解有关 axios 请求拦截与响应拦截的更多信息，请访问[axios interceptors](https://github.com/axios/axios#interceptors)。
 
