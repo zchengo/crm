@@ -1,12 +1,11 @@
 # crm
 
-<a href="#公众号"><img src="https://img.shields.io/badge/公众号-GoCode-%2302DF6D" /></a>
 <a href="https://zocrm.cloud"><img src="https://img.shields.io/badge/在线演示-zocrm.cloud-%230092FF" /></a>
 <a href="https://docs.zocrm.cloud"><img src="https://img.shields.io/badge/项目文档-docs.zocrm.cloud-%230092FF" /></a>
 
 ## 简介
 
-客户关系管理系统，基于 Vue + Go 实现，主要功能有仪表盘、客户管理、合同管理、产品管理，订阅等功能。
+客户关系管理系统，基于 Vue + Go 实现，主要功能有仪表盘、客户管理、合同管理、产品管理，配置、订阅等功能。
 
 - 在线演示：[zocrm.cloud](https://zocrm.cloud)
 
@@ -44,14 +43,8 @@ $ npm run dev
 
 想要了解有关项目的更多信息，请访问[docs.zocrm.cloud](https://docs.zocrm.cloud)。
 
-## 公众号
-
-欢迎关注公众号「GoCode」，本公众号专注Go语言技术分享！
-
-![公众号二维码](https://docs.zocrm.cloud/gzh_qrcode.jpg)
-
 ## 许可证
 
 [MIT License](https://github.com/zchengo/crm/blob/main/LICENSE) 
 
-Copyright (c) 2022 zchengo 
+Copyright (c) 2022-present zchengo 
