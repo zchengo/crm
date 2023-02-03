@@ -58,11 +58,14 @@ type CustomerDeleteParam struct {
 }
 
 type CustomerQueryParam struct {
-	Id      int64  `form:"id" binding:"omitempty,gt=0"`
-	Name    string `form:"name" binding:"-"`
-	Phone   string `form:"phone" binding:"omitempty,len=11"`
-	Creator int64  `form:"creator,omitempty" binding:"-"`
-	Page    Page
+	Id       int64  `form:"id" binding:"omitempty,gt=0"`
+	Name     string `form:"name" binding:"omitempty,gt=0"`
+	Source   string `form:"source" binding:"omitempty,gt=0"`
+	Industry string `form:"industry" binding:"omitempty,gt=0"`
+	Level    string `form:"level" binding:"omitempty,gt=0"`
+	Status   int    `form:"status" binding:"omitempty,oneof=1 2"`
+	Creator  int64  `form:"creator,omitempty" binding:"-"`
+	Page     Page
 }
 
 type CustomerList struct {

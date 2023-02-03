@@ -2,20 +2,24 @@
     <div :style="{ padding: '20px 20px 12px 20px' }">
         <div style="display: flex;justify-content: space-between;margin-bottom: 20px;">
             <a-space>
-                <a-input v-model:value="keyWord" placeholder="产品名称" style="width: 280px; margin-right: 50px;">
+                <a-input v-model:value="keyWord" placeholder="产品名称" style="width: 280px; margin-right: 10px;">
                     <template #suffix>
-                        <search-outlined style="color: rgba(0, 0, 0, 0.45)" @click="onSearch" />
+                        <search-outlined style="color: rgba(0, 0, 0, 0.45)" @click="productList(0)" />
                     </template>
                 </a-input>
-                <a-button type="primary" @click="onProducts">全部产品</a-button>
+                <a-button :type="buttonType.bt1" @click="productList(0)">全部产品</a-button>
+                <a-button :type="buttonType.bt2" @click="productList(1)">上架的产品</a-button>
+                <a-button :type="buttonType.bt3" @click="productList(2)">下架的产品</a-button>
                 <a-button type="primary" @click="onDelete" :disabled="disabled" danger>删除</a-button>
-                <a-button type="primary" @click="onCreate">新建</a-button>
             </a-space>
             <div>
-                <a-button type="primary" @click="onExport">
+                <a-space size="middle">
+                    <a-button type="primary" @click="onCreate">新建</a-button>
+                <a-button type="primary" @click="onExport" ghost>
                     <template #icon>
                         <ExportOutlined />
                     </template>导出</a-button>
+                </a-space>
             </div>
         </div>
         <a-table rowKey="id" :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
@@ -208,8 +212,32 @@ const operation = ref(0);
 const productFormRef = ref();
 const keyWord = ref('')
 
+// 按钮状态
+const buttonType = reactive({
+    bt1: 'primary',
+    bt2: 'default',
+    bt3: 'default',
+})
+const setButtonType = (status) => {
+    if (status == 0) {
+        buttonType.bt1 = 'primary'
+        buttonType.bt2 = 'default'
+        buttonType.bt3 = 'default'
+    }
+    if (status == 1) {
+        buttonType.bt1 = 'default'
+        buttonType.bt2 = 'primary'
+        buttonType.bt3 = 'default'
+    }
+    if (status == 2) {
+        buttonType.bt1 = 'default'
+        buttonType.bt2 = 'default'
+        buttonType.bt3 = 'primary'
+    }
+}
+
 // 初始化数据
-onMounted(() => { getProductList() })
+onMounted(() => { productList() })
 
 // 表格记录多选
 const onSelectChange = selectedRowKeys => {
@@ -220,15 +248,6 @@ const onSelectChange = selectedRowKeys => {
         disabled.value = true
     }
 };
-
-// 点击搜索
-const onSearch = () => { getProductList() };
-
-// 点击全部产品
-const onProducts = () => {
-    keyWord.value = ''
-    getProductList()
-}
 
 // 点击新建产品
 const onCreate = () => {
@@ -267,7 +286,7 @@ const onSave = () => {
                     message.success('保存成功')
                     productFormRef.value.resetFields()
                     visible.value = false;
-                    getProductList()
+                    productList()
                 }
                 if (res.data.code == 40001) {
                     message.error('产品名称已经存在')
@@ -280,7 +299,7 @@ const onSave = () => {
                     productFormRef.value.resetFields()
                     visible.value = false;
                     message.success('保存成功')
-                    getProductList()
+                    productList()
                 }
             })
         }
@@ -298,7 +317,7 @@ const onDelete = () => {
         onOk() {
             deleteProduct({ ids: data.selectedIds }).then((res) => {
                 if (res.data.code == 0) {
-                    getProductList()
+                    productList()
                     disabled.value = true
                     message.success('删除成功')
                 }
@@ -313,13 +332,15 @@ const onDelete = () => {
 // 分页查询产品列表
 const onPagination = (page) => {
     pagination.current = page
-    getProductList()
+    productList()
 }
 
-// 查询产列表
-const getProductList = () => {
+// 获取产品列表
+const productList = (status) => {
+    setButtonType(status)
     let param = {
         name: keyWord.value,
+        status: status,
         pageNum: pagination.current,
         pageSize: pagination.pageSize,
     }

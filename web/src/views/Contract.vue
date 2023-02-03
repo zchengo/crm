@@ -2,20 +2,24 @@
     <div :style="{ padding: '20px 20px 12px 20px' }">
         <div style="display: flex;justify-content: space-between;margin-bottom: 20px;">
             <a-space>
-                <a-input v-model:value="keyWord" placeholder="合同编号" style="width: 280px; margin-right: 50px;">
+                <a-input v-model:value="query.id" placeholder="合同编号" style="width: 250px; margin-right: 10px;">
                     <template #suffix>
                         <search-outlined style="color: rgba(0, 0, 0, 0.45)" @click="onSearch" />
                     </template>
                 </a-input>
-                <a-button type="primary" @click="onContracts">全部合同</a-button>
+                <a-button :type="buttonType.bt1" @click="onContractList">全部合同</a-button>
+                <a-button :type="buttonType.bt2" @click="onContractStatus(1)">已签约合同</a-button>
+                <a-button :type="buttonType.bt3" @click="onContractStatus(2)">未签约合同</a-button>
                 <a-button type="primary" @click="onDelete" :disabled="disabled" danger>删除</a-button>
-                <a-button type="primary" @click="onCreate">新建</a-button>
             </a-space>
             <div>
-                <a-button type="primary" @click="onExport">
-                    <template #icon>
-                        <ExportOutlined />
-                    </template>导出</a-button>
+                <a-space size="middle">
+                    <a-button type="primary" @click="onCreate">新建</a-button>
+                    <a-button type="primary" @click="onExport" ghost>
+                        <template #icon>
+                            <ExportOutlined />
+                        </template>导出</a-button>
+                </a-space>
             </div>
         </div>
         <a-table rowKey="id"
@@ -179,6 +183,62 @@ import { queryProductList } from "../api/product";
 import { queryCustomerOption } from "../api/customer";
 import { message, Modal } from 'ant-design-vue';
 import Spot from '../components/Spot.vue';
+
+// 条件筛选
+const query = reactive({
+    id: undefined,
+    status: undefined
+})
+
+// 点击搜索合同
+const onSearch = () => {
+    contractList()
+}
+
+// 点击全部合同
+const onContractList = () => {
+    query.id = undefined
+    query.status = undefined
+    pagination.current = 1
+    setButtonType()
+    contractList()
+}
+
+// 点击已签约或未签约合同
+const onContractStatus = (status) => {
+    query.status = status
+    pagination.current = 1
+    setButtonType(status)
+    contractList()
+}
+
+// 按钮默认类型
+const buttonType = reactive({
+    bt1: 'primary',
+    bt2: 'default',
+    bt3: 'default',
+})
+
+// 设置按钮类型
+const setButtonType = (status) => {
+    switch (status) {
+        case 1:
+            buttonType.bt1 = 'default'
+            buttonType.bt2 = 'primary'
+            buttonType.bt3 = 'default'
+            break;
+        case 2:
+            buttonType.bt1 = 'default'
+            buttonType.bt2 = 'default'
+            buttonType.bt3 = 'primary'
+            break;
+        default:
+            buttonType.bt1 = 'primary'
+            buttonType.bt2 = 'default'
+            buttonType.bt3 = 'default'
+            break;
+    }
+}
 
 // 合同表格字段
 const columns = [{
@@ -358,15 +418,11 @@ let pagination = reactive({
     total: undefined,
 })
 
-// 点击搜索
-const onSearch = () => { getContractList() };
-
 const title = ref('');
 const visible = ref(false);
 const disabled = ref(true)
 const operation = ref(0);
 const contractFormRef = ref();
-const keyWord = ref('')
 const productListVisible = ref(false);
 
 // 点击新建合同
@@ -419,7 +475,7 @@ const onSave = () => {
                 if (res.data.code == 0) {
                     message.success('保存成功')
                     data.defaultSelectedIds = []
-                    getContractList()
+                    contractList()
                 }
             })
         }
@@ -439,7 +495,7 @@ const onSave = () => {
                 if (res.data.code == 0) {
                     message.success('保存成功')
                     data.defaultSelectedIds = []
-                    getContractList()
+                    contractList()
                 }
             })
         }
@@ -462,7 +518,7 @@ const onDelete = () => {
         onOk() {
             deleteContract(param).then((res) => {
                 if (res.data.code == 0) {
-                    getContractList()
+                    contractList()
                     disabled.value = true
                     message.success('删除成功')
                 }
@@ -475,22 +531,17 @@ const onDelete = () => {
 }
 
 // 初始化数据
-onMounted(() => { getContractList() })
-
-// 点击全部合同
-const onContracts = () => {
-    keyWord.value = ''
-    getContractList()
-}
+onMounted(() => { contractList() })
 
 // 分页查询合同列表
 const onPagination = (page) => {
     pagination.current = page
-    getContractList()
+    contractList(query.status)
 }
-const getContractList = () => {
+const contractList = () => {
     let param = {
-        id: parseInt(keyWord.value == '' ? '0' : keyWord.value),
+        id: parseInt(query.id == undefined || query.id == '' ? '0' : query.id),
+        status: query.status,
         pageNum: pagination.current,
         pageSize: pagination.pageSize
     }

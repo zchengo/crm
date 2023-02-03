@@ -52,23 +52,30 @@ func (c *ContractDao) Delete(param *models.ContractDeleteParam) error {
 
 func (c *ContractDao) GetList(param *models.ContractQueryParam) ([]*models.ContractList, int64, error) {
 	contractList := make([]*models.ContractList, 0)
-	s := "contract.id, contract.name, contract.amount, contract.begin_time, contract.over_time, customer.name as cname, contract.remarks, contract.status, contract.created, contract.updated"
-	j := "inner join customer on contract.cid = customer.id and contract.creator = ?"
+	field := "contract.id, contract.name, contract.amount, contract.begin_time, contract.over_time, customer.name as cname, contract.remarks, contract.status, contract.created, contract.updated"
+	where := "inner join customer on contract.cid = customer.id and contract.creator = ?"
+	raw := "select count(*) from contract where creator = ?"
 
 	// 分页查询
 	offset := (param.Page.PageNum - 1) * param.Page.PageSize
-	mdb := global.Db.Offset(offset).Limit(param.Page.PageSize).Table(CONTRACT).Select(s)
-	var err error
-	if param.Id != 0 {
-		err = mdb.Joins(j+" and contract.id = ?", param.Creator, param.Id).Scan(&contractList).Error
-	} else {
-		err = mdb.Joins(j, param.Creator).Scan(&contractList).Error
-	}
-	if err != nil {
-		return nil, 0, err
-	}
+	db := global.Db.Offset(offset).Limit(param.Page.PageSize).Table(CONTRACT).Select(field)
+	
 	var rows int64
-	global.Db.Raw("select count(*) from contract where creator = ?", param.Creator).Scan(&rows)
+	if param.Id != NumberNull {
+		db.Joins(where+" and contract.id = ?", param.Creator, param.Id)
+		global.Db.Raw(raw + " and contract.id = ?", param.Creator, param.Creator).Scan(&rows)
+	} else {
+		if param.Status != NumberNull {
+			db.Joins(where+" and contract.status = ?", param.Creator, param.Status)
+			global.Db.Raw(raw + " and contract.status = ?", param.Creator, param.Status).Scan(&rows)
+		} else {
+			db.Joins(where, param.Creator)
+			global.Db.Raw(raw, param.Creator).Scan(&rows)
+		}
+	}
+	if err := db.Scan(&contractList).Error; err != nil {
+		return nil, NumberNull, nil
+	}
 	return contractList, rows, nil
 }
 

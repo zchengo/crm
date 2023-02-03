@@ -52,6 +52,7 @@ type ContractQueryParam struct {
 	Id      int64   `form:"id" binding:"omitempty,gt=0"`
 	Pids    []int64 `form:"pids" json:"pids" binding:"-"`
 	Name    string  `form:"name" binding:"-"`
+	Status  int     `form:"status" binding:"omitempty,oneof=1 2"`
 	Creator int64   `form:"creator,omitempty" binding:"-"`
 	Page    Page
 }

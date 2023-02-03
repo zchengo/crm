@@ -2,21 +2,48 @@
     <div :style="{ padding: '20px 20px 12px 20px' }">
         <div style="display: flex;justify-content: space-between;margin-bottom: 20px;">
             <a-space>
-                <a-input v-model:value="keyWord" placeholder="客户名称" style="width: 280px; margin-right: 50px;">
+                <a-input v-model:value="query.name" placeholder="客户名称" style="width: 250px; margin-right: 10px;">
                     <template #suffix>
-                        <search-outlined style="color: rgba(0, 0, 0, 0.45)" @click="onSearch" />
+                        <search-outlined style="color: rgba(0, 0, 0, 0.45)" @click="customerList()" />
                     </template>
                 </a-input>
-                <a-button type="primary" @click="onCustomers">全部客户</a-button>
+                <a-button :type="buttonType.bt1" @click="onCustomers">全部客户</a-button>
+                <a-button :type="buttonType.bt2" @click="onFilter">
+                    <template #icon>
+                        <FilterOutlined />
+                    </template>高级筛选</a-button>
                 <a-button type="primary" @click="onDelete" :disabled="disabled" danger>删除</a-button>
-                <a-button type="primary" @click="onCreate">新建</a-button>
             </a-space>
             <div>
-                <a-button type="primary" @click="onExport">
-                    <template #icon>
-                        <ExportOutlined />
-                    </template>导出</a-button>
+                <a-space size="middle">
+                    <a-button type="primary" @click="onCreate">新建</a-button>
+                    <a-button type="primary" @click="onExport" ghost>
+                        <template #icon>
+                            <ExportOutlined />
+                        </template>导出</a-button>
+                </a-space>
             </div>
+            <a-modal v-model:visible="visibleFilter" title="高级筛选" @ok="confirmFilter" @cancel="cancelFilter"
+                cancelText="取消" okText="确定" width="800px" style="top: 150px;">
+                <a-row :gutter="20">
+                    <a-col :span="6">
+                        <a-select v-model:value="query.source" :options="options.source" placeholder="客户来源"
+                            style="width: 100%;" :allowClear="true" />
+                    </a-col>
+                    <a-col :span="6">
+                        <a-select v-model:value="query.industry" :options="options.industry" placeholder="客户行业"
+                            style="width: 100%;" :allowClear="true" />
+                    </a-col>
+                    <a-col :span="6">
+                        <a-select v-model:value="query.level" :options="options.level" placeholder="客户级别"
+                            style="width: 100%;" :allowClear="true" />
+                    </a-col>
+                    <a-col :span="6">
+                        <a-select v-model:value="query.status" :options="options.status" placeholder="成交状态"
+                            style="width: 100%;" :allowClear="true" />
+                    </a-col>
+                </a-row>
+            </a-modal>
         </div>
         <a-table rowKey="id" :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
             :columns="columns" :data-source="data.customerList"
@@ -58,15 +85,7 @@
                         </a-col>
                         <a-col :span="12">
                             <a-form-item label="客户来源" name="source">
-                                <a-select v-model:value="customer.source" placeholder="请选择">
-                                    <a-select-option value="促销">促销</a-select-option>
-                                    <a-select-option value="搜索引擎">搜索引擎</a-select-option>
-                                    <a-select-option value="广告">广告</a-select-option>
-                                    <a-select-option value="转介绍">转介绍</a-select-option>
-                                    <a-select-option value="线上注册">线上注册</a-select-option>
-                                    <a-select-option value="电话咨询">电话咨询</a-select-option>
-                                    <a-select-option value="邮件咨询">邮件咨询</a-select-option>
-                                </a-select>
+                                <a-select v-model:value="customer.source" :options="options.source" placeholder="请选择" />
                             </a-form-item>
                         </a-col>
                     </a-row>
@@ -85,32 +104,21 @@
                     <a-row :gutter="16">
                         <a-col :span="12">
                             <a-form-item label="客户行业" name="industry">
-                                <a-select v-model:value="customer.industry" placeholder="请选择">
-                                    <a-select-option value="互联网">互联网</a-select-option>
-                                    <a-select-option value="金融业">金融业</a-select-option>
-                                    <a-select-option value="政府">政府</a-select-option>
-                                    <a-select-option value="房地产">房地产</a-select-option>
-                                    <a-select-option value="文化传媒">文化传媒</a-select-option>
-                                    <a-select-option value="生产">生产</a-select-option>
-                                    <a-select-option value="物流运输">物流运输</a-select-option>
-                                </a-select>
+                                <a-select v-model:value="customer.industry" :options="options.industry"
+                                    placeholder="请选择" />
                             </a-form-item>
                         </a-col>
                         <a-col :span="12">
                             <a-form-item label="客户级别" name="level">
-                                <a-select v-model:value="customer.level" placeholder="请选择">
-                                    <a-select-option value="重点客户">重点客户</a-select-option>
-                                    <a-select-option value="普通客户">普通客户</a-select-option>
-                                    <a-select-option value="非优先客户">非优先客户</a-select-option>
-                                </a-select>
+                                <a-select v-model:value="customer.level" :options="options.level" placeholder="请选择" />
                             </a-form-item>
                         </a-col>
                     </a-row>
                     <a-row :gutter="16">
                         <a-col :span="12">
                             <a-form-item label="所在地区" name="region">
-                                <a-cascader v-model:value="customer.region" @change="selectedOptions" :options="options"
-                                    placeholder="请选择" style="width: 100%" />
+                                <a-cascader v-model:value="customer.region" @change="selectedOptions"
+                                    :options="options.regionData" placeholder="请选择" style="width: 100%" />
                             </a-form-item>
                         </a-col>
                         <a-col :span="12">
@@ -177,13 +185,128 @@
 
 <script setup>
 import { ref, reactive, onMounted, createVNode } from 'vue';
-import { SearchOutlined, ExclamationCircleOutlined, ExportOutlined, PhoneTwoTone, MailTwoTone, InboxOutlined } from '@ant-design/icons-vue';
+import { SearchOutlined, ExclamationCircleOutlined, FilterOutlined, ExportOutlined, PhoneTwoTone, MailTwoTone, InboxOutlined } from '@ant-design/icons-vue';
 import moment from 'moment'
 import { createCustomer, updateCustomer, sendMailToCustomer, queryCustomerList, queryCustomerInfo, deleteCustomer, customerExport } from '../api/customer';
 import { message, Modal } from 'ant-design-vue';
 import Spot from '../components/Spot.vue';
 import { fileRemove } from '../api/common';
 import regionData from '../assets/region';
+
+// 条件筛选
+const query = reactive({
+    name: undefined,
+    source: undefined,
+    industry: undefined,
+    level: undefined,
+    status: undefined,
+})
+
+// 按钮类型
+const buttonType = reactive({
+    bt1: 'primary',
+    bt2: 'default',
+})
+
+// 点击全部客户
+const onCustomers = () => {
+    buttonType.bt1 = 'primary'
+    buttonType.bt2 = 'default'
+    for (const key in query) {
+        query[key] = undefined
+    }
+    customerList()
+}
+
+const visibleFilter = ref(false)
+
+// 点击高级筛选
+const onFilter = () => {
+    buttonType.bt1 = 'default'
+    buttonType.bt2 = 'primary'
+    visibleFilter.value = true
+}
+
+// 确认筛选
+const confirmFilter = () => {
+    customerList()
+    visibleFilter.value = false
+}
+
+// 取消筛选
+const cancelFilter = () => {
+    buttonType.bt1 = 'primary'
+    buttonType.bt2 = 'default'
+    for (const key in query) {
+        query[key] = undefined
+    }
+}
+
+// 表单选项
+const options = reactive({
+    source: [{
+        value: '促销',
+        label: '促销',
+    }, {
+        value: '搜索引擎',
+        label: '搜索引擎',
+    }, {
+        value: '广告',
+        label: '广告',
+    }, {
+        value: '转介绍',
+        label: '转介绍',
+    }, {
+        value: '线上注册',
+        label: '线上注册',
+    }, {
+        value: '电话咨询',
+        label: '电话咨询',
+    }, {
+        value: '邮件咨询',
+        label: '邮件咨询',
+    }],
+    industry: [{
+        value: '互联网',
+        label: '互联网',
+    }, {
+        value: '金融业',
+        label: '金融业',
+    }, {
+        value: '政府',
+        label: '政府',
+    }, {
+        value: '房地产',
+        label: '房地产',
+    }, {
+        value: '文化传媒',
+        label: '文化传媒',
+    }, {
+        value: '生产',
+        label: '生产',
+    }, {
+        value: '物流运输',
+        label: '物流运输',
+    }],
+    level: [{
+        value: '重点客户',
+        label: '重点客户',
+    }, {
+        value: '普通客户',
+        label: '普通客户',
+    }, {
+        value: '非优先客户',
+        label: '非优先客户',
+    }],
+    status: [{
+        value: 1,
+        label: '已成交',
+    }, {
+        value: 2,
+        label: '未成交',
+    }],
+    regionData
+})
 
 // 表格字段
 const columns = [{
@@ -278,17 +401,6 @@ const onSelectChange = selectedRowKeys => {
     }
 };
 
-// 点击搜索
-const onSearch = () => {
-    getCustomerList()
-};
-
-// 点击全部客户
-const onCustomers = () => {
-    keyWord.value = ''
-    getCustomerList()
-}
-
 // 客户属性
 let customer = reactive({
     id: undefined,
@@ -316,7 +428,6 @@ const visible = ref(false);
 const disabled = ref(true)
 const operation = ref(0);
 const customerFormRef = ref();
-const keyWord = ref('')
 const visibleMail = ref(false)
 
 // 点击新建客户
@@ -363,7 +474,7 @@ const onSave = () => {
                     message.success('保存成功')
                     customerFormRef.value.resetFields()
                     visible.value = false;
-                    getCustomerList()
+                    customerList()
                 }
                 if (res.data.code == 20001) {
                     message.error('客户名称已经存在')
@@ -376,7 +487,7 @@ const onSave = () => {
                     message.success('保存成功')
                     customerFormRef.value.resetFields()
                     visible.value = false;
-                    getCustomerList()
+                    customerList()
                 }
             })
         }
@@ -397,7 +508,7 @@ const onDelete = () => {
         onOk() {
             deleteCustomer(param).then((res) => {
                 if (res.data.code == 0) {
-                    getCustomerList()
+                    customerList()
                     disabled.value = true
                     message.success('删除成功')
                 }
@@ -412,15 +523,19 @@ const onDelete = () => {
 // 分页查询客户列表
 const onPagination = (page) => {
     pagination.current = page
-    getCustomerList()
+    customerList()
 }
 
 // 初始化数据
-onMounted(() => { getCustomerList() })
+onMounted(() => { customerList() })
 
-const getCustomerList = () => {
+const customerList = () => {
     let param = {
-        name: keyWord.value,
+        name: query.name,
+        source: query.source,
+        industry: query.industry,
+        level: query.level,
+        status: query.status,
         pageNum: pagination.current,
         pageSize: pagination.pageSize,
     }
@@ -533,9 +648,7 @@ const onSend = () => {
 const onCancel = () => {
     customerFormRef.value.resetFields()
     visible.value = false
-};
-
-const options = regionData
+}
 
 const selectedOptions = (value) => {
     customer.region = value

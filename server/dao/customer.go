@@ -62,8 +62,12 @@ func (c *CustomerDao) IsExists(name string, uid int64) bool {
 
 func (c *CustomerDao) GetList(param *models.CustomerQueryParam) ([]*models.CustomerList, int64, error) {
 	customer := models.Customer{
-		Name:    param.Name,
-		Creator: param.Creator,
+		Name:     param.Name,
+		Source:   param.Source,
+		Industry: param.Industry,
+		Level:    param.Level,
+		Status:   param.Status,
+		Creator:  param.Creator,
 	}
 	customerList := make([]*models.CustomerList, 0)
 	rows, err := restPage(param.Page, CUSTOMER, customer, &customerList, &[]*models.CustomerList{})
