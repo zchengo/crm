@@ -11,7 +11,7 @@
   "author": "zchengo",
   "license": "MIT",
   "dependencies": {
-    "vitepress": "^1.0.0-alpha.45",
+    "vitepress": "^1.0.0-alpha.47",
     "vue": "^3.2.45"
   }
 }
